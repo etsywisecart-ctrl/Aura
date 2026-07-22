@@ -1,0 +1,123 @@
+{%- comment -%}
+  Aura — Showcase. Full-bleed product tiles in the reference grid pattern:
+  a hero tile plus half-width tiles, each with content set over a product image
+  or a solid ground. This is the theme's signature merchandising surface.
+{%- endcomment -%}
+<div class="section" style="--section-y: {{ section.settings.padding | divided_by: 10.0 }}rem;">
+  <div class="page-width">
+    <div class="showcase" style="--showcase-gap: {{ section.settings.gap }}px;">
+      {%- for block in section.blocks -%}
+        {%- liquid
+          assign light = false
+          if block.settings.text_color == 'light'
+            assign light = true
+          endif
+        -%}
+        <div
+          class="showcase__tile showcase__tile--{{ block.settings.size }} showcase__tile--{{ block.settings.height }} showcase__tile--{{ block.settings.content_position }}{% if light %} showcase__tile--light{% endif %} scroll-trigger"
+          {% if block.settings.background_color != blank %}style="--tile-bg: {{ block.settings.background_color.red }}, {{ block.settings.background_color.green }}, {{ block.settings.background_color.blue }};"{% endif %}
+          {{ block.shopify_attributes }}>
+
+          {%- if block.settings.image != blank -%}
+            <div class="showcase__bg">
+              <img
+                src="{{ block.settings.image | image_url: width: 1600 }}"
+                srcset="{{ block.settings.image | image_url: width: 800 }} 800w, {{ block.settings.image | image_url: width: 1600 }} 1600w"
+                sizes="(min-width: 750px) {% if block.settings.size == 'full' %}100vw{% else %}50vw{% endif %}, 100vw"
+                alt="{{ block.settings.image.alt | escape }}"
+                width="{{ block.settings.image.width }}"
+                height="{{ block.settings.image.height }}"
+                loading="{% if forloop.index <= 2 %}eager{% else %}lazy{% endif %}"
+                class="image-fade">
+            </div>
+            {%- if block.settings.overlay_opacity > 0 -%}
+              <div class="showcase__tint" style="background: linear-gradient(180deg, rgba(0,0,0,{{ block.settings.overlay_opacity | divided_by: 200.0 }}) 0%, rgba(0,0,0,{{ block.settings.overlay_opacity | divided_by: 100.0 }}) 100%);"></div>
+            {%- endif -%}
+          {%- endif -%}
+
+          <div class="showcase__content">
+            {%- if block.settings.eyebrow != blank -%}
+              <span class="showcase__eyebrow">{{ block.settings.eyebrow | escape }}</span>
+            {%- endif -%}
+            {%- if block.settings.heading != blank -%}
+              <h2 class="showcase__heading">{{ block.settings.heading | escape }}</h2>
+            {%- endif -%}
+            {%- if block.settings.subheading != blank -%}
+              <p class="showcase__sub">{{ block.settings.subheading | escape }}</p>
+            {%- endif -%}
+            {%- if block.settings.cta1_label != blank or block.settings.cta2_label != blank -%}
+              <div class="showcase__ctas">
+                {%- if block.settings.cta1_label != blank -%}
+                  <a class="cta-link" href="{{ block.settings.cta1_link | default: '#' }}">{{ block.settings.cta1_label | escape }}</a>
+                {%- endif -%}
+                {%- if block.settings.cta2_label != blank -%}
+                  <a class="button button--compact" href="{{ block.settings.cta2_link | default: '#' }}">{{ block.settings.cta2_label | escape }}</a>
+                {%- endif -%}
+              </div>
+            {%- endif -%}
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Showcase",
+  "tag": "section",
+  "class": "section-showcase",
+  "max_blocks": 9,
+  "settings": [
+    { "type": "range", "id": "gap", "min": 4, "max": 32, "step": 2, "unit": "px", "label": "Gap between tiles", "default": 16 },
+    { "type": "range", "id": "padding", "min": 0, "max": 120, "step": 4, "unit": "px", "label": "Section spacing", "default": 100 }
+  ],
+  "blocks": [
+    {
+      "type": "tile",
+      "name": "Tile",
+      "settings": [
+        { "type": "select", "id": "size", "options": [
+          { "value": "full", "label": "Full width" },
+          { "value": "half", "label": "Half width" }
+        ], "default": "half", "label": "Tile width" },
+        { "type": "select", "id": "height", "options": [
+          { "value": "short", "label": "Short" },
+          { "value": "default", "label": "Medium" },
+          { "value": "tall", "label": "Tall" }
+        ], "default": "default", "label": "Tile height" },
+        { "type": "image_picker", "id": "image", "label": "Background image", "info": "A product shot on its background works best." },
+        { "type": "color", "id": "background_color", "label": "Background color", "info": "Used when no image is set." },
+        { "type": "range", "id": "overlay_opacity", "min": 0, "max": 70, "step": 5, "unit": "%", "label": "Image darken", "default": 0 },
+        { "type": "select", "id": "text_color", "options": [
+          { "value": "dark", "label": "Dark" },
+          { "value": "light", "label": "Light" }
+        ], "default": "dark", "label": "Text color" },
+        { "type": "select", "id": "content_position", "options": [
+          { "value": "top", "label": "Top" },
+          { "value": "center", "label": "Center" },
+          { "value": "bottom", "label": "Bottom" }
+        ], "default": "top", "label": "Content position" },
+        { "type": "header", "content": "Content" },
+        { "type": "text", "id": "eyebrow", "label": "Eyebrow" },
+        { "type": "text", "id": "heading", "label": "Heading", "default": "Product name" },
+        { "type": "text", "id": "subheading", "label": "Subheading", "default": "A short, confident line." },
+        { "type": "text", "id": "cta1_label", "label": "Link label", "default": "Learn more" },
+        { "type": "url", "id": "cta1_link", "label": "Link" },
+        { "type": "text", "id": "cta2_label", "label": "Button label", "default": "Shop" },
+        { "type": "url", "id": "cta2_link", "label": "Button link" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Showcase",
+      "blocks": [
+        { "type": "tile", "settings": { "size": "full", "height": "tall", "text_color": "dark", "content_position": "top", "eyebrow": "New", "heading": "The Field Jacket", "subheading": "Waxed cotton, built for a decade of weather.", "cta1_label": "Learn more", "cta2_label": "Shop" } },
+        { "type": "tile", "settings": { "size": "half", "height": "default", "background_color": "#0D0E11", "text_color": "light", "heading": "Knitwear", "subheading": "Merino, milled in Scotland.", "cta1_label": "Learn more", "cta2_label": "Shop" } },
+        { "type": "tile", "settings": { "size": "half", "height": "default", "background_color": "#ECE7DE", "text_color": "dark", "heading": "Leather goods", "subheading": "Vegetable-tanned, made to age.", "cta1_label": "Learn more", "cta2_label": "Shop" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

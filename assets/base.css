@@ -69,9 +69,9 @@ body {
   display: flex;
   flex-direction: column;
   font-family: var(--font-sans);
-  font-size: 1.6rem;
-  line-height: 1.65;
-  letter-spacing: -0.005em;
+  font-size: 1.7rem;
+  line-height: 1.6;
+  letter-spacing: -0.01em;
   color: rgb(var(--color-foreground));
   background-color: rgb(var(--color-background));
   -webkit-font-smoothing: antialiased;
@@ -84,8 +84,8 @@ main { display: block; flex: 1 0 auto; }
 h1, h2, h3, h4, h5, h6 {
   margin: 0;
   font-family: var(--font-sans);
-  font-weight: 400;
-  line-height: 1.12;
+  font-weight: 600;
+  line-height: 1.1;
   letter-spacing: -0.02em;
   text-wrap: balance;
 }
@@ -122,26 +122,29 @@ table { border-collapse: collapse; width: 100%; }
 /* -------------------------------------------------------------------------
    3. Typographic scale
    ------------------------------------------------------------------------- */
+/* Apple-caliber: confident semibold display, tight optical tracking */
 .display, .h0 {
-  font-weight: 300;
-  letter-spacing: -0.03em;
-  line-height: 1.02;
-  font-size: clamp(3.6rem, 8vw, 7rem);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1.04;
+  font-size: clamp(4rem, 7.2vw, 6.6rem);
 }
-.h1, h1 { font-size: clamp(2.8rem, 4.5vw, 4rem); font-weight: 350; letter-spacing: -0.022em; line-height: 1.08; }
-.h2, h2 { font-size: clamp(2.2rem, 3.4vw, 3rem); font-weight: 400; letter-spacing: -0.018em; line-height: 1.14; }
-.h3, h3 { font-size: clamp(1.8rem, 2.4vw, 2.2rem); font-weight: 450; letter-spacing: -0.012em; line-height: 1.22; }
-.h4, h4 { font-size: 1.7rem; font-weight: 500; letter-spacing: -0.008em; }
-.h5, h5 { font-size: 1.5rem; font-weight: 550; }
+.h1, h1 { font-size: clamp(3.2rem, 5vw, 4.8rem); font-weight: 600; letter-spacing: -0.021em; line-height: 1.06; }
+.h2, h2 { font-size: clamp(2.6rem, 4vw, 4rem); font-weight: 600; letter-spacing: -0.019em; line-height: 1.08; }
+.h3, h3 { font-size: clamp(2.1rem, 2.6vw, 2.7rem); font-weight: 600; letter-spacing: -0.014em; line-height: 1.16; }
+.h4, h4 { font-size: 1.9rem; font-weight: 600; letter-spacing: -0.01em; }
+.h5, h5 { font-size: 1.6rem; font-weight: 600; letter-spacing: -0.006em; }
 .h6, h6 { font-size: 1.3rem; font-weight: 600; }
 
 .lead {
-  font-size: clamp(1.7rem, 2.2vw, 2rem);
-  font-weight: 380;
-  line-height: 1.5;
-  color: rgba(var(--color-foreground), 0.72);
-  max-width: 62ch;
+  font-size: clamp(1.9rem, 1.9vw, 2.3rem);
+  font-weight: 400;
+  line-height: 1.4;
+  letter-spacing: -0.003em;
+  color: rgba(var(--color-foreground), 0.64);
+  max-width: 60ch;
 }
+.lead--tight { max-width: 46ch; }
 
 .eyebrow {
   display: inline-flex;
@@ -202,8 +205,8 @@ table { border-collapse: collapse; width: 100%; }
 .page-width--narrow { max-width: 76rem; }
 .page-width--medium { max-width: 100rem; }
 
-.section { margin-top: var(--section-y, 4.8rem); margin-bottom: var(--section-y, 4.8rem); }
-@media screen and (min-width: 750px) { .section { --section-y: 8rem; } }
+.section { margin-top: var(--section-y, 5.6rem); margin-bottom: var(--section-y, 5.6rem); }
+@media screen and (min-width: 750px) { .section { --section-y: 10rem; } }
 .section + .section { margin-top: var(--spacing-sections, 0); }
 
 .section--tight { --section-y: 3.2rem; }
@@ -250,13 +253,13 @@ table { border-collapse: collapse; width: 100%; }
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.9rem;
-  min-height: 5rem;
-  padding: 0 2.8rem;
+  gap: 0.8rem;
+  min-height: 4.6rem;
+  padding: 0 2.6rem;
   font-family: var(--font-sans);
-  font-size: 1.4rem;
-  font-weight: 550;
-  letter-spacing: 0.01em;
+  font-size: 1.6rem;
+  font-weight: 500;
+  letter-spacing: 0;
   text-align: center;
   color: rgb(var(--color-button-text));
   background-color: rgb(var(--color-button));
@@ -314,6 +317,36 @@ table { border-collapse: collapse; width: 100%; }
   text-decoration-color: rgba(var(--color-foreground), 0.4);
 }
 .underlined-link:hover { text-decoration-color: rgb(var(--accent)); }
+
+/* Apple/Tesla-style CTA text link with chevron */
+.cta-link {
+  display: inline-flex;
+  align-items: center;
+  font-size: 1.7rem;
+  font-weight: 400;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+.cta-link::after {
+  content: "\203A";
+  margin-left: 0.4rem;
+  font-size: 1.35em;
+  line-height: 0;
+  transform: translateY(-0.05em);
+  transition: transform var(--t-base) var(--ease-aura);
+}
+.cta-link:hover { text-decoration: underline; text-underline-offset: 0.4rem; text-decoration-thickness: 1px; }
+.cta-link:hover::after { transform: translate(0.3rem, -0.05em); }
+
+/* Compact pill for tile CTAs */
+.button--compact { min-height: 3.8rem; padding: 0 2rem; font-size: 1.5rem; }
+
+/* CTA cluster (chevron link + pill, à la reference) */
+.cta-row { display: inline-flex; align-items: center; gap: 2.4rem; flex-wrap: wrap; }
+.cta-row--center { justify-content: center; }
 
 /* -------------------------------------------------------------------------
    7. Forms & inputs
@@ -436,7 +469,7 @@ input:focus, textarea:focus, select:focus, .field__input:focus {
 .card__media { position: relative; margin-bottom: 1.6rem; }
 .card__content { display: flex; flex-direction: column; gap: 0.5rem; }
 .card__vendor { font-size: 1.2rem; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(var(--color-foreground), 0.5); }
-.card__heading { margin: 0; font-size: 1.6rem; font-weight: 450; letter-spacing: -0.008em; line-height: 1.35; }
+.card__heading { margin: 0; font-size: 1.7rem; font-weight: 500; letter-spacing: -0.01em; line-height: 1.3; }
 .card__heading a { display: inline-block; }
 .card__heading a::after { content: ""; position: absolute; inset: 0; z-index: 1; }
 
@@ -758,6 +791,58 @@ body.overflow-hidden { overflow: hidden; }
 /* -------------------------------------------------------------------------
    17. Content sections
    ------------------------------------------------------------------------- */
+
+/* Showcase — full-bleed product tiles (hero + 2-up grid) */
+.showcase { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--showcase-gap, 1.6rem); }
+.showcase__tile {
+  position: relative;
+  grid-column: span 2;
+  display: flex;
+  overflow: hidden;
+  min-height: var(--tile-h, 48rem);
+  border-radius: var(--r-lg);
+  background-color: rgb(var(--tile-bg, 245, 245, 247));
+  isolation: isolate;
+}
+.showcase__tile--tall { --tile-h: 62rem; }
+.showcase__tile--short { --tile-h: 40rem; }
+@media screen and (min-width: 750px) {
+  .showcase__tile--half { grid-column: span 1; }
+}
+.showcase__bg { position: absolute; inset: 0; z-index: 0; }
+.showcase__bg img { width: 100%; height: 100%; object-fit: cover; }
+.showcase__tint { position: absolute; inset: 0; z-index: 1; }
+.showcase__content {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1.4rem;
+  padding: clamp(3.2rem, 5vw, 5.6rem) 2rem;
+}
+.showcase__tile--bottom { align-items: flex-end; }
+.showcase__tile--center { align-items: center; }
+.showcase__tile--top { align-items: flex-start; }
+.showcase__tile--light { color: #f5f5f7; }
+.showcase__tile--light .showcase__sub { color: rgba(245, 245, 247, 0.82); }
+.showcase__eyebrow { font-size: 1.4rem; font-weight: 500; letter-spacing: 0.01em; color: rgb(var(--accent)); }
+.showcase__heading { font-size: clamp(2.8rem, 3.6vw, 4rem); font-weight: 600; letter-spacing: -0.02em; line-height: 1.06; }
+.showcase__tile--tall .showcase__heading { font-size: clamp(3.4rem, 4.6vw, 5.6rem); }
+.showcase__sub { font-size: clamp(1.7rem, 1.7vw, 2.1rem); font-weight: 400; color: rgba(var(--color-foreground), 0.64); max-width: 40ch; }
+.showcase__ctas { display: inline-flex; align-items: center; gap: 2.2rem; flex-wrap: wrap; justify-content: center; margin-top: 0.4rem; }
+.showcase__product { position: relative; z-index: 1; margin-top: auto; width: 100%; display: flex; justify-content: center; padding: 0 2rem 3rem; }
+.showcase__product img { width: 100%; max-width: 52rem; height: auto; object-fit: contain; }
+.showcase__tile:hover .showcase__product img,
+.showcase__tile:hover .showcase__bg img { transform: scale(1.02); }
+.showcase__product img, .showcase__bg img { transition: transform var(--t-ambient) var(--ease-aura); }
+/* Tile CTAs adapt to the tile's own text color, independent of section scheme */
+.showcase__tile--light .button { background: #fff; border-color: #fff; color: #1d1d1f; }
+.showcase__tile--light .button:hover { opacity: 0.9; }
+.showcase__tile:not(.showcase__tile--light) .button { background: #1d1d1f; border-color: #1d1d1f; color: #fff; }
+
 .banner { position: relative; display: flex; overflow: hidden; isolation: isolate; }
 .banner__media { position: absolute; inset: 0; z-index: 0; }
 .banner__media img, .banner__media video { width: 100%; height: 100%; object-fit: cover; }
@@ -776,7 +861,10 @@ body.overflow-hidden { overflow: hidden; }
 .banner--large { min-height: 80rem; }
 .banner__buttons { display: flex; flex-wrap: wrap; gap: 1.2rem; }
 .banner--text-light { color: #fff; }
-.banner--text-light .eyebrow { color: rgba(255,255,255,0.8); }
+.banner--text-light .eyebrow { color: rgba(255,255,255,0.85); }
+.banner--text-light .eyebrow::before { background: rgba(255,255,255,0.7); }
+.banner--text-light .banner__text,
+.banner--text-light .lead { color: rgba(255,255,255,0.82); }
 
 .title-with-link { display: flex; align-items: baseline; justify-content: space-between; gap: 2rem; margin-bottom: clamp(2.4rem, 4vw, 4rem); flex-wrap: wrap; }
 .section-header { display: flex; flex-direction: column; gap: 1.4rem; margin-bottom: clamp(2.4rem, 4vw, 4rem); }

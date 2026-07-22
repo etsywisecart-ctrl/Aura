@@ -12,7 +12,7 @@
     "settings": [
       {
         "type": "paragraph",
-        "content": "Aura is near-monochrome by design — a calm ground, ink text, and one restrained champagne accent. Keep schemes quiet so product imagery leads."
+        "content": "Aura is near-monochrome by design — clean white and cool grey grounds, ink text, and one restrained champagne accent. Keep schemes quiet so product imagery leads."
       },
       {
         "type": "color_scheme_group",
@@ -22,7 +22,7 @@
             "type": "color",
             "id": "background",
             "label": "Background",
-            "default": "#F5F3EE"
+            "default": "#FFFFFF"
           },
           {
             "type": "color_background",
@@ -33,31 +33,31 @@
             "type": "color",
             "id": "text",
             "label": "Text",
-            "default": "#17181B"
+            "default": "#1D1D1F"
           },
           {
             "type": "color",
             "id": "button",
             "label": "Solid button background",
-            "default": "#17181B"
+            "default": "#1D1D1F"
           },
           {
             "type": "color",
             "id": "button_label",
             "label": "Solid button label",
-            "default": "#F5F3EE"
+            "default": "#FFFFFF"
           },
           {
             "type": "color",
             "id": "secondary_button_label",
             "label": "Outline button",
-            "default": "#17181B"
+            "default": "#1D1D1F"
           },
           {
             "type": "color",
             "id": "shadow",
             "label": "Shadow",
-            "default": "#17181B"
+            "default": "#1D1D1F"
           }
         ],
         "role": {

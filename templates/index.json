@@ -10,23 +10,24 @@
         "heading": "The essential object",
         "heading_size": "display",
         "text": "<p>Considered essentials, made to last a lifetime.</p>",
-        "content_position": "middle-left",
+        "content_position": "middle-center",
         "button_label_1": "Shop the collection",
         "button_style_1": "primary",
         "button_label_2": "Our story",
-        "color_scheme": "scheme-3"
+        "color_scheme": "scheme-4"
       }
     },
-    "philosophy": {
-      "type": "rich-text",
+    "showcase": {
+      "type": "showcase",
       "blocks": {
-        "eyebrow": { "type": "eyebrow", "settings": { "text": "Our philosophy" } },
-        "heading": { "type": "heading", "settings": { "heading": "Less, but better.", "size": "h1" } },
-        "text": { "type": "text", "settings": { "text": "<p>We design for permanence — objects you keep, not things you replace. Every detail earns its place, and nothing is added for its own sake.</p>", "large": true } },
-        "button": { "type": "button", "settings": { "button_label": "Discover Aura", "button_style": "secondary" } }
+        "t1": { "type": "tile", "settings": { "size": "full", "height": "tall", "background_color": "#0D0E11", "text_color": "light", "content_position": "top", "eyebrow": "The Winter Edit", "heading": "Layers, considered", "subheading": "Warmth without weight — the pieces the season is built around.", "cta1_label": "Explore the edit", "cta2_label": "Shop now" } },
+        "t2": { "type": "tile", "settings": { "size": "half", "height": "default", "background_color": "#F5F5F7", "text_color": "dark", "content_position": "top", "heading": "Outerwear", "subheading": "Built for a decade of weather.", "cta1_label": "Learn more", "cta2_label": "Shop" } },
+        "t3": { "type": "tile", "settings": { "size": "half", "height": "default", "background_color": "#ECE7DE", "text_color": "dark", "content_position": "top", "heading": "Knitwear", "subheading": "Merino, milled in Scotland.", "cta1_label": "Learn more", "cta2_label": "Shop" } },
+        "t4": { "type": "tile", "settings": { "size": "half", "height": "default", "background_color": "#1D1D1F", "text_color": "light", "content_position": "top", "heading": "Leather goods", "subheading": "Vegetable-tanned, made to age.", "cta1_label": "Learn more", "cta2_label": "Shop" } },
+        "t5": { "type": "tile", "settings": { "size": "half", "height": "default", "background_color": "#F5F5F7", "text_color": "dark", "content_position": "top", "heading": "The Journal", "subheading": "On craft, care, and permanence.", "cta1_label": "Read", "cta2_label": "" } }
       },
-      "block_order": ["eyebrow", "heading", "text", "button"],
-      "settings": { "alignment": "center", "color_scheme": "scheme-1" }
+      "block_order": ["t1", "t2", "t3", "t4", "t5"],
+      "settings": { "gap": 16, "padding": 100 }
     },
     "featured": {
       "type": "featured-collection",
@@ -52,24 +53,6 @@
       "block_order": ["eyebrow", "heading", "text", "button"],
       "settings": { "image_ratio": "portrait", "layout": "default", "color_scheme": "scheme-1" }
     },
-    "categories": {
-      "type": "collection-list",
-      "blocks": {
-        "c1": { "type": "featured_collection", "settings": {} },
-        "c2": { "type": "featured_collection", "settings": {} },
-        "c3": { "type": "featured_collection", "settings": {} }
-      },
-      "block_order": ["c1", "c2", "c3"],
-      "settings": {
-        "eyebrow": "",
-        "title": "Shop by category",
-        "heading_size": "h1",
-        "alignment": "left",
-        "columns_desktop": "3",
-        "image_ratio": "portrait",
-        "color_scheme": "scheme-1"
-      }
-    },
     "why": {
       "type": "multicolumn",
       "blocks": {
@@ -92,5 +75,5 @@
       }
     }
   },
-  "order": ["hero", "philosophy", "featured", "craft", "categories", "why", "newsletter"]
+  "order": ["hero", "showcase", "featured", "craft", "why", "newsletter"]
 }
