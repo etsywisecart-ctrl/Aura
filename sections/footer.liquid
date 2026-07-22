@@ -1,0 +1,136 @@
+{%- comment -%} Aura — Footer {%- endcomment -%}
+{%- liquid
+  assign footer_cols = section.blocks.size
+  if footer_cols < 1
+    assign footer_cols = 1
+  endif
+-%}
+<footer class="footer color-{{ section.settings.color_scheme }} gradient">
+  <div class="page-width">
+    <div class="footer__top" style="--footer-cols: {{ footer_cols }}; --footer-pt: {{ section.settings.padding_top | default: 60 | divided_by: 10.0 }}rem;">
+
+      <div class="footer__brand">
+        {%- if settings.brand_image != blank -%}
+          <img src="{{ settings.brand_image | image_url: width: 320 }}" alt="{{ shop.name | escape }}" width="160" height="auto" style="width:140px;margin-bottom:1.6rem;">
+        {%- else -%}
+          <p class="footer-block__brand-name">{{ shop.name }}</p>
+        {%- endif -%}
+
+        {%- if settings.brand_headline != blank -%}
+          <p class="footer-block__text">{{ settings.brand_headline | escape }}</p>
+        {%- elsif settings.brand_description != blank -%}
+          <div class="footer-block__text rte">{{ settings.brand_description }}</div>
+        {%- endif -%}
+
+        {%- if section.settings.newsletter_enable -%}
+          <div class="footer__newsletter">
+            {%- if section.settings.newsletter_heading != blank -%}
+              <p class="footer-block__heading">{{ section.settings.newsletter_heading | escape }}</p>
+            {%- endif -%}
+            {%- form 'customer', class: 'newsletter-form' -%}
+              <input type="hidden" name="contact[tags]" value="newsletter">
+              <div class="field">
+                <label class="visually-hidden" for="footer-email">{{ 'newsletter.label' | t }}</label>
+                <input id="footer-email" type="email" name="contact[email]" required placeholder="{{ 'newsletter.label' | t }}" autocorrect="off" autocapitalize="off">
+              </div>
+              <button type="submit" class="button" name="commit" aria-label="{{ 'newsletter.button_label' | t }}">
+                {% render 'icon', icon: 'arrow' %}
+              </button>
+              {%- if form.posted_successfully? -%}
+                <p class="form__message form__message--success">{{ 'newsletter.success' | t }}</p>
+              {%- elsif form.errors -%}
+                <p class="form__message form__message--error">{{ form.errors.translated_fields.email | capitalize }} {{ form.errors.messages.email }}</p>
+              {%- endif -%}
+            {%- endform -%}
+          </div>
+        {%- endif -%}
+      </div>
+
+      {%- for block in section.blocks -%}
+        <div class="footer-block" {{ block.shopify_attributes }}>
+          {%- case block.type -%}
+            {%- when 'link_list' -%}
+              {%- if block.settings.heading != blank -%}
+                <p class="footer-block__heading">{{ block.settings.heading | escape }}</p>
+              {%- endif -%}
+              {%- if block.settings.menu != blank -%}
+                <ul class="footer__links list-unstyled">
+                  {%- for link in block.settings.menu.links -%}
+                    <li><a href="{{ link.url }}">{{ link.title | escape }}</a></li>
+                  {%- endfor -%}
+                </ul>
+              {%- endif -%}
+            {%- when 'text' -%}
+              {%- if block.settings.heading != blank -%}
+                <p class="footer-block__heading">{{ block.settings.heading | escape }}</p>
+              {%- endif -%}
+              {%- if block.settings.subtext != blank -%}
+                <div class="footer-block__text rte">{{ block.settings.subtext }}</div>
+              {%- endif -%}
+          {%- endcase -%}
+        </div>
+      {%- endfor -%}
+    </div>
+
+    <div class="footer__bottom" style="padding-bottom: {{ section.settings.padding_bottom | default: 40 | divided_by: 10.0 }}rem;">
+      <div class="footer__copyright">
+        &copy; {{ 'now' | date: '%Y' }} {{ shop.name }}
+        {%- if section.settings.show_policy_links -%}
+          {%- for policy in shop.policies -%}
+            {%- if policy != blank %} &middot; <a href="{{ policy.url }}" class="underlined-link">{{ policy.title }}</a>{% endif -%}
+          {%- endfor -%}
+        {%- endif -%}
+      </div>
+
+      <div class="footer__bottom-right" style="display:flex;align-items:center;gap:2rem;flex-wrap:wrap;">
+        {%- if section.settings.show_social -%}
+          {% render 'social-icons' %}
+        {%- endif -%}
+        {%- if section.settings.show_payment_icons and shop.enabled_payment_types.size > 0 -%}
+          <div class="payment-icons" role="list" aria-label="Payment methods">
+            {%- for type in shop.enabled_payment_types -%}
+              {{ type | payment_type_svg_tag: class: 'payment-icon' }}
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "Footer",
+  "blocks": [
+    {
+      "type": "link_list",
+      "name": "Menu",
+      "settings": [
+        { "type": "text", "id": "heading", "default": "Quick links", "label": "Heading" },
+        { "type": "link_list", "id": "menu", "default": "footer", "label": "Menu" }
+      ]
+    },
+    {
+      "type": "text",
+      "name": "Text",
+      "settings": [
+        { "type": "text", "id": "heading", "default": "About", "label": "Heading" },
+        { "type": "richtext", "id": "subtext", "default": "<p>Share store details, promotions, or brand content with your customers.</p>", "label": "Text" }
+      ]
+    }
+  ],
+  "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "default": "scheme-2", "label": "Color scheme" },
+    { "type": "header", "content": "Newsletter" },
+    { "type": "checkbox", "id": "newsletter_enable", "default": true, "label": "Show email signup" },
+    { "type": "text", "id": "newsletter_heading", "default": "Join the list", "label": "Heading" },
+    { "type": "header", "content": "Bottom bar" },
+    { "type": "checkbox", "id": "show_social", "default": true, "label": "Show social icons" },
+    { "type": "checkbox", "id": "show_payment_icons", "default": true, "label": "Show payment icons" },
+    { "type": "checkbox", "id": "show_policy_links", "default": true, "label": "Show policy links" },
+    { "type": "header", "content": "Spacing" },
+    { "type": "range", "id": "padding_top", "min": 32, "max": 100, "step": 4, "unit": "px", "label": "Top padding", "default": 60 },
+    { "type": "range", "id": "padding_bottom", "min": 20, "max": 80, "step": 4, "unit": "px", "label": "Bottom padding", "default": 40 }
+  ]
+}
+{% endschema %}

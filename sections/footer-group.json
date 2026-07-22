@@ -1,0 +1,44 @@
+{
+  "type": "footer",
+  "name": "Footer group",
+  "sections": {
+    "footer": {
+      "type": "footer",
+      "blocks": {
+        "link-list-1": {
+          "type": "link_list",
+          "settings": {
+            "heading": "Shop",
+            "menu": "footer"
+          }
+        },
+        "link-list-2": {
+          "type": "link_list",
+          "settings": {
+            "heading": "Help",
+            "menu": ""
+          }
+        },
+        "text-1": {
+          "type": "text",
+          "settings": {
+            "heading": "About Aura",
+            "subtext": "<p>Considered essentials, made to last. Designed in-house and crafted responsibly.</p>"
+          }
+        }
+      },
+      "block_order": ["link-list-1", "link-list-2", "text-1"],
+      "settings": {
+        "color_scheme": "scheme-2",
+        "newsletter_enable": true,
+        "newsletter_heading": "Join the list",
+        "enable_follow_on_shop": false,
+        "show_social": true,
+        "show_payment_icons": true,
+        "padding_top": 60,
+        "padding_bottom": 40
+      }
+    }
+  },
+  "order": ["footer"]
+}

@@ -1,0 +1,56 @@
+{%- comment -%}
+  Renders a product/variant price with sale and unit-price handling.
+  Accepts:
+    product      {Object}  product or variant (required)
+    use_variant  {Boolean} use the selected/first available variant price
+    price_class  {String}  extra class for the wrapper
+    show_badges  {Boolean} render inline "Sale"/"Sold out" badges
+{%- endcomment -%}
+{%- liquid
+  if use_variant
+    assign target = product.selected_or_first_available_variant
+  else
+    assign target = product
+  endif
+
+  assign compare_at_price = target.compare_at_price
+  assign price = target.price | default: 0
+  assign available = target.available | default: false
+  assign money_price = price | money
+
+  if target == product and product.price_varies
+    assign money_price = 'products.product.price.from_price_html' | t: price: money_price
+  endif
+-%}
+<div class="price {{ price_class }}{% if compare_at_price > price %} price--on-sale{% endif %}{% unless available %} price--sold-out{% endunless %}">
+  <div class="price__container">
+    {%- if compare_at_price > price -%}
+      <span class="visually-hidden visually-hidden--inline">{{ 'products.product.price.sale_price' | t }}</span>
+      <span class="price-item price-item--sale">{{ money_price }}</span>
+      <span class="visually-hidden visually-hidden--inline">{{ 'products.product.price.regular_price' | t }}</span>
+      <s class="price-item price-item--regular">{{ compare_at_price | money }}</s>
+    {%- else -%}
+      <span class="visually-hidden visually-hidden--inline">{{ 'products.product.price.regular_price' | t }}</span>
+      <span class="price-item price-item--regular">{{ money_price }}</span>
+    {%- endif -%}
+  </div>
+
+  {%- if target.unit_price_measurement -%}
+    <div class="unit-price caption">
+      <span class="visually-hidden">{{ 'products.product.price.unit_price' | t }}</span>
+      {{ target.unit_price | money }}
+      <span aria-hidden="true">/</span>
+      <span class="visually-hidden">&nbsp;{{ 'general.accessibility.unit_price_separator' | t }}&nbsp;</span>
+      {%- if target.unit_price_measurement.reference_value != 1 -%}
+        {{- target.unit_price_measurement.reference_value -}}
+      {%- endif -%}
+      {{ target.unit_price_measurement.reference_unit }}
+    </div>
+  {%- endif -%}
+
+  {%- if show_badges -%}
+    {%- if compare_at_price > price and available -%}
+      <span class="price__badge-sale caption">{{ 'products.product.on_sale' | t }}</span>
+    {%- endif -%}
+  {%- endif -%}
+</div>

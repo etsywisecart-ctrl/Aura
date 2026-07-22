@@ -1,0 +1,60 @@
+{%- comment -%}
+  Renders an inline SVG icon.
+  Usage: {% render 'icon', icon: 'cart' %}
+  Icons: cart, search, hamburger, close, account, caret, plus, minus, arrow,
+         check, instagram, facebook, tiktok, twitter, youtube, pinterest
+{%- endcomment -%}
+{%- liquid
+  assign viewbox = '0 0 24 24'
+  case icon
+    when 'caret'
+      assign viewbox = '0 0 10 6'
+    when 'close'
+      assign viewbox = '0 0 18 18'
+  endcase
+-%}
+<svg class="icon icon-{{ icon }}" viewBox="{{ viewbox }}" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+  {%- case icon -%}
+    {%- when 'cart' -%}
+      <path d="M6 7h12l-1 12H7L6 7Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+      <path d="M9 7a3 3 0 0 1 6 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    {%- when 'search' -%}
+      <circle cx="11" cy="11" r="6" stroke="currentColor" stroke-width="1.5"/>
+      <path d="m20 20-4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    {%- when 'hamburger' -%}
+      <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    {%- when 'close' -%}
+      <path d="m3 3 12 12M15 3 3 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    {%- when 'account' -%}
+      <circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.5"/>
+      <path d="M5 20a7 7 0 0 1 14 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    {%- when 'caret' -%}
+      <path d="m1 1 4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    {%- when 'plus' -%}
+      <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    {%- when 'minus' -%}
+      <path d="M5 12h14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    {%- when 'arrow' -%}
+      <path d="M4 12h16m0 0-6-6m6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    {%- when 'check' -%}
+      <path d="m5 12 4 4 10-10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    {%- when 'instagram' -%}
+      <rect x="4" y="4" width="16" height="16" rx="4" stroke="currentColor" stroke-width="1.5"/>
+      <circle cx="12" cy="12" r="3.5" stroke="currentColor" stroke-width="1.5"/>
+      <circle cx="17" cy="7" r="1" fill="currentColor"/>
+    {%- when 'facebook' -%}
+      <path d="M14 8h2V5h-2a3 3 0 0 0-3 3v2H9v3h2v6h3v-6h2l1-3h-3V8a1 1 0 0 1 1-1Z" fill="currentColor"/>
+    {%- when 'tiktok' -%}
+      <path d="M14 4v9.5a3.5 3.5 0 1 1-3-3.46V13a1.5 1.5 0 1 0 1 1.42V4h2Zm0 0a4 4 0 0 0 4 4V6a2 2 0 0 1-2-2h-2Z" fill="currentColor"/>
+    {%- when 'twitter' -%}
+      <path d="M4 4h4l4.5 6L17 4h3l-6 7.5L21 20h-4l-4.8-6.3L7 20H4l6.3-7.8L4 4Z" fill="currentColor"/>
+    {%- when 'youtube' -%}
+      <rect x="3" y="6" width="18" height="12" rx="3" stroke="currentColor" stroke-width="1.5"/>
+      <path d="m10 9 5 3-5 3V9Z" fill="currentColor"/>
+    {%- when 'pinterest' -%}
+      <circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.5"/>
+      <path d="M12 7c-2.2 0-3.5 1.4-3.5 3.2 0 .8.4 1.7 1.1 2 .1 0 .2 0 .2-.1l.2-.8c0-.1 0-.2-.1-.3-.3-.3-.4-.7-.4-1.1 0-1.4 1-2.5 2.7-2.5 1.5 0 2.3.9 2.3 2.1 0 1.6-.7 2.9-1.7 2.9-.6 0-1-.5-.9-1.1.2-.7.5-1.4.5-1.9 0-.4-.2-.8-.7-.8-.6 0-1 .6-1 1.4 0 .5.2.8.2.8l-.7 3c-.2.9-.1 2 0 2.1 0 .1.1.1.2 0 .1-.1.8-1 1-1.9l.4-1.4c.2.4.8.7 1.4.7 1.8 0 3.1-1.7 3.1-3.9 0-1.7-1.4-3.3-3.7-3.3Z" fill="currentColor"/>
+    {%- else -%}
+      <circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="1.5"/>
+  {%- endcase -%}
+</svg>

@@ -1,0 +1,11 @@
+{%- comment -%}
+  Exposes the cart bubble to the Section Rendering API so the header count can
+  be refreshed after AJAX cart changes.
+{%- endcomment -%}
+{% render 'cart-icon-bubble' %}
+
+{% schema %}
+{
+  "name": "Cart bubble"
+}
+{% endschema %}

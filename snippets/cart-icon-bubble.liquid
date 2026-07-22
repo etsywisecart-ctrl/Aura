@@ -1,0 +1,9 @@
+{%- comment -%}
+  Renders the cart icon with an item-count bubble. Kept in sync via the
+  Section Rendering API after AJAX cart updates.
+{%- endcomment -%}
+{% render 'icon', icon: 'cart' %}
+{%- if cart != empty and cart.item_count > 0 -%}
+  <span class="cart-count-bubble" aria-hidden="true">{{ cart.item_count }}</span>
+  <span class="visually-hidden">{{ 'sections.header.cart_count' | t: count: cart.item_count }}</span>
+{%- endif -%}

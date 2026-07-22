@@ -1,0 +1,238 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "Aura",
+    "theme_version": "1.0.0",
+    "theme_author": "Aura",
+    "theme_documentation_url": "https://help.shopify.com/manual/online-store/themes",
+    "theme_support_url": "https://support.shopify.com/"
+  },
+  {
+    "name": "Colors",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Aura is near-monochrome by design — a calm ground, ink text, and one restrained champagne accent. Keep schemes quiet so product imagery leads."
+      },
+      {
+        "type": "color_scheme_group",
+        "id": "color_schemes",
+        "definition": [
+          {
+            "type": "color",
+            "id": "background",
+            "label": "Background",
+            "default": "#F5F3EE"
+          },
+          {
+            "type": "color_background",
+            "id": "background_gradient",
+            "label": "Background gradient"
+          },
+          {
+            "type": "color",
+            "id": "text",
+            "label": "Text",
+            "default": "#17181B"
+          },
+          {
+            "type": "color",
+            "id": "button",
+            "label": "Solid button background",
+            "default": "#17181B"
+          },
+          {
+            "type": "color",
+            "id": "button_label",
+            "label": "Solid button label",
+            "default": "#F5F3EE"
+          },
+          {
+            "type": "color",
+            "id": "secondary_button_label",
+            "label": "Outline button",
+            "default": "#17181B"
+          },
+          {
+            "type": "color",
+            "id": "shadow",
+            "label": "Shadow",
+            "default": "#17181B"
+          }
+        ],
+        "role": {
+          "text": "text",
+          "background": {
+            "solid": "background",
+            "gradient": "background_gradient"
+          },
+          "links": "text",
+          "icons": "text",
+          "primary_button": "button",
+          "on_primary_button": "button_label",
+          "primary_button_border": "button",
+          "secondary_button": "background",
+          "on_secondary_button": "secondary_button_label",
+          "secondary_button_border": "secondary_button_label",
+          "shadow": "shadow"
+        }
+      }
+    ]
+  },
+  {
+    "name": "Typography",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Aura uses the system typeface for a fast, native, flagship feel — the same voice as the Apple store on Apple devices. Type roles, scale, and weights are fixed by the design language for consistency."
+      }
+    ]
+  },
+  {
+    "name": "Layout",
+    "settings": [
+      {
+        "type": "range",
+        "id": "page_width",
+        "min": 1200,
+        "max": 1600,
+        "step": 20,
+        "default": 1360,
+        "unit": "px",
+        "label": "Page width"
+      },
+      {
+        "type": "range",
+        "id": "spacing_sections",
+        "min": 0,
+        "max": 80,
+        "step": 4,
+        "unit": "px",
+        "label": "Space between template sections",
+        "default": 0
+      },
+      {
+        "type": "header",
+        "content": "Product grid"
+      },
+      {
+        "type": "range",
+        "id": "spacing_grid_horizontal",
+        "min": 4,
+        "max": 40,
+        "step": 4,
+        "default": 16,
+        "unit": "px",
+        "label": "Horizontal space"
+      },
+      {
+        "type": "range",
+        "id": "spacing_grid_vertical",
+        "min": 4,
+        "max": 40,
+        "step": 4,
+        "default": 24,
+        "unit": "px",
+        "label": "Vertical space"
+      }
+    ]
+  },
+  {
+    "name": "Product cards",
+    "settings": [
+      {
+        "type": "select",
+        "id": "card_style",
+        "options": [
+          { "value": "standard", "label": "Standard" },
+          { "value": "card", "label": "Card" }
+        ],
+        "default": "standard",
+        "label": "Style",
+        "info": "Standard keeps cards borderless and quiet — recommended for the Aura look."
+      },
+      {
+        "type": "select",
+        "id": "card_image_ratio",
+        "options": [
+          { "value": "adapt", "label": "Adapt to image" },
+          { "value": "portrait", "label": "Portrait" },
+          { "value": "square", "label": "Square" }
+        ],
+        "default": "portrait",
+        "label": "Image ratio"
+      },
+      {
+        "type": "range",
+        "id": "card_corner_radius",
+        "min": 0,
+        "max": 28,
+        "step": 2,
+        "unit": "px",
+        "label": "Corner radius",
+        "default": 16
+      },
+      {
+        "type": "checkbox",
+        "id": "card_show_secondary_image",
+        "label": "Reveal second image on hover",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "card_show_vendor",
+        "label": "Show vendor",
+        "default": false
+      }
+    ]
+  },
+  {
+    "name": "Cart",
+    "settings": [
+      {
+        "type": "select",
+        "id": "cart_type",
+        "options": [
+          { "value": "drawer", "label": "Drawer" },
+          { "value": "page", "label": "Page" },
+          { "value": "notification", "label": "Popup notification" }
+        ],
+        "default": "drawer",
+        "label": "Cart type"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_cart_note",
+        "label": "Enable cart note",
+        "default": false
+      }
+    ]
+  },
+  {
+    "name": "Social media",
+    "settings": [
+      { "type": "header", "content": "Social accounts" },
+      { "type": "text", "id": "social_instagram_link", "label": "Instagram", "info": "https://instagram.com/shopify" },
+      { "type": "text", "id": "social_facebook_link", "label": "Facebook", "info": "https://facebook.com/shopify" },
+      { "type": "text", "id": "social_tiktok_link", "label": "TikTok", "info": "https://tiktok.com/@shopify" },
+      { "type": "text", "id": "social_twitter_link", "label": "X", "info": "https://x.com/shopify" },
+      { "type": "text", "id": "social_youtube_link", "label": "YouTube", "info": "https://youtube.com/shopify" },
+      { "type": "text", "id": "social_pinterest_link", "label": "Pinterest", "info": "https://pinterest.com/shopify" }
+    ]
+  },
+  {
+    "name": "Brand information",
+    "settings": [
+      { "type": "paragraph", "content": "Add a brand to your store's footer, social sharing, and search results." },
+      { "type": "image_picker", "id": "brand_image", "label": "Logo" },
+      { "type": "textarea", "id": "brand_headline", "label": "Headline" },
+      { "type": "richtext", "id": "brand_description", "label": "Description" }
+    ]
+  },
+  {
+    "name": "Favicon",
+    "settings": [
+      { "type": "image_picker", "id": "favicon", "label": "Favicon image", "info": "Will be scaled down to 32 x 32px" }
+    ]
+  }
+]

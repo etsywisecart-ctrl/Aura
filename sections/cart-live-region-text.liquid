@@ -1,0 +1,12 @@
+{%- comment -%}
+  Screen-reader live region announcing the updated cart count.
+{%- endcomment -%}
+<p class="visually-hidden" role="status">
+  {{ 'sections.header.cart_count' | t: count: cart.item_count }}
+</p>
+
+{% schema %}
+{
+  "name": "Cart live region"
+}
+{% endschema %}

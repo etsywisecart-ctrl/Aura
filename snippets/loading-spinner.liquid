@@ -1,0 +1,7 @@
+{%- comment -%}
+  Renders a loading spinner. Add class "hidden" to keep it hidden until needed.
+{%- endcomment -%}
+<div class="loading-spinner {{ class }} hidden" role="status">
+  <div class="spinner" aria-hidden="true"></div>
+  <span class="visually-hidden">{{ 'accessibility.loading' | t }}</span>
+</div>
