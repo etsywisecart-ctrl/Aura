@@ -1,0 +1,59 @@
+{%- comment -%}
+  Renders a horizontal, scrollable collection/category navigation.
+  Accepts:
+    menu     {linklist}  optional — a menu of collection links; falls back to all collections
+    heading  {String}
+    limit    {Number}
+    current  {Object}    the active collection (to highlight)
+{%- endcomment -%}
+{%- liquid
+  assign nav_limit = limit | default: 14
+-%}
+<nav class="collections-nav" data-scroller-wrap aria-label="{{ heading | default: 'Collections' | escape }}">
+  <div class="collections-nav__head">
+    {%- if heading != blank -%}<p class="collections-nav__title">{{ heading | escape }}</p>{%- endif -%}
+    <div class="collections-nav__arrows">
+      <button type="button" class="collections-nav__arrow collections-nav__arrow--prev" data-scroll="prev" aria-label="{{ 'general.pagination.previous' | t }}">{% render 'icon', icon: 'arrow' %}</button>
+      <button type="button" class="collections-nav__arrow" data-scroll="next" aria-label="{{ 'general.pagination.next' | t }}">{% render 'icon', icon: 'arrow' %}</button>
+    </div>
+  </div>
+
+  <ul class="collections-nav__scroll" data-scroller role="list">
+    {%- if menu != blank and menu.links.size > 0 -%}
+      {%- for link in menu.links -%}
+        {%- assign coll = link.object -%}
+        <li class="collections-nav__cell">
+          <a class="collections-nav__item{% if current and coll.id == current.id %} is-active{% endif %}" href="{{ link.url }}">
+            <span class="collections-nav__thumb">
+              {%- if coll.image -%}
+                <img src="{{ coll.image | image_url: width: 240 }}" alt="{{ link.title | escape }}" width="120" height="120" loading="lazy">
+              {%- elsif coll.products.first.featured_image -%}
+                <img src="{{ coll.products.first.featured_image | image_url: width: 240 }}" alt="{{ link.title | escape }}" width="120" height="120" loading="lazy">
+              {%- else -%}
+                {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg' }}
+              {%- endif -%}
+            </span>
+            <span class="collections-nav__label">{{ link.title | escape }}</span>
+          </a>
+        </li>
+      {%- endfor -%}
+    {%- else -%}
+      {%- for coll in collections limit: nav_limit -%}
+        <li class="collections-nav__cell">
+          <a class="collections-nav__item{% if current and coll.id == current.id %} is-active{% endif %}" href="{{ coll.url }}">
+            <span class="collections-nav__thumb">
+              {%- if coll.image -%}
+                <img src="{{ coll.image | image_url: width: 240 }}" alt="{{ coll.title | escape }}" width="120" height="120" loading="lazy">
+              {%- elsif coll.products.first.featured_image -%}
+                <img src="{{ coll.products.first.featured_image | image_url: width: 240 }}" alt="{{ coll.title | escape }}" width="120" height="120" loading="lazy">
+              {%- else -%}
+                {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg' }}
+              {%- endif -%}
+            </span>
+            <span class="collections-nav__label">{{ coll.title | escape }}</span>
+          </a>
+        </li>
+      {%- endfor -%}
+    {%- endif -%}
+  </ul>
+</nav>

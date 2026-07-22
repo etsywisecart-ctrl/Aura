@@ -579,9 +579,52 @@
     });
   }
 
+  /* Wishlist — client-side, persisted in localStorage */
+  const WISHLIST_KEY = 'aura-wishlist';
+  function getWishlist() {
+    try { return JSON.parse(localStorage.getItem(WISHLIST_KEY)) || []; } catch (e) { return []; }
+  }
+  function setWishlist(list) {
+    try { localStorage.setItem(WISHLIST_KEY, JSON.stringify(list)); } catch (e) {}
+  }
+  function initWishlist() {
+    const list = getWishlist();
+    document.querySelectorAll('[data-wishlist]').forEach((btn) => {
+      const active = list.indexOf(btn.getAttribute('data-product-id')) > -1;
+      btn.classList.toggle('is-active', active);
+      btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+    });
+  }
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-wishlist]');
+    if (!btn) return;
+    e.preventDefault();
+    const id = btn.getAttribute('data-product-id');
+    const list = getWishlist();
+    const i = list.indexOf(id);
+    const active = i === -1;
+    if (active) list.push(id); else list.splice(i, 1);
+    setWishlist(list);
+    btn.classList.toggle('is-active', active);
+    btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+    publish('wishlist:change', { id: id, active: active });
+  });
+
+  /* Horizontal scroller arrows — [data-scroll="prev|next"] targets [data-scroller] */
+  document.addEventListener('click', (e) => {
+    const arrow = e.target.closest('[data-scroll]');
+    if (!arrow) return;
+    const wrap = arrow.closest('[data-scroller-wrap]');
+    const scroller = wrap && wrap.querySelector('[data-scroller]');
+    if (!scroller) return;
+    const amount = Math.round(scroller.clientWidth * 0.8);
+    scroller.scrollBy({ left: arrow.getAttribute('data-scroll') === 'next' ? amount : -amount, behavior: 'smooth' });
+  });
+
   function init() {
     initScrollAnimations();
     initImageFade();
+    initWishlist();
   }
 
   if (document.readyState !== 'loading') {
