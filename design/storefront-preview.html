@@ -1,0 +1,553 @@
+<title>Aura — Storefront Preview</title>
+
+<style>
+  /* ===== Aura tokens (mirrors assets/base.css) ===== */
+  *,*::before,*::after{box-sizing:border-box}
+  :root{
+    --bg:#F5F3EE; --bg-2:#ECE7DE; --surface:#FBFAF7; --ink:#17181B; --ink-2:#55575E; --ink-3:#8B8D94;
+    --line:rgba(23,24,27,.10); --line-2:rgba(23,24,27,.16);
+    --accent:#C2A268; --accent-ink:#9A7B44; --halo:rgba(194,162,104,.22); --halo-soft:rgba(194,162,104,.10);
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --serif:"Hoefler Text","Iowan Old Style","Palatino Linotype",Palatino,Georgia,ui-serif,serif;
+    --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+    --r-sm:10px; --r-md:16px; --r-lg:24px; --r-pill:999px;
+    --shadow-md:0 10px 34px rgba(23,24,27,.07); --shadow-lg:0 30px 70px rgba(23,24,27,.12);
+    --t-quick:180ms; --t-base:280ms; --t-slow:480ms; --t-ambient:800ms;
+    --ease:cubic-bezier(.22,1,.36,1); --ease-move:cubic-bezier(.4,0,.2,1);
+    --page:1360px; --pad:clamp(20px,4vw,56px);
+    color-scheme:light;
+  }
+  @media (prefers-color-scheme:dark){:root{
+    --bg:#0D0E11; --bg-2:#131418; --surface:#16171B; --ink:#ECEAE3; --ink-2:#A2A4AB; --ink-3:#6E7077;
+    --line:rgba(236,234,227,.12); --line-2:rgba(236,234,227,.20);
+    --accent:#CBAE78; --accent-ink:#D8BE8A; --halo:rgba(203,174,120,.20); --halo-soft:rgba(203,174,120,.08);
+    --shadow-md:0 10px 34px rgba(0,0,0,.45); --shadow-lg:0 30px 70px rgba(0,0,0,.55); color-scheme:dark;
+  }}
+  :root[data-theme="light"]{--bg:#F5F3EE;--bg-2:#ECE7DE;--surface:#FBFAF7;--ink:#17181B;--ink-2:#55575E;--ink-3:#8B8D94;--line:rgba(23,24,27,.10);--line-2:rgba(23,24,27,.16);--accent:#C2A268;--accent-ink:#9A7B44;--halo:rgba(194,162,104,.22);--halo-soft:rgba(194,162,104,.10);--shadow-md:0 10px 34px rgba(23,24,27,.07);--shadow-lg:0 30px 70px rgba(23,24,27,.12);color-scheme:light}
+  :root[data-theme="dark"]{--bg:#0D0E11;--bg-2:#131418;--surface:#16171B;--ink:#ECEAE3;--ink-2:#A2A4AB;--ink-3:#6E7077;--line:rgba(236,234,227,.12);--line-2:rgba(236,234,227,.20);--accent:#CBAE78;--accent-ink:#D8BE8A;--halo:rgba(203,174,120,.20);--halo-soft:rgba(203,174,120,.08);--shadow-md:0 10px 34px rgba(0,0,0,.45);--shadow-lg:0 30px 70px rgba(0,0,0,.55);color-scheme:dark}
+
+  html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+  body{margin:0;font-family:var(--sans);font-size:16px;line-height:1.65;color:var(--ink);background:var(--bg);
+    -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;transition:background var(--t-base) var(--ease-move),color var(--t-base) var(--ease-move)}
+  a{color:inherit;text-decoration:none}
+  img,svg{display:block;max-width:100%}
+  button{font-family:inherit;cursor:pointer;color:inherit}
+  ::selection{background:var(--halo)}
+
+  .wrap{max-width:var(--page);margin:0 auto;padding:0 var(--pad)}
+  h1,h2,h3{margin:0;font-weight:400;letter-spacing:-.02em;line-height:1.1;text-wrap:balance}
+  .display{font-weight:300;letter-spacing:-.03em;line-height:1.02;font-size:clamp(3.2rem,7vw,6rem)}
+  .h1{font-size:clamp(2.4rem,4.4vw,3.6rem);font-weight:350;letter-spacing:-.022em}
+  .h2{font-size:clamp(1.9rem,3vw,2.6rem);font-weight:400}
+  .lead{font-size:clamp(1.05rem,1.7vw,1.28rem);color:var(--ink-2);font-weight:380;line-height:1.55;max-width:60ch}
+  .eyebrow{display:inline-flex;align-items:center;gap:.7em;font-size:.72rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-2)}
+  .eyebrow::before{content:"";width:22px;height:1px;background:var(--accent)}
+  .eyebrow.c{justify-content:center}
+  .serif{font-family:var(--serif)}
+  .mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+  .muted{color:var(--ink-2)}
+
+  /* ===== Announcement + header ===== */
+  .announce{background:#0D0E11;color:#ECEAE3;text-align:center;font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;padding:10px}
+  :root[data-theme="light"] .announce{background:#0D0E11;color:#ECEAE3}
+  .site-header{position:sticky;top:0;z-index:40;background:color-mix(in srgb,var(--bg) 82%,transparent);
+    backdrop-filter:saturate(160%) blur(18px);-webkit-backdrop-filter:saturate(160%) blur(18px);
+    border-bottom:1px solid var(--line);transition:transform var(--t-base) var(--ease),box-shadow var(--t-base)}
+  .site-header.hide{transform:translateY(-100%)}
+  .site-header.scrolled{box-shadow:0 2px 20px rgba(0,0,0,.05)}
+  .hdr{display:flex;align-items:center;gap:24px;height:68px}
+  .logo{font-weight:500;letter-spacing:.28em;text-transform:uppercase;font-size:1.15rem}
+  .nav{display:none;gap:30px;margin-left:28px}
+  @media(min-width:900px){.nav{display:flex}}
+  .nav a{position:relative;font-size:.9rem;padding:6px 0;color:var(--ink)}
+  .nav a::after{content:"";position:absolute;left:0;bottom:2px;width:100%;height:1px;background:var(--accent);transform:scaleX(0);transform-origin:left;transition:transform var(--t-base) var(--ease)}
+  .nav a:hover::after,.nav a.on::after{transform:scaleX(1)}
+  .hdr-icons{margin-left:auto;display:flex;align-items:center;gap:2px}
+  .icn{width:44px;height:44px;display:inline-flex;align-items:center;justify-content:center;border:0;background:transparent;border-radius:50%;transition:background var(--t-quick);position:relative}
+  .icn:hover{background:rgba(128,128,128,.1)}
+  .icn svg{width:21px;height:21px}
+  .bubble{position:absolute;top:6px;right:6px;min-width:18px;height:18px;padding:0 5px;font-size:10px;font-weight:600;display:flex;align-items:center;justify-content:center;background:var(--accent);color:#fff;border-radius:999px;font-variant-numeric:tabular-nums}
+  :root[data-theme="dark"] .bubble{color:#17181B}
+
+  /* ===== Buttons ===== */
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:50px;padding:0 30px;
+    font-size:.86rem;font-weight:550;letter-spacing:.01em;border-radius:var(--r-pill);border:1px solid var(--ink);
+    background:var(--ink);color:var(--bg);transition:transform var(--t-quick) var(--ease),opacity var(--t-quick),background var(--t-base),color var(--t-base)}
+  .btn:hover{transform:translateY(-2px)}
+  .btn.sec{background:transparent;color:var(--ink);border-color:var(--line-2)}
+  .btn.sec:hover{border-color:var(--ink)}
+  .btn.full{display:flex;width:100%}
+  .btn.on-dark{background:var(--accent);border-color:var(--accent);color:#17181B}
+  .ghost{display:inline-flex;align-items:center;gap:7px;background:none;border:0;padding:4px 0;font-size:.85rem;font-weight:500;color:var(--ink)}
+  .ghost svg{width:15px;transition:transform var(--t-base) var(--ease)}
+  .ghost:hover svg{transform:translateX(4px)}
+
+  /* ===== Product surface (placeholder imagery) ===== */
+  .surface{position:relative;overflow:hidden;border-radius:var(--r-md);background:
+     radial-gradient(120% 80% at 72% 18%,var(--halo) 0%,transparent 52%),
+     linear-gradient(160deg,var(--surface),var(--bg-2));isolation:isolate}
+  .surface::after{content:"";position:absolute;left:50%;bottom:8%;width:52%;height:5%;transform:translateX(-50%);
+    background:radial-gradient(closest-side,rgba(0,0,0,.14),transparent);filter:blur(2px)}
+  .surface svg.glyph{position:absolute;inset:0;margin:auto;width:44%;height:44%;color:var(--ink);opacity:.16;stroke-width:1}
+  .surface.tone-b{background:radial-gradient(120% 80% at 30% 20%,var(--halo) 0%,transparent 52%),linear-gradient(200deg,var(--bg-2),var(--surface))}
+  .surface.tone-c{background:radial-gradient(130% 90% at 60% 80%,var(--halo-soft) 0%,transparent 55%),linear-gradient(140deg,var(--surface),var(--bg-2))}
+  .ratio-portrait{aspect-ratio:4/5}
+  .ratio-tall{aspect-ratio:3/4}
+  .ratio-wide{aspect-ratio:16/10}
+  .ratio-sq{aspect-ratio:1}
+
+  /* ===== Sections ===== */
+  section{position:relative}
+  .sec{padding:clamp(56px,9vh,110px) 0}
+  .sec-head{display:flex;align-items:baseline;justify-content:space-between;gap:24px;margin-bottom:clamp(28px,4vw,44px);flex-wrap:wrap}
+  .sec-head.c{flex-direction:column;align-items:center;text-align:center}
+  .glow{position:absolute;pointer-events:none;width:60vw;height:60vw;max-width:760px;max-height:760px;
+    background:radial-gradient(circle at 50% 50%,var(--halo) 0%,var(--halo-soft) 34%,transparent 66%);filter:blur(8px);z-index:0}
+
+  /* Hero */
+  .hero{position:relative;min-height:86vh;display:flex;align-items:center;overflow:hidden;background:linear-gradient(180deg,var(--bg),var(--bg-2))}
+  .hero .glow{top:-16%;right:-8%}
+  .hero-inner{position:relative;z-index:2;max-width:640px;display:flex;flex-direction:column;gap:22px}
+  .hero .btns{display:flex;gap:12px;flex-wrap:wrap;margin-top:12px}
+
+  /* Product grid */
+  .pgrid{display:grid;gap:16px 20px;grid-template-columns:repeat(2,1fr)}
+  @media(min-width:760px){.pgrid{grid-template-columns:repeat(4,1fr)}}
+  .card{display:flex;flex-direction:column;cursor:pointer}
+  .card .surface{margin-bottom:15px;transition:transform var(--t-ambient) var(--ease)}
+  .card:hover .surface{transform:scale(1.02)}
+  .card .badge{position:absolute;top:12px;left:12px;z-index:3;background:var(--accent);color:#fff;font-size:.66rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:5px 11px;border-radius:999px}
+  :root[data-theme="dark"] .card .badge{color:#17181B}
+  .card h3{font-size:1rem;font-weight:450;letter-spacing:0;margin-bottom:4px}
+  .card .vendor{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin-bottom:6px}
+  .price{font-size:.95rem;font-variant-numeric:tabular-nums}
+  .price .was{text-decoration:line-through;opacity:.5;margin-right:8px}
+  .price .sale{color:var(--accent-ink)}
+
+  /* Editorial */
+  .rich{max-width:720px;margin:0 auto;text-align:center;display:flex;flex-direction:column;gap:20px;align-items:center}
+  .iwt{display:grid;gap:clamp(28px,5vw,64px);align-items:center}
+  @media(min-width:760px){.iwt{grid-template-columns:1fr 1fr}}
+  .iwt-txt{display:flex;flex-direction:column;gap:16px;align-items:flex-start}
+  .clist{display:grid;gap:20px;grid-template-columns:1fr}
+  @media(min-width:760px){.clist{grid-template-columns:repeat(3,1fr)}}
+  .ctile{position:relative;cursor:pointer}
+  .ctile .surface{margin-bottom:14px}
+  .ctile h3{font-size:1.15rem;font-weight:450;display:flex;align-items:center;gap:8px}
+  .ctile h3 svg{width:15px;opacity:0;transform:translateX(-5px);transition:all var(--t-base) var(--ease)}
+  .ctile:hover h3 svg{opacity:1;transform:none}
+  .mcol{display:grid;gap:32px;grid-template-columns:1fr;text-align:center}
+  @media(min-width:760px){.mcol{grid-template-columns:repeat(3,1fr)}}
+  .mcol .it{display:flex;flex-direction:column;align-items:center;gap:12px}
+  .mcol .it svg{width:40px;height:40px;color:var(--accent-ink);stroke-width:1.4}
+  .mcol h3{font-size:1.05rem;font-weight:500}
+
+  /* Newsletter */
+  .news{position:relative;overflow:hidden;background:linear-gradient(180deg,var(--bg-2),var(--bg));text-align:center}
+  .news .glow{left:50%;top:50%;transform:translate(-50%,-50%)}
+  .news-in{position:relative;z-index:2;max-width:560px;margin:0 auto;display:flex;flex-direction:column;gap:18px;align-items:center}
+  .news form{display:flex;gap:8px;width:100%;max-width:440px}
+  @media(max-width:560px){.news form{flex-direction:column}}
+  input[type=email],input[type=text]{flex:1;min-height:50px;padding:13px 18px;font-family:inherit;font-size:.95rem;color:var(--ink);
+    background:transparent;border:1px solid var(--line-2);border-radius:var(--r-pill);transition:border-color var(--t-quick),box-shadow var(--t-quick)}
+  input:focus{outline:0;border-color:var(--accent);box-shadow:0 0 0 3px var(--halo-soft)}
+  input::placeholder{color:var(--ink-3)}
+
+  /* Footer */
+  footer.ft{background:var(--bg-2);border-top:1px solid var(--line);padding:60px 0 36px}
+  .ft-top{display:grid;gap:40px;grid-template-columns:1fr;padding-bottom:40px}
+  @media(min-width:760px){.ft-top{grid-template-columns:1.5fr 1fr 1fr 1fr}}
+  .ft h4{font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);margin-bottom:16px;font-weight:600}
+  .ft-links a{display:block;padding:5px 0;font-size:.9rem;color:var(--ink-2)}
+  .ft-links a:hover{color:var(--ink)}
+  .ft-brand .logo{font-size:1.3rem;margin-bottom:14px}
+  .ft-bottom{display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;align-items:center;padding-top:28px;border-top:1px solid var(--line);font-size:.8rem;color:var(--ink-3)}
+  .soc{display:flex;gap:4px}
+  .soc a{width:38px;height:38px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%}
+  .soc a:hover{background:rgba(128,128,128,.1)}
+  .soc svg{width:18px}
+
+  /* ===== Product page ===== */
+  .pdp{display:grid;gap:40px;padding-top:40px}
+  @media(min-width:960px){.pdp{grid-template-columns:1.08fr .92fr;gap:64px;align-items:start}}
+  .pdp-media{display:flex;flex-direction:column;gap:14px}
+  .pdp-info{display:flex;flex-direction:column}
+  @media(min-width:960px){.pdp-info{position:sticky;top:96px}}
+  .pdp-info .price{font-size:1.35rem;margin:6px 0 26px}
+  .opt{margin-bottom:22px}
+  .opt .lbl{font-size:.78rem;font-weight:550;letter-spacing:.02em;margin-bottom:10px;display:block}
+  .opt .lbl .sel{color:var(--ink-3);font-weight:400;margin-left:6px}
+  .chips{display:flex;gap:8px;flex-wrap:wrap}
+  .chip{min-width:48px;min-height:48px;padding:0 16px;display:inline-flex;align-items:center;justify-content:center;font-size:.9rem;
+    border:1px solid var(--line-2);border-radius:var(--r-pill);background:transparent;transition:all var(--t-quick)}
+  .chip:hover{border-color:var(--ink)}
+  .chip.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+  .qrow{display:flex;gap:12px;align-items:center;margin-bottom:16px}
+  .qty{display:inline-flex;align-items:center;border:1px solid var(--line-2);border-radius:var(--r-pill)}
+  .qty button{width:44px;height:44px;background:none;border:0;font-size:1.1rem}
+  .qty button:hover{opacity:.55}
+  .qty input{width:42px;text-align:center;border:0;background:none;font-variant-numeric:tabular-nums;font-size:1rem;color:var(--ink)}
+  .qty input:focus{outline:0}
+  .acc{border-top:1px solid var(--line)}
+  .acc:last-of-type{border-bottom:1px solid var(--line)}
+  .acc summary{display:flex;align-items:center;justify-content:space-between;padding:18px 0;font-size:.95rem;font-weight:500;cursor:pointer;list-style:none}
+  .acc summary::-webkit-details-marker{display:none}
+  .acc summary svg{width:12px;transition:transform var(--t-base) var(--ease)}
+  .acc[open] summary svg{transform:rotate(180deg)}
+  .acc .body{padding-bottom:18px;color:var(--ink-2);font-size:.95rem}
+  .pdp-vendor{margin-bottom:12px}
+  .pdp-title{margin-bottom:14px}
+
+  /* ===== Cart drawer ===== */
+  .scrim{position:fixed;inset:0;z-index:90;background:rgba(0,0,0,.36);opacity:0;visibility:hidden;transition:opacity var(--t-base);backdrop-filter:blur(2px)}
+  .scrim.open{opacity:1;visibility:visible}
+  .cart{position:fixed;top:0;right:0;bottom:0;width:min(440px,100%);z-index:91;background:var(--bg);display:flex;flex-direction:column;
+    transform:translateX(100%);transition:transform var(--t-base) var(--ease);box-shadow:var(--shadow-lg)}
+  .cart.open{transform:none}
+  .cart-hd{display:flex;align-items:center;justify-content:space-between;padding:22px 24px;border-bottom:1px solid var(--line)}
+  .cart-hd h3{font-size:1.05rem;font-weight:550;letter-spacing:.02em}
+  .cart-body{flex:1;overflow-y:auto;padding:12px 24px}
+  .cart-empty{text-align:center;padding:60px 0;color:var(--ink-2)}
+  .li{display:grid;grid-template-columns:64px 1fr auto;gap:16px;padding:18px 0;border-bottom:1px solid var(--line)}
+  .li .surface{border-radius:var(--r-sm)}
+  .li .nm{font-size:.95rem;margin-bottom:3px}
+  .li .op{font-size:.8rem;color:var(--ink-3)}
+  .li .rm{font-size:.8rem;color:var(--ink-3);text-decoration:underline;text-underline-offset:3px;background:none;border:0;padding:0;margin-top:8px}
+  .li .lp{font-size:.9rem;font-variant-numeric:tabular-nums}
+  .cart-ft{padding:22px 24px;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:14px}
+  .totals{display:flex;justify-content:space-between;align-items:baseline;font-size:1.05rem}
+  .totals b{font-weight:600;font-variant-numeric:tabular-nums}
+  .tax{font-size:.8rem;color:var(--ink-3)}
+
+  /* toolbar */
+  .toolbar{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);z-index:80;display:flex;gap:6px;align-items:center;
+    background:color-mix(in srgb,var(--bg) 80%,transparent);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+    border:1px solid var(--line-2);border-radius:var(--r-pill);padding:6px;box-shadow:var(--shadow-md)}
+  .toolbar button{border:0;background:transparent;color:var(--ink-2);font-size:.8rem;padding:8px 16px;border-radius:var(--r-pill);transition:all var(--t-quick)}
+  .toolbar button.on{background:var(--ink);color:var(--bg)}
+  .toolbar .div{width:1px;height:20px;background:var(--line-2)}
+
+  /* reveal */
+  .rv{opacity:0;transform:translateY(18px)}
+  .rv.in{opacity:1;transform:none;transition:opacity var(--t-slow) var(--ease),transform var(--t-slow) var(--ease)}
+  .view{display:none}
+  .view.on{display:block}
+  @media(prefers-reduced-motion:reduce){*{animation:none!important;transition-duration:.01ms!important}.rv{opacity:1;transform:none}}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:3px}
+
+  /* toast */
+  .toast{position:fixed;top:80px;left:50%;transform:translate(-50%,-12px);z-index:95;background:var(--ink);color:var(--bg);
+    padding:11px 20px;border-radius:var(--r-pill);font-size:.85rem;opacity:0;visibility:hidden;transition:all var(--t-base) var(--ease);display:flex;gap:8px;align-items:center}
+  .toast.show{opacity:1;visibility:visible;transform:translate(-50%,0)}
+  .toast svg{width:15px}
+</style>
+
+<!-- glyph defs -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <g id="g-jacket"><path d="M30 14 44 8h12l14 6-8 12-6-3v55H44V29l-6 3z" fill="none" stroke="currentColor" stroke-linejoin="round"/><path d="M50 8v10" stroke="currentColor" fill="none"/></g>
+  <g id="g-knit"><path d="M28 20 44 12h12l16 8-7 12-5-3v44H40V29l-5 3z" fill="none" stroke="currentColor" stroke-linejoin="round"/></g>
+  <g id="g-bag"><path d="M28 30h44l-4 44H32z" fill="none" stroke="currentColor" stroke-linejoin="round"/><path d="M40 34v-6a10 10 0 0 1 20 0v6" fill="none" stroke="currentColor"/></g>
+  <g id="g-watch"><circle cx="50" cy="50" r="20" fill="none" stroke="currentColor"/><path d="M50 40v10l7 4M42 30l3-14h10l3 14M42 70l3 14h10l3-14" fill="none" stroke="currentColor" stroke-linejoin="round"/></g>
+</defs></svg>
+
+<div id="app">
+  <div class="announce">Complimentary carbon-neutral shipping over $150</div>
+
+  <header class="site-header" id="hdr">
+    <div class="wrap hdr">
+      <a class="logo" href="#" data-nav="home">Aura</a>
+      <nav class="nav">
+        <a href="#" data-nav="home" class="on">Home</a>
+        <a href="#" data-nav="product">Shop</a>
+        <a href="#">Collections</a>
+        <a href="#">Journal</a>
+      </nav>
+      <div class="hdr-icons">
+        <button class="icn" aria-label="Search"><svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="6" stroke="currentColor" stroke-width="1.5"/><path d="m20 20-4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+        <button class="icn" aria-label="Account"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.5"/><path d="M5 20a7 7 0 0 1 14 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+        <button class="icn" aria-label="Cart" id="cartBtn"><svg viewBox="0 0 24 24" fill="none"><path d="M6 7h12l-1 12H7L6 7Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M9 7a3 3 0 0 1 6 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span class="bubble" id="bubble" style="display:none">0</span></button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===================== HOME ===================== -->
+  <main class="view on" id="view-home">
+    <section class="hero">
+      <div class="glow"></div>
+      <div class="wrap hero-inner rv">
+        <span class="eyebrow">New arrival</span>
+        <h1 class="display">The essential<br>object.</h1>
+        <p class="lead">Considered essentials, made to last a lifetime. Designed in-house, crafted responsibly, and built to be kept.</p>
+        <div class="btns">
+          <button class="btn" data-nav="product">Shop the collection</button>
+          <button class="btn sec">Our story</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec">
+      <div class="wrap">
+        <div class="rich rv">
+          <span class="eyebrow c">Our philosophy</span>
+          <h2 class="h1">Less, but better.</h2>
+          <p class="lead" style="text-align:center">We design for permanence — objects you keep, not things you replace. Every detail earns its place, and nothing is added for its own sake.</p>
+          <button class="btn sec">Discover Aura</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec" style="padding-top:0">
+      <div class="wrap">
+        <div class="sec-head rv">
+          <div>
+            <span class="eyebrow">Curated</span>
+            <h2 class="h1" style="margin-top:10px">New this season</h2>
+          </div>
+          <button class="ghost" data-nav="product">View all <svg viewBox="0 0 24 24" fill="none"><path d="M4 12h16m0 0-6-6m6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        </div>
+        <div class="pgrid" id="homeGrid"></div>
+      </div>
+    </section>
+
+    <section class="sec">
+      <div class="wrap">
+        <div class="iwt rv">
+          <div class="surface ratio-tall tone-b"><svg class="glyph"><use href="#g-knit"/></svg></div>
+          <div class="iwt-txt">
+            <span class="eyebrow">The craft</span>
+            <h2 class="h2">Made by hand,<br>meant for years</h2>
+            <p class="lead">Each piece is finished by hand and inspected against a single question — will it still feel right in ten years?</p>
+            <button class="btn sec">Read the journal</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec">
+      <div class="wrap">
+        <div class="sec-head c rv"><h2 class="h1">Shop by category</h2></div>
+        <div class="clist rv" id="catList"></div>
+      </div>
+    </section>
+
+    <section class="sec" style="background:var(--bg-2)">
+      <div class="wrap">
+        <div class="sec-head c rv"><h2 class="h1">Why Aura</h2></div>
+        <div class="mcol rv">
+          <div class="it"><svg viewBox="0 0 24 24" fill="none"><path d="m5 12 4 4 10-10" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><h3>Made to last</h3><p class="muted" style="font-size:.92rem">Materials chosen for permanence, backed by a lifetime guarantee.</p></div>
+          <div class="it"><svg viewBox="0 0 24 24" fill="none"><path d="M6 7h12l-1 12H7L6 7Z" stroke="currentColor" stroke-linejoin="round"/><path d="M9 7a3 3 0 0 1 6 0" stroke="currentColor" stroke-linecap="round"/></svg><h3>Considered shipping</h3><p class="muted" style="font-size:.92rem">Carbon-neutral delivery in recyclable packaging, always.</p></div>
+          <div class="it"><svg viewBox="0 0 24 24" fill="none"><path d="M4 12h16m0 0-6-6m6 6-6 6" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><h3>Simple returns</h3><p class="muted" style="font-size:.92rem">Thirty days to decide. Free, effortless returns.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec news">
+      <div class="glow"></div>
+      <div class="wrap">
+        <div class="news-in rv">
+          <span class="eyebrow c">Stay close</span>
+          <h2 class="h1">Join the list</h2>
+          <p class="lead" style="text-align:center">First access to new arrivals and considered stories. No noise.</p>
+          <form onsubmit="return false"><input type="email" placeholder="Email" aria-label="Email"><button class="btn">Subscribe</button></form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===================== PRODUCT ===================== -->
+  <main class="view" id="view-product">
+    <section class="sec" style="padding-top:0">
+      <div class="wrap">
+        <div class="pdp">
+          <div class="pdp-media">
+            <div class="surface ratio-portrait" id="pdpHero"><svg class="glyph"><use href="#g-jacket"/></svg></div>
+            <div class="surface ratio-portrait tone-c"><svg class="glyph"><use href="#g-jacket"/></svg></div>
+          </div>
+          <div class="pdp-info rv">
+            <span class="eyebrow pdp-vendor">Outerwear</span>
+            <h1 class="h1 pdp-title">The Field Jacket</h1>
+            <div class="price" id="pdpPrice">$248.00</div>
+
+            <div class="opt">
+              <span class="lbl">Color <span class="sel" id="selColor">Olive</span></span>
+              <div class="chips" data-group="color">
+                <button class="chip on">Olive</button><button class="chip">Stone</button><button class="chip">Black</button>
+              </div>
+            </div>
+            <div class="opt">
+              <span class="lbl">Size <span class="sel" id="selSize">M</span></span>
+              <div class="chips" data-group="size">
+                <button class="chip">XS</button><button class="chip">S</button><button class="chip on">M</button><button class="chip">L</button><button class="chip">XL</button>
+              </div>
+            </div>
+
+            <div class="qrow">
+              <div class="qty"><button data-q="-1" aria-label="Decrease">–</button><input id="qty" value="1" inputmode="numeric" aria-label="Quantity"><button data-q="1" aria-label="Increase">+</button></div>
+            </div>
+            <button class="btn full" id="addBtn"><span>Add to bag — $248.00</span></button>
+
+            <div style="margin-top:32px">
+              <details class="acc" open><summary>Details &amp; materials <svg viewBox="0 0 10 6" fill="none"><path d="m1 1 4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></summary><div class="body">Water-resistant waxed cotton with a brushed-cotton lining. Corozo buttons, felled seams, and a two-year repair promise. Made in Portugal.</div></details>
+              <details class="acc"><summary>Shipping &amp; returns <svg viewBox="0 0 10 6" fill="none"><path d="m1 1 4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></summary><div class="body">Carbon-neutral delivery in 2–4 days. Thirty-day free returns, no questions asked.</div></details>
+              <details class="acc"><summary>Care <svg viewBox="0 0 10 6" fill="none"><path d="m1 1 4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></summary><div class="body">Spot clean and re-wax annually. Avoid machine washing to preserve the finish.</div></details>
+            </div>
+          </div>
+        </div>
+
+        <div class="sec" style="padding-bottom:0">
+          <div class="sec-head c rv"><h2 class="h2">You may also like</h2></div>
+          <div class="pgrid rv" id="recGrid"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="ft">
+    <div class="wrap">
+      <div class="ft-top">
+        <div class="ft-brand">
+          <div class="logo">Aura</div>
+          <p class="muted" style="font-size:.9rem;max-width:32ch">Considered essentials, made to last. Designed in-house and crafted responsibly.</p>
+        </div>
+        <div><h4>Shop</h4><div class="ft-links"><a href="#">New arrivals</a><a href="#">Outerwear</a><a href="#">Knitwear</a><a href="#">Accessories</a></div></div>
+        <div><h4>Help</h4><div class="ft-links"><a href="#">Shipping</a><a href="#">Returns</a><a href="#">Contact</a><a href="#">Size guide</a></div></div>
+        <div><h4>Studio</h4><div class="ft-links"><a href="#">Our story</a><a href="#">Sustainability</a><a href="#">Journal</a><a href="#">Stockists</a></div></div>
+      </div>
+      <div class="ft-bottom">
+        <span>© 2026 Aura · Privacy · Terms</span>
+        <div class="soc">
+          <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="4" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="3.5" stroke="currentColor" stroke-width="1.5"/><circle cx="17" cy="7" r="1" fill="currentColor"/></svg></a>
+          <a href="#" aria-label="Pinterest"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.5"/><path d="M12 7c-2 0-3.3 1.4-3.3 3.1 0 .8.4 1.6 1 1.9l.2-.9c-.3-.3-.4-.7-.4-1 0-1.3 1-2.4 2.5-2.4 1.4 0 2.2.9 2.2 2 0 1.5-.7 2.8-1.6 2.8-.5 0-.9-.5-.8-1 .2-.8.5-1.4.5-1.9 0-1.3-1.7-1.1-1.7.6 0 .4.1.7.1.7l-.7 3c-.2 1-.1 2.4 0 2.5l.9-1.3.4-1.4c.2.4.8.7 1.4.7 1.7 0 2.9-1.6 2.9-3.7 0-1.6-1.3-3.1-3.6-3.1Z" fill="currentColor"/></svg></a>
+        </div>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<!-- overlays -->
+<div class="scrim" id="scrim"></div>
+<aside class="cart" id="cart" aria-label="Cart">
+  <div class="cart-hd"><h3>Your bag</h3><button class="icn" id="cartClose" aria-label="Close"><svg viewBox="0 0 18 18" fill="none"><path d="m3 3 12 12M15 3 3 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button></div>
+  <div class="cart-body" id="cartBody"></div>
+  <div class="cart-ft" id="cartFt" style="display:none">
+    <div class="totals"><span>Estimated total</span><b id="cartTotal">$0.00</b></div>
+    <p class="tax">Taxes and shipping calculated at checkout.</p>
+    <button class="btn full">Checkout</button>
+  </div>
+</aside>
+
+<div class="toast" id="toast"><svg viewBox="0 0 24 24" fill="none"><path d="m5 12 4 4 10-10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Added to bag</span></div>
+
+<div class="toolbar">
+  <button class="on" data-nav="home">Home</button>
+  <button data-nav="product">Product</button>
+  <span class="div"></span>
+  <button id="themeBtn">◐ Theme</button>
+</div>
+
+<script>
+(function(){
+  var products=[
+    {n:"The Field Jacket",v:"Outerwear",p:24800,g:"g-jacket",t:""},
+    {n:"Merino Crew",v:"Knitwear",p:14500,g:"g-knit",t:"tone-b"},
+    {n:"Leather Tote",v:"Accessories",p:32000,g:"g-bag",t:"tone-c"},
+    {n:"Field Watch",v:"Accessories",p:41000,g:"g-watch",t:"",was:46000}
+  ];
+  var cats=[{n:"Outerwear",g:"g-jacket",t:""},{n:"Knitwear",g:"g-knit",t:"tone-b"},{n:"Accessories",g:"g-bag",t:"tone-c"}];
+  var money=function(c){return "$"+(c/100).toFixed(2)};
+
+  function card(pr){
+    var sale = pr.was ? '<span class="was">'+money(pr.was)+'</span><span class="sale">'+money(pr.p)+'</span>' : money(pr.p);
+    var badge = pr.was ? '<span class="badge">Sale</span>' : '';
+    return '<div class="card" data-nav="product">'+
+      '<div class="surface ratio-portrait '+pr.t+'">'+badge+'<svg class="glyph"><use href="#'+pr.g+'"/></svg></div>'+
+      '<span class="vendor">'+pr.v+'</span><h3>'+pr.n+'</h3><div class="price">'+sale+'</div></div>';
+  }
+  document.getElementById('homeGrid').innerHTML = products.map(card).join('');
+  document.getElementById('recGrid').innerHTML = products.slice(1).concat(products[0]).slice(0,4).map(card).join('');
+  document.getElementById('catList').innerHTML = cats.map(function(c){
+    return '<div class="ctile" data-nav="product"><div class="surface ratio-tall '+c.t+'"><svg class="glyph"><use href="#'+c.g+'"/></svg></div>'+
+      '<h3>'+c.n+' <svg viewBox="0 0 24 24" fill="none"><path d="M4 12h16m0 0-6-6m6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></h3></div>';
+  }).join('');
+
+  // view switching
+  function show(v){
+    document.querySelectorAll('.view').forEach(function(el){el.classList.toggle('on',el.id==='view-'+v)});
+    document.querySelectorAll('[data-nav]').forEach(function(el){ if(el.classList.contains('on')||el.tagName==='A'||el.parentElement.classList.contains('toolbar')) el.classList.toggle('on',el.dataset.nav===v)});
+    document.querySelectorAll('.nav a').forEach(function(a){a.classList.toggle('on',a.dataset.nav===v)});
+    document.querySelectorAll('.toolbar button[data-nav]').forEach(function(b){b.classList.toggle('on',b.dataset.nav===v)});
+    window.scrollTo({top:0,behavior:'instant' in window?'instant':'auto'});
+    setTimeout(reveal,30);
+  }
+  document.addEventListener('click',function(e){
+    var n=e.target.closest('[data-nav]'); if(n){e.preventDefault();show(n.dataset.nav);}
+  });
+
+  // reveal
+  var io=new IntersectionObserver(function(es){es.forEach(function(en){if(en.isIntersecting){en.target.classList.add('in');io.unobserve(en.target);}})},{rootMargin:'0px 0px -8% 0px'});
+  function reveal(){document.querySelectorAll('.view.on .rv:not(.in)').forEach(function(el){io.observe(el)});}
+  reveal();
+
+  // sticky header hide/show
+  var hdr=document.getElementById('hdr'),last=0;
+  window.addEventListener('scroll',function(){
+    var y=window.scrollY; hdr.classList.toggle('scrolled',y>60);
+    if(y>last&&y>320) hdr.classList.add('hide'); else hdr.classList.remove('hide');
+    last=y;
+  },{passive:true});
+
+  // variant chips
+  document.querySelectorAll('.chips').forEach(function(grp){
+    grp.addEventListener('click',function(e){
+      var c=e.target.closest('.chip'); if(!c)return;
+      grp.querySelectorAll('.chip').forEach(function(x){x.classList.remove('on')}); c.classList.add('on');
+      var t=grp.dataset.group==='color'?'selColor':'selSize'; document.getElementById(t).textContent=c.textContent;
+    });
+  });
+  // qty
+  var qty=document.getElementById('qty');
+  document.querySelectorAll('[data-q]').forEach(function(b){b.addEventListener('click',function(){
+    qty.value=Math.max(1,(parseInt(qty.value)||1)+parseInt(b.dataset.q));
+  })});
+
+  // cart
+  var cart=[],bubble=document.getElementById('bubble'),body=document.getElementById('cartBody'),ft=document.getElementById('cartFt');
+  function renderCart(){
+    var count=cart.reduce(function(a,i){return a+i.q},0);
+    bubble.textContent=count; bubble.style.display=count?'flex':'none';
+    if(!cart.length){body.innerHTML='<div class="cart-empty">Your bag is empty.</div>';ft.style.display='none';return;}
+    ft.style.display='flex';
+    body.innerHTML=cart.map(function(it,idx){
+      return '<div class="li"><div class="surface ratio-sq '+it.t+'"><svg class="glyph"><use href="#'+it.g+'"/></svg></div>'+
+        '<div><div class="nm">'+it.n+'</div><div class="op">'+it.o+'</div><button class="rm" data-rm="'+idx+'">Remove</button></div>'+
+        '<div class="lp">'+money(it.p*it.q)+'</div></div>';
+    }).join('');
+    document.getElementById('cartTotal').textContent=money(cart.reduce(function(a,i){return a+i.p*i.q},0));
+  }
+  function openCart(){document.getElementById('scrim').classList.add('open');document.getElementById('cart').classList.add('open');document.body.style.overflow='hidden';}
+  function closeCart(){document.getElementById('scrim').classList.remove('open');document.getElementById('cart').classList.remove('open');document.body.style.overflow='';}
+  document.getElementById('cartBtn').addEventListener('click',openCart);
+  document.getElementById('cartClose').addEventListener('click',closeCart);
+  document.getElementById('scrim').addEventListener('click',closeCart);
+  body.addEventListener('click',function(e){var r=e.target.closest('[data-rm]');if(r){cart.splice(+r.dataset.rm,1);renderCart();}});
+
+  var toast=document.getElementById('toast');
+  document.getElementById('addBtn').addEventListener('click',function(){
+    var o=document.getElementById('selColor').textContent+' / '+document.getElementById('selSize').textContent;
+    var ex=cart.find(function(i){return i.o===o&&i.n==='The Field Jacket'});
+    if(ex)ex.q+=parseInt(qty.value)||1; else cart.push({n:'The Field Jacket',o:o,p:24800,q:parseInt(qty.value)||1,g:'g-jacket',t:''});
+    renderCart();
+    toast.classList.add('show');setTimeout(function(){toast.classList.remove('show')},1600);
+    setTimeout(openCart,260);
+  });
+  renderCart();
+
+  // theme
+  var root=document.documentElement;
+  function cur(){return root.getAttribute('data-theme')|| (matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light')}
+  document.getElementById('themeBtn').addEventListener('click',function(){
+    var m=cur()==='dark'?'light':'dark'; root.setAttribute('data-theme',m);
+    this.textContent=(m==='dark'?'◑':'◐')+' Theme';
+  });
+})();
+</script>
