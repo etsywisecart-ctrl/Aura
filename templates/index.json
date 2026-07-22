@@ -63,6 +63,14 @@
       "block_order": ["b1", "b2", "b3"],
       "settings": { "title": "Why Aura", "heading_size": "h1", "columns_desktop": "3", "alignment": "center", "color_scheme": "scheme-2" }
     },
+    "reviews": {
+      "type": "quote",
+      "blocks": {
+        "q1": { "type": "quote", "settings": { "rating": 5, "text": "<p>The best-made piece I own. Three years in and it looks better than the day it arrived.</p>", "author": "A. Mercer, verified buyer" } }
+      },
+      "block_order": ["q1"],
+      "settings": { "show_glow": false, "color_scheme": "scheme-2" }
+    },
     "newsletter": {
       "type": "newsletter",
       "settings": {
@@ -75,5 +83,5 @@
       }
     }
   },
-  "order": ["hero", "showcase", "featured", "craft", "why", "newsletter"]
+  "order": ["hero", "showcase", "featured", "craft", "why", "reviews", "newsletter"]
 }

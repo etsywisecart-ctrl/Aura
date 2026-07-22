@@ -907,6 +907,23 @@ body.overflow-hidden { overflow: hidden; }
 .quote { max-width: 76rem; margin: 0 auto; text-align: center; }
 .quote__text { font-family: var(--font-serif); font-style: italic; font-size: clamp(2rem, 3.6vw, 3rem); line-height: 1.32; }
 .quote__author { margin-top: 2rem; font-size: 1.3rem; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(var(--color-foreground), 0.6); }
+.rating { display: inline-flex; gap: 0.3rem; color: rgb(var(--accent)); margin-bottom: 0.4rem; }
+.rating svg { width: 1.8rem; height: 1.8rem; }
+
+/* Featured product spotlight */
+.spotlight { display: grid; gap: clamp(2.4rem, 4vw, 5.6rem); align-items: center; }
+@media screen and (min-width: 750px) {
+  .spotlight { grid-template-columns: 1fr 1fr; }
+  .spotlight--reverse .spotlight__media { order: 2; }
+}
+.spotlight__media .media { border-radius: var(--media-radius); }
+.spotlight__content { display: flex; flex-direction: column; gap: 1.4rem; align-items: flex-start; }
+.spotlight__price { font-size: 2rem; font-variant-numeric: tabular-nums; }
+.spotlight__buttons { display: flex; gap: 1.2rem; flex-wrap: wrap; margin-top: 0.6rem; }
+
+/* Collapsible content / FAQ */
+.faq { max-width: 78rem; margin: 0 auto; }
+.faq__header { text-align: center; margin-bottom: clamp(2.4rem, 4vw, 4rem); display: flex; flex-direction: column; gap: 1.2rem; align-items: center; }
 
 /* -------------------------------------------------------------------------
    18. Footer

@@ -1,0 +1,92 @@
+{%- comment -%} Aura — Featured product (spotlight) {%- endcomment -%}
+{%- liquid
+  assign product = section.settings.product
+  assign product_form_id = 'featured-product-form-' | append: section.id
+-%}
+<div class="section color-{{ section.settings.color_scheme }} gradient">
+  <div class="page-width">
+    <div class="spotlight spotlight--{{ section.settings.layout }} scroll-trigger">
+      <div class="spotlight__media">
+        <div class="media media--{{ section.settings.image_ratio }} zoom-on-hover">
+          {%- if product != blank and product.featured_media -%}
+            <img src="{{ product.featured_media | image_url: width: 1200 }}"
+              srcset="{{ product.featured_media | image_url: width: 600 }} 600w, {{ product.featured_media | image_url: width: 1200 }} 1200w"
+              sizes="(min-width: 750px) 50vw, 100vw"
+              alt="{{ product.featured_media.alt | escape }}"
+              width="{{ product.featured_media.width }}" height="{{ product.featured_media.height }}"
+              loading="lazy" class="image-fade">
+          {%- else -%}
+            {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+          {%- endif -%}
+        </div>
+      </div>
+
+      <div class="spotlight__content">
+        {%- if section.settings.eyebrow != blank -%}
+          <span class="eyebrow">{{ section.settings.eyebrow | escape }}</span>
+        {%- elsif product.vendor != blank and section.settings.show_vendor -%}
+          <span class="eyebrow">{{ product.vendor }}</span>
+        {%- endif -%}
+
+        <h2 class="{{ section.settings.heading_size | default: 'h1' }}">{{ product.title | default: 'Featured product' | escape }}</h2>
+
+        {%- if product != blank -%}
+          <div class="spotlight__price">{% render 'price', product: product, use_variant: true, show_badges: true %}</div>
+        {%- endif -%}
+
+        {%- if section.settings.show_description and product.description != blank -%}
+          <div class="rte lead lead--tight">{{ product.description | strip_html | truncatewords: 40 }}</div>
+        {%- elsif section.settings.custom_text != blank -%}
+          <div class="rte lead lead--tight">{{ section.settings.custom_text }}</div>
+        {%- endif -%}
+
+        <div class="spotlight__buttons">
+          {%- if product != blank -%}
+            {%- if product.has_only_default_variant and product.available -%}
+              <product-form class="product-form">
+                {%- form 'product', product, id: product_form_id, novalidate: 'novalidate' -%}
+                  <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+                  <button type="submit" name="add" class="button">
+                    <span>{{ 'products.product.add_to_cart' | t }}</span>
+                    {% render 'loading-spinner' %}
+                  </button>
+                {%- endform -%}
+              </product-form>
+            {%- else -%}
+              <a href="{{ product.url }}" class="button">{{ 'products.product.choose_options' | t }}</a>
+            {%- endif -%}
+            <a href="{{ product.url }}" class="cta-link">{{ 'products.product.view_full_details' | t }}</a>
+          {%- else -%}
+            <a href="{{ section.settings.button_link | default: '#' }}" class="button">{{ section.settings.button_label | default: 'Shop now' }}</a>
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Featured product",
+  "tag": "section",
+  "class": "section-featured-product",
+  "settings": [
+    { "type": "product", "id": "product", "label": "Product" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Spotlight" },
+    { "type": "checkbox", "id": "show_vendor", "label": "Use vendor as eyebrow if empty", "default": false },
+    { "type": "select", "id": "heading_size", "options": [
+      { "value": "h2", "label": "Small" }, { "value": "h1", "label": "Medium" }, { "value": "h0", "label": "Large" }
+    ], "default": "h1", "label": "Heading size" },
+    { "type": "checkbox", "id": "show_description", "default": true, "label": "Show product description" },
+    { "type": "richtext", "id": "custom_text", "label": "Custom text", "info": "Used when description is hidden or empty." },
+    { "type": "select", "id": "layout", "options": [
+      { "value": "default", "label": "Image left" }, { "value": "reverse", "label": "Image right" }
+    ], "default": "default", "label": "Desktop layout" },
+    { "type": "select", "id": "image_ratio", "options": [
+      { "value": "portrait", "label": "Portrait" }, { "value": "square", "label": "Square" }, { "value": "landscape", "label": "Landscape" }
+    ], "default": "square", "label": "Image ratio" },
+    { "type": "color_scheme", "id": "color_scheme", "default": "scheme-2", "label": "Color scheme" }
+  ],
+  "presets": [{ "name": "Featured product" }]
+}
+{% endschema %}

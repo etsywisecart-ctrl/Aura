@@ -9,15 +9,15 @@
   *, *::before, *::after { box-sizing: border-box; }
 
   :root {
-    /* ---- Neutrals (light) ---- */
-    --bg:        #F5F3EE;
-    --surface:   #FBFAF7;
+    /* ---- Neutrals (light) — cool, reference-tuned ---- */
+    --bg:        #FFFFFF;
+    --surface:   #F5F5F7;
     --surface-2: #FFFFFF;
-    --ink:       #17181B;
-    --ink-2:     #55575E;
-    --ink-3:     #8B8D94;
-    --line:      rgba(23, 24, 27, 0.10);
-    --line-2:    rgba(23, 24, 27, 0.16);
+    --ink:       #1D1D1F;
+    --ink-2:     #6E6E73;
+    --ink-3:     #86868B;
+    --line:      rgba(29, 29, 31, 0.10);
+    --line-2:    rgba(29, 29, 31, 0.16);
 
     /* ---- Accent: Champagne ---- */
     --accent:      #C2A268;
@@ -83,14 +83,14 @@
 
   /* Explicit toggle overrides media query in both directions */
   :root[data-theme="light"] {
-    --bg:#F5F3EE; --surface:#FBFAF7; --surface-2:#FFFFFF;
-    --ink:#17181B; --ink-2:#55575E; --ink-3:#8B8D94;
-    --line:rgba(23,24,27,0.10); --line-2:rgba(23,24,27,0.16);
+    --bg:#FFFFFF; --surface:#F5F5F7; --surface-2:#FFFFFF;
+    --ink:#1D1D1F; --ink-2:#6E6E73; --ink-3:#86868B;
+    --line:rgba(29,29,31,0.10); --line-2:rgba(29,29,31,0.16);
     --accent:#C2A268; --accent-ink:#9A7B44;
     --halo:rgba(194,162,104,0.22); --halo-soft:rgba(194,162,104,0.10);
-    --shadow-sm:0 1px 2px rgba(23,24,27,0.05);
-    --shadow-md:0 10px 34px rgba(23,24,27,0.07);
-    --shadow-lg:0 30px 70px rgba(23,24,27,0.11);
+    --shadow-sm:0 1px 2px rgba(29,29,31,0.05);
+    --shadow-md:0 10px 34px rgba(29,29,31,0.07);
+    --shadow-lg:0 30px 70px rgba(29,29,31,0.11);
     color-scheme: light;
   }
   :root[data-theme="dark"] {
@@ -125,15 +125,15 @@
   /* ---- Type primitives ---- */
   .display {
     font-family: var(--sans);
-    font-weight: 300;
-    letter-spacing: -0.03em;
-    line-height: 1.02;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    line-height: 1.04;
     font-size: clamp(3.4rem, 9vw, 7.2rem);
     text-wrap: balance;
   }
   h1,h2,h3,h4 { text-wrap: balance; margin: 0; }
-  .h1 { font-size: clamp(2.6rem, 5vw, 3.4rem); font-weight: 350; letter-spacing: -0.02em; line-height: 1.08; }
-  .h2 { font-size: clamp(1.9rem, 3.2vw, 2.4rem); font-weight: 400; letter-spacing: -0.015em; line-height: 1.14; }
+  .h1 { font-size: clamp(2.6rem, 5vw, 3.4rem); font-weight: 600; letter-spacing: -0.021em; line-height: 1.07; }
+  .h2 { font-size: clamp(1.9rem, 3.2vw, 2.4rem); font-weight: 600; letter-spacing: -0.018em; line-height: 1.1; }
   .h3 { font-size: 1.25rem; font-weight: 550; letter-spacing: -0.01em; line-height: 1.3; }
   .lead { font-size: clamp(1.15rem, 2vw, 1.35rem); color: var(--ink-2); font-weight: 380; line-height: 1.55; max-width: 62ch; }
   .body { max-width: 66ch; color: var(--ink-2); }
@@ -479,7 +479,7 @@
     <span class="brand__sub">Design Language</span>
   </div>
   <div class="masthead__right">
-    <span class="pill">v0.1 · Draft</span>
+    <span class="pill">v0.2 · Reference-tuned</span>
     <button class="toggle" id="themeToggle" type="button" aria-label="Switch color theme">
       <span class="toggle__dot" aria-hidden="true"></span>
       <span id="themeLabel">Theme</span>
@@ -498,7 +498,7 @@
       <div class="hero__meta">
         <span><b>Discipline</b> — Design only</span>
         <span><b>Reference</b> — Apple · Tesla · B&amp;O</span>
-        <span><b>Status</b> — Awaiting approval</span>
+        <span><b>Status</b> — Approved &amp; in build</span>
         <span class="mono"><b>2026.07</b></span>
       </div>
     </div>
@@ -606,23 +606,23 @@
 
         <!-- Color -->
         <div class="subhead"><span class="h3">Color language</span><span class="subhead__tag">near-monochrome · one accent</span></div>
-        <p class="body">A warm porcelain ground and a cool obsidian ink form a calm, photographic canvas. A single champagne accent is spent sparingly — focus states, a key numeral, the soft light of the <em>aura</em> glow. Color never competes with product photography; it frames it.</p>
+        <p class="body">A clean white ground, cool grey surfaces, and ink text form a calm, photographic canvas — tuned to the reference standard. A single champagne accent is spent sparingly — focus states, a key mark, the soft light of the <em>aura</em> glow. Color never competes with product photography; it frames it.</p>
         <div class="swatches" style="margin-top:22px">
-          <div class="swatch"><div class="swatch__chip" style="background:#F5F3EE"></div><div class="swatch__meta"><span class="swatch__name">Porcelain</span><span class="swatch__hex">#F5F3EE</span><span class="swatch__role">Ground · light</span></div></div>
-          <div class="swatch"><div class="swatch__chip" style="background:#17181B"></div><div class="swatch__meta"><span class="swatch__name">Obsidian</span><span class="swatch__hex">#17181B</span><span class="swatch__role">Ink · primary</span></div></div>
-          <div class="swatch"><div class="swatch__chip" style="background:#55575E"></div><div class="swatch__meta"><span class="swatch__name">Graphite</span><span class="swatch__hex">#55575E</span><span class="swatch__role">Text · secondary</span></div></div>
+          <div class="swatch"><div class="swatch__chip" style="background:#FFFFFF;box-shadow:inset 0 0 0 1px rgba(0,0,0,0.08)"></div><div class="swatch__meta"><span class="swatch__name">Snow</span><span class="swatch__hex">#FFFFFF</span><span class="swatch__role">Ground · light</span></div></div>
+          <div class="swatch"><div class="swatch__chip" style="background:#F5F5F7"></div><div class="swatch__meta"><span class="swatch__name">Cloud</span><span class="swatch__hex">#F5F5F7</span><span class="swatch__role">Surface · light</span></div></div>
+          <div class="swatch"><div class="swatch__chip" style="background:#1D1D1F"></div><div class="swatch__meta"><span class="swatch__name">Ink</span><span class="swatch__hex">#1D1D1F</span><span class="swatch__role">Text · primary</span></div></div>
+          <div class="swatch"><div class="swatch__chip" style="background:#6E6E73"></div><div class="swatch__meta"><span class="swatch__name">Slate</span><span class="swatch__hex">#6E6E73</span><span class="swatch__role">Text · secondary</span></div></div>
           <div class="swatch"><div class="swatch__chip" style="background:#C2A268"></div><div class="swatch__meta"><span class="swatch__name">Champagne</span><span class="swatch__hex">#C2A268</span><span class="swatch__role">Accent · restraint</span></div></div>
-          <div class="swatch"><div class="swatch__chip" style="background:#0D0E11"></div><div class="swatch__meta"><span class="swatch__name">Obsidian Deep</span><span class="swatch__hex">#0D0E11</span><span class="swatch__role">Ground · dark</span></div></div>
+          <div class="swatch"><div class="swatch__chip" style="background:#0D0E11"></div><div class="swatch__meta"><span class="swatch__name">Obsidian</span><span class="swatch__hex">#0D0E11</span><span class="swatch__role">Ground · dark</span></div></div>
           <div class="swatch"><div class="swatch__chip" style="background:#16171B"></div><div class="swatch__meta"><span class="swatch__name">Surface Dark</span><span class="swatch__hex">#16171B</span><span class="swatch__role">Raised · dark</span></div></div>
-          <div class="swatch"><div class="swatch__chip" style="background:#ECEAE3"></div><div class="swatch__meta"><span class="swatch__name">Porcelain Warm</span><span class="swatch__hex">#ECEAE3</span><span class="swatch__role">Text · on dark</span></div></div>
           <div class="swatch"><div class="swatch__chip" style="background:linear-gradient(135deg,#C2A268,rgba(194,162,104,0.12))"></div><div class="swatch__meta"><span class="swatch__name">Aura Halo</span><span class="swatch__hex">glow</span><span class="swatch__role">Light · signature</span></div></div>
         </div>
 
         <!-- Typography -->
         <div class="subhead"><span class="h3">Typography</span><span class="subhead__tag">three deliberate roles</span></div>
-        <p class="body">A single grotesque sans carries structure — set at hairline weights for display and disciplined tracking for labels. A serif appears only for a rare editorial line, a whisper of craft. A monospace holds spec and numeric data. Body measure stays near 65 characters; numerals are always tabular.</p>
+        <p class="body">A single grotesque sans carries structure — set at confident semibold weights for display, with tight optical tracking, and disciplined spacing for labels. A serif appears only for a rare editorial line, a whisper of craft. A monospace holds spec and numeric data. Body measure stays near 65 characters; numerals are always tabular.</p>
         <div class="typescale" style="margin-top:12px">
-          <div class="typerow"><div class="typerow__spec">Display<br>300 · -3% · 1.02</div><div class="typerow__sample display" style="font-size:clamp(2.4rem,6vw,4rem)">Considered.</div></div>
+          <div class="typerow"><div class="typerow__spec">Display<br>600 · -2.5% · 1.04</div><div class="typerow__sample display" style="font-size:clamp(2.4rem,6vw,4rem)">Considered.</div></div>
           <div class="typerow"><div class="typerow__spec">H1<br>350 · -2% · 1.08</div><div class="typerow__sample h1">The essential object</div></div>
           <div class="typerow"><div class="typerow__spec">H2<br>400 · -1.5% · 1.14</div><div class="typerow__sample h2">Made to be kept</div></div>
           <div class="typerow"><div class="typerow__spec">Serif accent<br>italic · editorial</div><div class="typerow__sample serif-quote" style="font-size:1.5rem">A quiet confidence.</div></div>
@@ -706,7 +706,7 @@
 
         <!-- Surface & light -->
         <div class="subhead"><span class="h3">Surface &amp; light</span><span class="subhead__tag">the aura motif</span></div>
-        <p class="body">The signature is light, not color. A soft radial <em>halo</em> sits behind heroes and key products — a warm ambient glow that suggests the “aura” of a well-lit object. Glass surfaces (the header, sheets) use a saturated blur over the ground. Borders are hairlines at 10–16% ink. Photography is styled: single subject, natural light, deep negative space, muted warm grade — the product on a considered surface, never a busy scene.</p>
+        <p class="body">The signature is light, not color. A soft radial <em>halo</em> sits behind heroes and key products — a warm ambient glow that suggests the “aura” of a well-lit object. Glass surfaces (the header, sheets) use a saturated blur over the ground. Borders are hairlines at 10–16% ink. Photography is styled: single subject, natural light, deep negative space, a clean neutral grade — the product on a considered surface, never a busy scene.</p>
       </section>
 
       <!-- 04 HOMEPAGE -->
@@ -866,7 +866,7 @@
           <div class="rules__row"><span class="rules__k">Motion</span><span class="rules__v"><span class="always">Always</span> aura-ease and a named duration. No bounce, no spring, no bespoke curves.</span></div>
           <div class="rules__row"><span class="rules__k">Alignment</span><span class="rules__v"><span class="always">Always</span> to the grid. Prefer left-aligned editorial composition; center only with intent.</span></div>
           <div class="rules__row"><span class="rules__k">Components</span><span class="rules__v"><span class="always">Always</span> reuse before you create. A new variant must justify itself against an existing one.</span></div>
-          <div class="rules__row"><span class="rules__k">Contrast</span><span class="rules__v"><span class="always">Always</span> meet legibility on both themes. Test the accent on porcelain and obsidian alike.</span></div>
+          <div class="rules__row"><span class="rules__k">Contrast</span><span class="rules__v"><span class="always">Always</span> meet legibility on both themes. Test the accent on white and obsidian alike.</span></div>
           <div class="rules__row"><span class="rules__k">Restraint</span><span class="rules__v"><span class="always">Never</span> decorate. If an element has no job, it doesn't exist.</span></div>
         </div>
       </section>
