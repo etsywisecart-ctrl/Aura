@@ -1,0 +1,79 @@
+{%- comment -%} Aura — Featured collection (curated shelf) {%- endcomment -%}
+{%- liquid
+  assign collection = section.settings.collection
+  assign products_to_show = section.settings.products_to_show
+-%}
+<div class="section color-{{ section.settings.color_scheme }} gradient">
+  <div class="page-width">
+    <div class="title-with-link scroll-trigger">
+      <div class="section-header__group">
+        {%- if section.settings.eyebrow != blank -%}
+          <span class="eyebrow">{{ section.settings.eyebrow | escape }}</span>
+        {%- endif -%}
+        {%- if section.settings.title != blank -%}
+          <h2 class="{{ section.settings.heading_size | default: 'h1' }}" style="margin-top:1.2rem;">{{ section.settings.title | escape }}</h2>
+        {%- endif -%}
+      </div>
+      {%- if section.settings.show_view_all and collection != blank -%}
+        <a href="{{ collection.url }}" class="button--ghost button">
+          {{ 'sections.featured_collection.view_all' | t }} {% render 'icon', icon: 'arrow' %}
+        </a>
+      {%- endif -%}
+    </div>
+
+    <div class="grid grid--{{ section.settings.columns_desktop }} grid--1-col-mobile scroll-trigger">
+      {%- if collection != blank and collection.products.size > 0 -%}
+        {%- for product in collection.products limit: products_to_show -%}
+          {% render 'card-product',
+            card_product: product,
+            media_aspect_ratio: section.settings.image_ratio,
+            lazy_load: forloop.index > 4
+          %}
+        {%- endfor -%}
+      {%- else -%}
+        {%- for i in (1..products_to_show) -%}
+          {% render 'card-product', placeholder: 'product-1', media_aspect_ratio: section.settings.image_ratio %}
+        {%- endfor -%}
+      {%- endif -%}
+    </div>
+
+    {%- if section.settings.show_view_all_button and collection != blank -%}
+      <div class="center" style="margin-top: 4rem;">
+        <a href="{{ collection.url }}" class="button button--secondary">{{ 'sections.featured_collection.view_all' | t }}</a>
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Featured collection",
+  "tag": "section",
+  "class": "section-featured-collection",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Curated" },
+    { "type": "inline_richtext", "id": "title", "label": "Heading", "default": "New this season" },
+    { "type": "select", "id": "heading_size", "options": [
+      { "value": "h2", "label": "Small" },
+      { "value": "h1", "label": "Medium" },
+      { "value": "h0", "label": "Large" }
+    ], "default": "h1", "label": "Heading size" },
+    { "type": "collection", "id": "collection", "label": "Collection" },
+    { "type": "range", "id": "products_to_show", "min": 2, "max": 12, "step": 1, "default": 4, "label": "Products to show" },
+    { "type": "select", "id": "columns_desktop", "options": [
+      { "value": "2", "label": "2 columns" },
+      { "value": "3", "label": "3 columns" },
+      { "value": "4", "label": "4 columns" }
+    ], "default": "4", "label": "Columns on desktop" },
+    { "type": "select", "id": "image_ratio", "options": [
+      { "value": "adapt", "label": "Adapt" },
+      { "value": "portrait", "label": "Portrait" },
+      { "value": "square", "label": "Square" }
+    ], "default": "portrait", "label": "Image ratio" },
+    { "type": "checkbox", "id": "show_view_all", "default": true, "label": "Show 'View all' link in header" },
+    { "type": "checkbox", "id": "show_view_all_button", "default": false, "label": "Show 'View all' button below" },
+    { "type": "color_scheme", "id": "color_scheme", "default": "scheme-1", "label": "Color scheme" }
+  ],
+  "presets": [{ "name": "Featured collection" }]
+}
+{% endschema %}

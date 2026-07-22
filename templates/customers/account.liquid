@@ -1,0 +1,46 @@
+{%- comment -%} Aura — Customer account {%- endcomment -%}
+<div class="section">
+  <div class="customer customer--wide">
+    <header class="center" style="margin-bottom:3.2rem;">
+      <span class="eyebrow eyebrow--center">{{ customer.name | default: customer.email }}</span>
+      <h1 class="customer__title h1" style="margin-top:1rem;">{{ 'customer.account.title' | t }}</h1>
+      <div class="account-nav" style="margin-top:2rem;">
+        <a href="{{ routes.account_addresses_url }}" class="link">{{ 'customer.account.view_addresses' | t }}</a>
+        <a href="{{ routes.account_logout_url }}" class="link">{{ 'customer.log_out' | t }}</a>
+      </div>
+    </header>
+
+    <h2 class="h3" style="margin-bottom:1.6rem;">{{ 'customer.orders.title' | t }}</h2>
+    {%- paginate customer.orders by 20 -%}
+      {%- if customer.orders.size > 0 -%}
+        <div style="overflow-x:auto;">
+          <table>
+            <thead>
+              <tr>
+                <th>{{ 'customer.orders.order_number' | t }}</th>
+                <th>{{ 'customer.orders.date' | t }}</th>
+                <th>{{ 'customer.orders.payment_status' | t }}</th>
+                <th>{{ 'customer.orders.fulfillment_status' | t }}</th>
+                <th>{{ 'customer.orders.total' | t }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {%- for order in customer.orders -%}
+                <tr>
+                  <td><a href="{{ order.customer_url }}" class="underlined-link">{{ order.name }}</a></td>
+                  <td>{{ order.created_at | date: '%b %-d, %Y' }}</td>
+                  <td>{{ order.financial_status_label }}</td>
+                  <td>{{ order.fulfillment_status_label }}</td>
+                  <td>{{ order.total_net_amount | money }}</td>
+                </tr>
+              {%- endfor -%}
+            </tbody>
+          </table>
+        </div>
+        {% render 'pagination', paginate: paginate %}
+      {%- else -%}
+        <p class="caption">{{ 'customer.orders.none' | t }}</p>
+      {%- endif -%}
+    {%- endpaginate -%}
+  </div>
+</div>

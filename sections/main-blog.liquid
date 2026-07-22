@@ -1,0 +1,48 @@
+{%- comment -%} Aura — Blog {%- endcomment -%}
+{%- paginate blog.articles by 12 -%}
+<section class="section">
+  <div class="page-width">
+    <header class="collection-hero scroll-trigger">
+      <span class="eyebrow">{{ 'blogs.article.back_to_blog' | t }}</span>
+      <h1 class="collection-hero__title h0">{{ blog.title | escape }}</h1>
+    </header>
+
+    <div class="grid grid--{{ section.settings.columns_desktop }} grid--1-col-mobile scroll-trigger">
+      {%- for article in blog.articles -%}
+        <article class="article-card">
+          <a href="{{ article.url }}" class="article-card__media media media--landscape zoom-on-hover">
+            {%- if article.image -%}
+              <img src="{{ article.image | image_url: width: 800 }}" srcset="{{ article.image | image_url: width: 400 }} 400w, {{ article.image | image_url: width: 800 }} 800w" sizes="(min-width:750px) 50vw, 100vw" alt="{{ article.image.alt | escape }}" width="{{ article.image.width }}" height="{{ article.image.height }}" loading="lazy" class="image-fade">
+            {%- else -%}
+              {{ 'blog-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
+            {%- endif -%}
+          </a>
+          <div class="article-card__info">
+            {%- if section.settings.show_date -%}<span class="article-card__meta">{{ article.published_at | date: '%B %-d, %Y' }}</span>{%- endif -%}
+            <h2 class="article-card__title"><a href="{{ article.url }}">{{ article.title | escape }}</a></h2>
+            {%- if section.settings.show_excerpt and article.excerpt_or_content != blank -%}
+              <p class="article-card__excerpt">{{ article.excerpt_or_content | strip_html | truncatewords: 24 }}</p>
+            {%- endif -%}
+          </div>
+        </article>
+      {%- endfor -%}
+    </div>
+    {% render 'pagination', paginate: paginate %}
+  </div>
+</section>
+{%- endpaginate -%}
+
+{% schema %}
+{
+  "name": "Blog posts",
+  "tag": "section",
+  "settings": [
+    { "type": "select", "id": "columns_desktop", "options": [
+      { "value": "2", "label": "2 columns" },
+      { "value": "3", "label": "3 columns" }
+    ], "default": "3", "label": "Columns on desktop" },
+    { "type": "checkbox", "id": "show_date", "default": true, "label": "Show date" },
+    { "type": "checkbox", "id": "show_excerpt", "default": true, "label": "Show excerpt" }
+  ]
+}
+{% endschema %}

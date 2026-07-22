@@ -26,9 +26,9 @@
               srcset="{{ section.settings.logo | image_url: width: 200 }} 1x, {{ section.settings.logo | image_url: width: 400 }} 2x"
               alt="{{ shop.name | escape }}"
               class="header__heading-logo"
-              width="{{ section.settings.logo_width }}"
-              height="auto"
-              style="width: {{ section.settings.logo_width | default: 120 }}px;">
+              width="{{ section.settings.logo.width }}"
+              height="{{ section.settings.logo.height }}"
+              style="width: {{ section.settings.logo_width | default: 120 }}px; height: auto;">
           {%- else -%}
             <span class="header__logo-text">{{ shop.name }}</span>
           {%- endif -%}

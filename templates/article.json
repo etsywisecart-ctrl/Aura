@@ -1,0 +1,9 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-article",
+      "settings": { "show_date": true, "show_author": false, "show_image": true }
+    }
+  },
+  "order": ["main"]
+}

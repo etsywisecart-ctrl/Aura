@@ -1,0 +1,63 @@
+{%- comment -%} Aura — Customer addresses {%- endcomment -%}
+<div class="section">
+  <div class="customer customer--wide">
+    <header style="margin-bottom:2.4rem;display:flex;align-items:center;justify-content:space-between;gap:1.6rem;flex-wrap:wrap;">
+      <h1 class="h1">{{ 'customer.addresses.title' | t }}</h1>
+      <a href="{{ routes.account_url }}" class="link">{{ 'customer.account.return' | t }}</a>
+    </header>
+
+    <div style="margin-bottom:3.2rem;">
+      <button type="button" class="button" data-address-toggle="new">{{ 'customer.addresses.add_new' | t }}</button>
+    </div>
+
+    {%- comment -%} New address {%- endcomment -%}
+    <div id="address-new" class="hidden" style="margin-bottom:4rem;">
+      <h2 class="h3" style="margin-bottom:1.6rem;">{{ 'customer.addresses.add_new' | t }}</h2>
+      {%- form 'customer_address', customer.new_address -%}
+        {% render 'address-fields', form_id: 'new', form: form %}
+        <div class="customer__actions" style="flex-direction:row;justify-content:flex-start;">
+          <button type="submit" class="button">{{ 'customer.addresses.add' | t }}</button>
+          <button type="button" class="link" data-address-toggle="new">{{ 'customer.addresses.cancel' | t }}</button>
+        </div>
+      {%- endform -%}
+    </div>
+
+    {%- comment -%} Existing addresses {%- endcomment -%}
+    <div class="grid grid--2" style="gap:2.4rem;">
+      {%- for address in customer.addresses -%}
+        <div class="card card--card">
+          {%- if address == customer.default_address -%}<span class="badge" style="margin-bottom:1rem;align-self:flex-start;">{{ 'customer.addresses.default' | t }}</span>{%- endif -%}
+          <div class="rte caption" style="margin-bottom:1.6rem;">{{ address | format_address }}</div>
+          <div style="display:flex;gap:1.2rem;">
+            <button type="button" class="link" data-address-toggle="edit-{{ address.id }}">{{ 'customer.addresses.edit' | t }}</button>
+            <form method="post" action="{{ address.url }}" onsubmit="return confirm('{{ 'customer.addresses.delete_confirm' | t }}');">
+              <input type="hidden" name="_method" value="delete">
+              <button type="submit" class="link">{{ 'customer.addresses.delete' | t }}</button>
+            </form>
+          </div>
+
+          <div id="address-edit-{{ address.id }}" class="hidden" style="margin-top:1.6rem;">
+            {%- form 'customer_address', address -%}
+              {% render 'address-fields', form_id: address.id, address: address, form: form %}
+              <div class="customer__actions" style="flex-direction:row;justify-content:flex-start;">
+                <button type="submit" class="button">{{ 'customer.addresses.update' | t }}</button>
+                <button type="button" class="link" data-address-toggle="edit-{{ address.id }}">{{ 'customer.addresses.cancel' | t }}</button>
+              </div>
+            {%- endform -%}
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+<script>
+  (function () {
+    document.querySelectorAll('[data-address-toggle]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var el = document.getElementById('address-' + btn.dataset.addressToggle);
+        if (el) el.classList.toggle('hidden');
+      });
+    });
+  })();
+</script>

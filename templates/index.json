@@ -1,0 +1,96 @@
+{
+  "sections": {
+    "hero": {
+      "type": "image-banner",
+      "settings": {
+        "height": "large",
+        "overlay_opacity": 20,
+        "text_color": "light",
+        "eyebrow": "New arrival",
+        "heading": "The essential object",
+        "heading_size": "display",
+        "text": "<p>Considered essentials, made to last a lifetime.</p>",
+        "content_position": "middle-left",
+        "button_label_1": "Shop the collection",
+        "button_style_1": "primary",
+        "button_label_2": "Our story",
+        "color_scheme": "scheme-3"
+      }
+    },
+    "philosophy": {
+      "type": "rich-text",
+      "blocks": {
+        "eyebrow": { "type": "eyebrow", "settings": { "text": "Our philosophy" } },
+        "heading": { "type": "heading", "settings": { "heading": "Less, but better.", "size": "h1" } },
+        "text": { "type": "text", "settings": { "text": "<p>We design for permanence — objects you keep, not things you replace. Every detail earns its place, and nothing is added for its own sake.</p>", "large": true } },
+        "button": { "type": "button", "settings": { "button_label": "Discover Aura", "button_style": "secondary" } }
+      },
+      "block_order": ["eyebrow", "heading", "text", "button"],
+      "settings": { "alignment": "center", "color_scheme": "scheme-1" }
+    },
+    "featured": {
+      "type": "featured-collection",
+      "settings": {
+        "eyebrow": "Curated",
+        "title": "New this season",
+        "heading_size": "h1",
+        "products_to_show": 4,
+        "columns_desktop": "4",
+        "image_ratio": "portrait",
+        "show_view_all": true,
+        "color_scheme": "scheme-1"
+      }
+    },
+    "craft": {
+      "type": "image-with-text",
+      "blocks": {
+        "eyebrow": { "type": "eyebrow", "settings": { "text": "The craft" } },
+        "heading": { "type": "heading", "settings": { "heading": "Made by hand, meant for years", "size": "h2" } },
+        "text": { "type": "text", "settings": { "text": "<p>Each piece is finished by hand and inspected against a single question — will it still feel right in ten years?</p>" } },
+        "button": { "type": "button", "settings": { "button_label": "Our story", "button_style": "secondary" } }
+      },
+      "block_order": ["eyebrow", "heading", "text", "button"],
+      "settings": { "image_ratio": "portrait", "layout": "default", "color_scheme": "scheme-1" }
+    },
+    "categories": {
+      "type": "collection-list",
+      "blocks": {
+        "c1": { "type": "featured_collection", "settings": {} },
+        "c2": { "type": "featured_collection", "settings": {} },
+        "c3": { "type": "featured_collection", "settings": {} }
+      },
+      "block_order": ["c1", "c2", "c3"],
+      "settings": {
+        "eyebrow": "",
+        "title": "Shop by category",
+        "heading_size": "h1",
+        "alignment": "left",
+        "columns_desktop": "3",
+        "image_ratio": "portrait",
+        "color_scheme": "scheme-1"
+      }
+    },
+    "why": {
+      "type": "multicolumn",
+      "blocks": {
+        "b1": { "type": "column", "settings": { "icon": "check", "heading": "Made to last", "text": "<p>Materials chosen for permanence, backed by a lifetime guarantee.</p>" } },
+        "b2": { "type": "column", "settings": { "icon": "cart", "heading": "Considered shipping", "text": "<p>Carbon-neutral delivery in recyclable packaging, always.</p>" } },
+        "b3": { "type": "column", "settings": { "icon": "arrow", "heading": "Simple returns", "text": "<p>Thirty days to decide. Free, effortless returns.</p>" } }
+      },
+      "block_order": ["b1", "b2", "b3"],
+      "settings": { "title": "Why Aura", "heading_size": "h1", "columns_desktop": "3", "alignment": "center", "color_scheme": "scheme-2" }
+    },
+    "newsletter": {
+      "type": "newsletter",
+      "settings": {
+        "eyebrow": "Stay close",
+        "heading": "Join the list",
+        "heading_size": "h1",
+        "text": "<p>First access to new arrivals and considered stories. No noise.</p>",
+        "show_glow": true,
+        "color_scheme": "scheme-3"
+      }
+    }
+  },
+  "order": ["hero", "philosophy", "featured", "craft", "categories", "why", "newsletter"]
+}

@@ -1,0 +1,33 @@
+{%- comment -%} Aura — Customer register {%- endcomment -%}
+<div class="section">
+  <div class="customer">
+    <h1 class="customer__title h1">{{ 'customer.register.title' | t }}</h1>
+    {%- form 'create_customer', novalidate: 'novalidate' -%}
+      {%- if form.errors -%}
+        <p class="form__message form__message--error">{% render 'icon', icon: 'close' %} {{ form.errors | default_errors }}</p>
+      {%- endif -%}
+      <div class="customer__form">
+        <div class="field">
+          <label for="FirstName">{{ 'customer.register.first_name' | t }}</label>
+          <input type="text" name="customer[first_name]" id="FirstName" autocomplete="given-name">
+        </div>
+        <div class="field">
+          <label for="LastName">{{ 'customer.register.last_name' | t }}</label>
+          <input type="text" name="customer[last_name]" id="LastName" autocomplete="family-name">
+        </div>
+        <div class="field">
+          <label for="RegisterEmail">{{ 'customer.register.email' | t }}</label>
+          <input type="email" name="customer[email]" id="RegisterEmail" autocomplete="email" autocapitalize="off" required>
+        </div>
+        <div class="field">
+          <label for="RegisterPassword">{{ 'customer.register.password' | t }}</label>
+          <input type="password" name="customer[password]" id="RegisterPassword" autocomplete="new-password" required>
+        </div>
+        <div class="customer__actions">
+          <button type="submit" class="button button--full">{{ 'customer.register.submit' | t }}</button>
+          <p class="caption"><a href="{{ routes.account_login_url }}" class="underlined-link">{{ 'customer.log_in' | t }}</a></p>
+        </div>
+      </div>
+    {%- endform -%}
+  </div>
+</div>

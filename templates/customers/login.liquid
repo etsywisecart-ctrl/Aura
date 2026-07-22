@@ -1,0 +1,58 @@
+{%- comment -%} Aura — Customer login {%- endcomment -%}
+<div class="section">
+  <div class="customer">
+    <div id="login-panel">
+      <h1 class="customer__title h1">{{ 'customer.login_page.title' | t }}</h1>
+      {%- form 'customer_login', novalidate: 'novalidate' -%}
+        {%- if form.errors -%}
+          <p class="form__message form__message--error">{% render 'icon', icon: 'close' %} {{ form.errors | default_errors }}</p>
+        {%- endif -%}
+        <div class="customer__form">
+          <div class="field">
+            <label for="CustomerEmail">{{ 'customer.login_page.email' | t }}</label>
+            <input type="email" name="customer[email]" id="CustomerEmail" autocomplete="email" autocapitalize="off" required>
+          </div>
+          <div class="field">
+            <label for="CustomerPassword">{{ 'customer.login_page.password' | t }}</label>
+            <input type="password" name="customer[password]" id="CustomerPassword" autocomplete="current-password" required>
+          </div>
+          <div class="customer__actions">
+            <button type="submit" class="button button--full">{{ 'customer.login_page.sign_in' | t }}</button>
+            <button type="button" class="link" data-toggle-recover>{{ 'customer.login_page.forgot_password' | t }}</button>
+            <p class="caption">{{ 'customer.login_page.create_account' | t }} — <a href="{{ routes.account_register_url }}" class="underlined-link">{{ 'customer.register.title' | t }}</a></p>
+          </div>
+        </div>
+      {%- endform -%}
+    </div>
+
+    <div id="recover-panel" class="hidden">
+      <h1 class="customer__title h1">{{ 'customer.recover_password.title' | t }}</h1>
+      <p class="center" style="margin-bottom:2rem;color:rgba(var(--color-foreground),0.7);">{{ 'customer.recover_password.subtext' | t }}</p>
+      {%- form 'recover_customer_password' -%}
+        {%- if form.posted_successfully? -%}
+          <p class="form__message form__message--success">{% render 'icon', icon: 'check' %} {{ 'customer.recover_password.success' | t }}</p>
+        {%- endif -%}
+        <div class="customer__form">
+          <div class="field">
+            <label for="RecoverEmail">{{ 'customer.login_page.email' | t }}</label>
+            <input type="email" name="email" id="RecoverEmail" autocomplete="email" autocapitalize="off" required>
+          </div>
+          <div class="customer__actions">
+            <button type="submit" class="button button--full">{{ 'customer.login_page.submit' | t }}</button>
+            <button type="button" class="link" data-toggle-recover>{{ 'customer.login_page.cancel' | t }}</button>
+          </div>
+        </div>
+      {%- endform -%}
+    </div>
+  </div>
+</div>
+
+<script>
+  (function () {
+    var login = document.getElementById('login-panel');
+    var recover = document.getElementById('recover-panel');
+    function toggle() { login.classList.toggle('hidden'); recover.classList.toggle('hidden'); }
+    document.querySelectorAll('[data-toggle-recover]').forEach(function (b) { b.addEventListener('click', toggle); });
+    if (window.location.hash === '#recover') toggle();
+  })();
+</script>

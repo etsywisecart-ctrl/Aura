@@ -11,7 +11,7 @@
 
       <div class="footer__brand">
         {%- if settings.brand_image != blank -%}
-          <img src="{{ settings.brand_image | image_url: width: 320 }}" alt="{{ shop.name | escape }}" width="160" height="auto" style="width:140px;margin-bottom:1.6rem;">
+          <img src="{{ settings.brand_image | image_url: width: 320 }}" alt="{{ shop.name | escape }}" width="{{ settings.brand_image.width }}" height="{{ settings.brand_image.height }}" style="width:140px;height:auto;margin-bottom:1.6rem;">
         {%- else -%}
           <p class="footer-block__brand-name">{{ shop.name }}</p>
         {%- endif -%}

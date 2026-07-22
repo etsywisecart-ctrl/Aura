@@ -1,0 +1,12 @@
+{
+  "sections": {
+    "main": {
+      "type": "contact-form",
+      "settings": {
+        "heading": "Get in touch",
+        "subtext": "<p>We usually reply within one business day.</p>"
+      }
+    }
+  },
+  "order": ["main"]
+}

@@ -1,0 +1,100 @@
+{%- comment -%} Aura — Image banner / hero (the "arrival") {%- endcomment -%}
+{%- liquid
+  assign text_light = false
+  if section.settings.image != blank and section.settings.text_color == 'light'
+    assign text_light = true
+  endif
+-%}
+<div class="section" style="--section-y: 0;">
+  <div class="banner banner--{{ section.settings.height }} banner--{{ section.settings.content_position }} color-{{ section.settings.color_scheme }} gradient{% if text_light %} banner--text-light{% endif %} scroll-trigger isolate">
+    {%- if section.settings.image != blank -%}
+      <div class="banner__media">
+        <img
+          src="{{ section.settings.image | image_url: width: 2200 }}"
+          srcset="{{ section.settings.image | image_url: width: 900 }} 900w, {{ section.settings.image | image_url: width: 1400 }} 1400w, {{ section.settings.image | image_url: width: 2200 }} 2200w"
+          sizes="100vw"
+          alt="{{ section.settings.image.alt | escape }}"
+          width="{{ section.settings.image.width }}"
+          height="{{ section.settings.image.height }}"
+          loading="{% if section.index <= 2 %}eager{% else %}lazy{% endif %}"
+          fetchpriority="{% if section.index <= 2 %}high{% else %}auto{% endif %}">
+      </div>
+      {%- if section.settings.overlay_opacity > 0 -%}
+        <div class="banner__overlay" style="--overlay-opacity: {{ section.settings.overlay_opacity | divided_by: 100.0 }};"></div>
+      {%- endif -%}
+    {%- else -%}
+      <div class="aura-glow" style="top:-15%; right:-5%;" aria-hidden="true"></div>
+    {%- endif -%}
+
+    <div class="banner__content-wrap page-width">
+      <div class="banner__box">
+        {%- if section.settings.eyebrow != blank -%}
+          <span class="eyebrow{% if section.settings.content_position contains 'center' %} eyebrow--center{% endif %}">{{ section.settings.eyebrow | escape }}</span>
+        {%- endif -%}
+        {%- if section.settings.heading != blank -%}
+          <h2 class="banner__heading {{ section.settings.heading_size }}">{{ section.settings.heading | escape }}</h2>
+        {%- endif -%}
+        {%- if section.settings.text != blank -%}
+          <div class="banner__text lead">{{ section.settings.text }}</div>
+        {%- endif -%}
+        {%- if section.settings.button_label_1 != blank or section.settings.button_label_2 != blank -%}
+          <div class="banner__buttons">
+            {%- if section.settings.button_label_1 != blank -%}
+              <a href="{{ section.settings.button_link_1 | default: '#' }}" class="button{% if section.settings.button_style_1 == 'secondary' %} button--secondary{% endif %}">{{ section.settings.button_label_1 | escape }}</a>
+            {%- endif -%}
+            {%- if section.settings.button_label_2 != blank -%}
+              <a href="{{ section.settings.button_link_2 | default: '#' }}" class="button button--secondary">{{ section.settings.button_label_2 | escape }}</a>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Image banner",
+  "tag": "section",
+  "class": "section-image-banner",
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "Background image" },
+    { "type": "select", "id": "height", "options": [
+        { "value": "small", "label": "Small" },
+        { "value": "medium", "label": "Medium" },
+        { "value": "large", "label": "Large" }
+      ], "default": "large", "label": "Height" },
+    { "type": "range", "id": "overlay_opacity", "min": 0, "max": 80, "step": 5, "unit": "%", "label": "Image overlay opacity", "default": 15 },
+    { "type": "select", "id": "text_color", "options": [
+        { "value": "auto", "label": "From color scheme" },
+        { "value": "light", "label": "Light (over image)" }
+      ], "default": "light", "label": "Text color (over image)" },
+    { "type": "header", "content": "Content" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "New arrival" },
+    { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "The essential object" },
+    { "type": "select", "id": "heading_size", "options": [
+        { "value": "h1", "label": "Medium" },
+        { "value": "h0", "label": "Large" },
+        { "value": "display", "label": "Display" }
+      ], "default": "display", "label": "Heading size" },
+    { "type": "richtext", "id": "text", "label": "Text", "default": "<p>Considered essentials, made to last a lifetime.</p>" },
+    { "type": "select", "id": "content_position", "options": [
+        { "value": "middle-left", "label": "Middle left" },
+        { "value": "middle-center", "label": "Middle center" },
+        { "value": "bottom-left", "label": "Bottom left" }
+      ], "default": "middle-left", "label": "Content position" },
+    { "type": "header", "content": "Buttons" },
+    { "type": "text", "id": "button_label_1", "label": "First button label", "default": "Shop the collection" },
+    { "type": "url", "id": "button_link_1", "label": "First button link" },
+    { "type": "select", "id": "button_style_1", "options": [
+        { "value": "primary", "label": "Solid" },
+        { "value": "secondary", "label": "Outline" }
+      ], "default": "primary", "label": "First button style" },
+    { "type": "text", "id": "button_label_2", "label": "Second button label" },
+    { "type": "url", "id": "button_link_2", "label": "Second button link" },
+    { "type": "header", "content": "Style" },
+    { "type": "color_scheme", "id": "color_scheme", "default": "scheme-3", "label": "Color scheme (no image)" }
+  ],
+  "presets": [{ "name": "Image banner" }]
+}
+{% endschema %}

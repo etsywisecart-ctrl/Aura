@@ -1,0 +1,35 @@
+{%- comment -%} Aura — Cart footer (page) {%- endcomment -%}
+<section class="section cart-footer-section{% if cart == empty %} hidden{% endif %}">
+  <div class="page-width page-width--medium">
+    <div id="main-cart-footer" class="js-contents">
+      <form action="{{ routes.cart_url }}" method="post" id="cart" class="cart__footer">
+        {%- if settings.show_cart_note -%}
+          <div class="field" style="margin-bottom:2rem;max-width:44rem;">
+            <label for="Cart-note">{{ 'sections.cart.note' | t }}</label>
+            <textarea id="Cart-note" name="note" placeholder="{{ 'sections.cart.note' | t }}">{{ cart.note }}</textarea>
+          </div>
+        {%- endif -%}
+
+        <div style="max-width:44rem;margin-left:auto;display:flex;flex-direction:column;gap:1.4rem;">
+          <div class="totals">
+            <span class="totals__subtitle">{{ 'sections.cart.estimated_total' | t }}</span>
+            <span class="totals__total">{{ cart.total_price | money_with_currency }}</span>
+          </div>
+          <p class="tax-note rte">{{ 'sections.cart.taxes_and_shipping_at_checkout' | t }}</p>
+          <div class="cart__ctas">
+            <button type="submit" name="update" class="button button--secondary">{{ 'sections.cart.update' | t }}</button>
+            <button type="submit" name="checkout" class="button button--full" {% if cart == empty %}disabled{% endif %}>{{ 'sections.cart.checkout' | t }}</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Cart footer",
+  "class": "section-cart-footer",
+  "settings": []
+}
+{% endschema %}

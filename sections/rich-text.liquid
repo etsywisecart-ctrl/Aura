@@ -1,0 +1,74 @@
+{%- comment -%} Aura — Rich text (editorial statement) {%- endcomment -%}
+<div class="section color-{{ section.settings.color_scheme }} gradient">
+  <div class="page-width">
+    <div class="rich-text rich-text--{{ section.settings.alignment }} scroll-trigger">
+      <div class="rich-text__wrapper">
+        {%- for block in section.blocks -%}
+          {%- case block.type -%}
+            {%- when 'eyebrow' -%}
+              <span class="eyebrow{% if section.settings.alignment == 'center' %} eyebrow--center{% endif %}" {{ block.shopify_attributes }}>{{ block.settings.text | escape }}</span>
+            {%- when 'heading' -%}
+              <h2 class="{{ block.settings.size }}" {{ block.shopify_attributes }}>{{ block.settings.heading }}</h2>
+            {%- when 'text' -%}
+              <div class="rich-text__text {% if block.settings.large %}lead{% else %}rte{% endif %}" {{ block.shopify_attributes }}>{{ block.settings.text }}</div>
+            {%- when 'button' -%}
+              {%- if block.settings.button_label != blank -%}
+                <div class="rich-text__buttons" {{ block.shopify_attributes }}>
+                  <a href="{{ block.settings.button_link | default: '#' }}" class="button{% if block.settings.button_style == 'secondary' %} button--secondary{% endif %}">{{ block.settings.button_label | escape }}</a>
+                </div>
+              {%- endif -%}
+          {%- endcase -%}
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Rich text",
+  "tag": "section",
+  "class": "section-rich-text",
+  "settings": [
+    { "type": "select", "id": "alignment", "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" }
+      ], "default": "center", "label": "Alignment" },
+    { "type": "color_scheme", "id": "color_scheme", "default": "scheme-1", "label": "Color scheme" }
+  ],
+  "blocks": [
+    { "type": "eyebrow", "name": "Eyebrow", "limit": 1, "settings": [
+      { "type": "text", "id": "text", "default": "Our philosophy", "label": "Text" }
+    ]},
+    { "type": "heading", "name": "Heading", "limit": 1, "settings": [
+      { "type": "inline_richtext", "id": "heading", "default": "Less, but better.", "label": "Heading" },
+      { "type": "select", "id": "size", "options": [
+        { "value": "h2", "label": "Small" },
+        { "value": "h1", "label": "Medium" },
+        { "value": "h0", "label": "Large" }
+      ], "default": "h1", "label": "Size" }
+    ]},
+    { "type": "text", "name": "Text", "settings": [
+      { "type": "richtext", "id": "text", "default": "<p>We design for permanence — objects you keep, not things you replace. Every detail earns its place, and nothing is added for its own sake.</p>", "label": "Text" },
+      { "type": "checkbox", "id": "large", "default": true, "label": "Large text" }
+    ]},
+    { "type": "button", "name": "Button", "limit": 1, "settings": [
+      { "type": "text", "id": "button_label", "default": "Discover Aura", "label": "Label" },
+      { "type": "url", "id": "button_link", "label": "Link" },
+      { "type": "select", "id": "button_style", "options": [
+        { "value": "primary", "label": "Solid" },
+        { "value": "secondary", "label": "Outline" }
+      ], "default": "secondary", "label": "Style" }
+    ]}
+  ],
+  "presets": [{
+    "name": "Rich text",
+    "blocks": [
+      { "type": "eyebrow" },
+      { "type": "heading" },
+      { "type": "text" },
+      { "type": "button" }
+    ]
+  }]
+}
+{% endschema %}
