@@ -204,7 +204,30 @@
         "type": "checkbox",
         "id": "show_cart_note",
         "label": "Enable cart note",
-        "default": false
+        "default": true
+      },
+      {
+        "type": "header",
+        "content": "Free shipping bar"
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_free_shipping_bar",
+        "label": "Show free-shipping progress bar",
+        "default": true
+      },
+      {
+        "type": "number",
+        "id": "free_shipping_threshold",
+        "label": "Free shipping threshold",
+        "info": "In your store currency (e.g. 150). Set to 0 to hide.",
+        "default": 150
+      },
+      {
+        "type": "checkbox",
+        "id": "show_secure_badge",
+        "label": "Show secure-checkout line",
+        "default": true
       }
     ]
   },

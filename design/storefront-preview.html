@@ -216,6 +216,23 @@
   .fopt{display:flex;align-items:center;gap:10px;padding:6px 0;font-size:.92rem;cursor:pointer}.fopt input{width:auto}
   .fdrawer .foot{padding:20px 24px;border-top:1px solid var(--line);display:flex;gap:10px}
   .scrim#fscrim{z-index:95}
+  /* ===== product detail + cart polish ===== */
+  .pbreadcrumb{display:flex;gap:8px;align-items:center;font-size:.82rem;color:var(--ink-2);margin-bottom:24px}
+  .pbreadcrumb a:hover{color:var(--ink)}.pbreadcrumb .sep{opacity:.5}
+  .prating{display:flex;align-items:center;gap:8px;margin:2px 0 8px}.prating .stars{font-size:1rem}.prating .rcount{font-size:.82rem;color:var(--ink-2)}
+  .psave{display:inline-block;margin-left:10px;padding:3px 10px;font-size:.78rem;font-weight:500;color:var(--accent-ink);background:var(--halo-soft);border-radius:999px}
+  .swatches{display:flex;gap:10px}
+  .swatch2{width:42px;height:42px;border-radius:50%;border:1px solid var(--line-2);cursor:pointer;padding:0;transition:transform var(--tq),box-shadow var(--tq)}
+  .swatch2:hover{transform:scale(1.07)}.swatch2.on{box-shadow:0 0 0 2px var(--bg),0 0 0 4px var(--ink)}
+  .trust{display:flex;flex-direction:column;gap:13px;margin-top:26px;padding-top:26px;border-top:1px solid var(--line);list-style:none;padding-left:0}
+  .trust li{display:flex;align-items:center;gap:13px;font-size:.92rem;color:var(--ink-2)}.trust li svg{width:20px;height:20px;color:var(--accent-ink);flex:none}
+  .secure{display:flex;flex-direction:column;gap:9px;align-items:center;text-align:center;margin-top:16px}
+  .secure-label{display:inline-flex;align-items:center;gap:7px;font-size:.8rem;color:var(--ink-2)}.secure-label svg{width:15px}
+  .paydots{display:flex;gap:6px}.paydot{width:34px;height:22px;border-radius:5px;background:color-mix(in srgb,var(--ink) 9%,transparent);border:1px solid var(--line)}
+  .shipbar .msg{display:flex;align-items:center;gap:8px;font-size:.82rem;margin:0 0 10px}.shipbar .msg svg{width:18px;color:var(--accent-ink);flex:none}.shipbar .msg strong{font-weight:600}
+  .shiptrack{height:5px;border-radius:999px;background:color-mix(in srgb,var(--ink) 10%,transparent);overflow:hidden}
+  .shipfill{height:100%;border-radius:999px;background:var(--accent);transition:width var(--ts) var(--ease)}
+  .cart-secure2{display:flex;flex-direction:column;gap:8px;align-items:center;margin-top:6px}
   :focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:3px}
 </style>
 
@@ -314,6 +331,7 @@
   <!-- ============ PRODUCT ============ -->
   <main class="view" id="view-product">
     <section class="sec" style="padding-top:0"><div class="wrap">
+      <nav class="pbreadcrumb rv"><a href="#" data-nav="home">Home</a><span class="sep">/</span><a href="#" data-nav="collection">Outerwear</a><span class="sep">/</span><span>The Field Jacket</span></nav>
       <div class="pdp">
         <div class="pdp-media">
           <div class="surface ratio-portrait"><svg class="glyph"><use href="#g-jacket"/></svg></div>
@@ -321,12 +339,19 @@
         </div>
         <div class="pdp-info rv">
           <span class="eyebrow">Outerwear</span>
-          <h1 class="h1" style="margin:12px 0 4px">The Field Jacket</h1>
-          <div class="price" id="pdpPrice">$248.00</div>
-          <div class="opt"><span class="lbl">Color <span class="sel" id="selColor">Olive</span></span><div class="chips" data-group="color"><button class="chip on">Olive</button><button class="chip">Stone</button><button class="chip">Black</button></div></div>
+          <h1 class="h1" style="margin:12px 0 6px">The Field Jacket</h1>
+          <div class="prating"><span class="stars"><span class="fill" style="width:96%"></span></span><span class="rcount">4.8 · 214 reviews</span></div>
+          <div class="price" id="pdpPrice"><s style="opacity:.5;margin-right:8px">$290.00</s>$248.00<span class="psave">Save $42</span></div>
+          <div class="opt"><span class="lbl">Color <span class="sel" id="selColor">Olive</span></span><div class="swatches" data-group="color"><button class="swatch2 on" style="background:#6b7247" data-val="Olive" title="Olive" aria-label="Olive"></button><button class="swatch2" style="background:#b8ae9c" data-val="Stone" title="Stone" aria-label="Stone"></button><button class="swatch2" style="background:#1a1a1a" data-val="Black" title="Black" aria-label="Black"></button></div></div>
           <div class="opt"><span class="lbl">Size <span class="sel" id="selSize">M</span></span><div class="chips" data-group="size"><button class="chip">XS</button><button class="chip">S</button><button class="chip on">M</button><button class="chip">L</button><button class="chip">XL</button></div></div>
           <div class="qty"><button data-q="-1" aria-label="Decrease">–</button><input id="qty" value="1" inputmode="numeric" aria-label="Quantity"><button data-q="1" aria-label="Increase">+</button></div>
           <button class="btn full" id="addBtn"><span>Add to bag — $248.00</span></button>
+          <ul class="trust">
+            <li><svg viewBox="0 0 24 24" fill="none"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="7" cy="18" r="1.6" stroke="currentColor" stroke-width="1.5"/><circle cx="17" cy="18" r="1.6" stroke="currentColor" stroke-width="1.5"/></svg> Complimentary carbon-neutral shipping</li>
+            <li><svg viewBox="0 0 24 24" fill="none"><path d="M4 5v5h5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M4.6 14a8 8 0 1 0 1.3-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg> Thirty-day free returns</li>
+            <li><svg viewBox="0 0 24 24" fill="none"><path d="M12 3l7 3v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="m9 12 2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Backed by a lifetime guarantee</li>
+          </ul>
+          <div class="secure"><span class="secure-label"><svg viewBox="0 0 24 24" fill="none"><rect x="5" y="10" width="14" height="10" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M8 10V8a4 4 0 0 1 8 0v2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg> Secure, encrypted checkout</span><div class="paydots"><span class="paydot"></span><span class="paydot"></span><span class="paydot"></span><span class="paydot"></span></div></div>
           <div style="margin-top:32px">
             <details class="acc" open><summary>Details &amp; materials <svg viewBox="0 0 10 6" fill="none"><path d="m1 1 4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></summary><div class="body">Water-resistant waxed cotton with a brushed-cotton lining. Corozo buttons, felled seams, and a two-year repair promise. Made in Portugal.</div></details>
             <details class="acc"><summary>Shipping &amp; returns <svg viewBox="0 0 10 6" fill="none"><path d="m1 1 4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></summary><div class="body">Carbon-neutral delivery in 2–4 days. Thirty-day free returns, no questions asked.</div></details>
@@ -379,8 +404,9 @@
 <div class="scrim" id="scrim"></div>
 <aside class="cart" id="cart" aria-label="Cart">
   <div class="cart-hd"><h3>Your bag</h3><button class="icn" id="cartClose" aria-label="Close"><svg viewBox="0 0 18 18" fill="none"><path d="m3 3 12 12M15 3 3 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button></div>
+  <div id="shipbar" class="shipbar" style="margin:14px 24px 0"></div>
   <div class="cart-body" id="cartBody"></div>
-  <div class="cart-ft" id="cartFt" style="display:none"><div class="totals"><span>Estimated total</span><b id="cartTotal">$0.00</b></div><p class="tax">Taxes and shipping calculated at checkout.</p><button class="btn full">Checkout</button></div>
+  <div class="cart-ft" id="cartFt" style="display:none"><div class="totals"><span>Estimated total</span><b id="cartTotal">$0.00</b></div><p class="tax">Taxes and shipping calculated at checkout.</p><button class="btn full">Checkout</button><div class="cart-secure2"><span class="secure-label"><svg viewBox="0 0 24 24" fill="none"><rect x="5" y="10" width="14" height="10" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M8 10V8a4 4 0 0 1 8 0v2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg> Secure, encrypted checkout</span><div class="paydots"><span class="paydot"></span><span class="paydot"></span><span class="paydot"></span><span class="paydot"></span></div></div></div>
 </aside>
 
 <div class="scrim" id="fscrim"></div>
@@ -434,16 +460,27 @@
   window.addEventListener('scroll',function(){var y=window.scrollY;hdr.classList.toggle('scrolled',y>60);if(y>last&&y>320)hdr.classList.add('hide');else hdr.classList.remove('hide');last=y;},{passive:true});
 
   document.querySelectorAll('.chips').forEach(function(grp){grp.addEventListener('click',function(e){var c=e.target.closest('.chip');if(!c)return;grp.querySelectorAll('.chip').forEach(function(x){x.classList.remove('on')});c.classList.add('on');document.getElementById(grp.dataset.group==='color'?'selColor':'selSize').textContent=c.textContent;});});
+  document.querySelectorAll('.swatches').forEach(function(grp){grp.addEventListener('click',function(e){var s=e.target.closest('.swatch2');if(!s)return;grp.querySelectorAll('.swatch2').forEach(function(x){x.classList.remove('on')});s.classList.add('on');document.getElementById('selColor').textContent=s.dataset.val;});});
   var qty=document.getElementById('qty');
   document.querySelectorAll('[data-q]').forEach(function(b){b.addEventListener('click',function(){qty.value=Math.max(1,(parseInt(qty.value)||1)+parseInt(b.dataset.q));});});
 
   var cart=[],bubble=document.getElementById('bubble'),body=document.getElementById('cartBody'),ft=document.getElementById('cartFt');
   function renderCart(){
     var count=cart.reduce(function(a,i){return a+i.q},0);bubble.textContent=count;bubble.style.display=count?'flex':'none';
+    var total=cart.reduce(function(a,i){return a+i.p*i.q},0);
+    var sb=document.getElementById('shipbar');
+    if(sb){
+      if(!cart.length){sb.innerHTML='';}
+      else{var thr=15000,rem=thr-total,pct=Math.min(100,total/thr*100);
+        sb.innerHTML='<p class="msg">'+(rem>0
+          ?'<svg viewBox="0 0 24 24" fill="none"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="7" cy="18" r="1.6" stroke="currentColor" stroke-width="1.5"/><circle cx="17" cy="18" r="1.6" stroke="currentColor" stroke-width="1.5"/></svg> <span>You\'re <strong>'+money(rem)+'</strong> from complimentary shipping</span>'
+          :'<svg viewBox="0 0 24 24" fill="none"><path d="m5 12 4 4 10-10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> <span>You\'ve unlocked <strong>complimentary shipping</strong></span>')
+          +'</p><div class="shiptrack"><div class="shipfill" style="width:'+pct+'%"></div></div>';}
+    }
     if(!cart.length){body.innerHTML='<div class="cart-empty">Your bag is empty.</div>';ft.style.display='none';return;}
     ft.style.display='flex';
     body.innerHTML=cart.map(function(it,idx){return '<div class="li"><div class="surface ratio-sq"><svg class="glyph"><use href="#'+it.g+'"/></svg></div><div><div class="nm">'+it.n+'</div><div class="op">'+it.o+'</div><button class="rm" data-rm="'+idx+'">Remove</button></div><div class="lp">'+money(it.p*it.q)+'</div></div>';}).join('');
-    document.getElementById('cartTotal').textContent=money(cart.reduce(function(a,i){return a+i.p*i.q},0));
+    document.getElementById('cartTotal').textContent=money(total);
   }
   function openCart(){document.getElementById('scrim').classList.add('open');document.getElementById('cart').classList.add('open');document.body.style.overflow='hidden';}
   function closeCart(){document.getElementById('scrim').classList.remove('open');document.getElementById('cart').classList.remove('open');document.body.style.overflow='';}

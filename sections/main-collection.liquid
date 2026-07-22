@@ -1,4 +1,4 @@
-{%- comment -%} Aura — Main collection (premium) {%- endcomment -%}
+{%- comment -%} Aura — Main collection (premium, instant filters) {%- endcomment -%}
 {%- liquid
   assign show_filters = false
   if section.settings.enable_filtering or section.settings.enable_sorting
@@ -7,9 +7,8 @@
   assign banner_image = section.settings.banner_image | default: collection.image
 -%}
 {%- paginate collection.products by section.settings.products_per_page -%}
-<div class="collection-page section" style="--section-y: 0;">
+<facet-filters class="collection-page section" data-section="{{ section.id }}" data-url="{{ collection.url }}" style="--section-y: 0;">
 
-  {%- comment -%} Breadcrumbs {%- endcomment -%}
   {%- if section.settings.show_breadcrumbs -%}
     <div class="page-width">
       <nav class="breadcrumb" aria-label="Breadcrumb">
@@ -20,14 +19,12 @@
     </div>
   {%- endif -%}
 
-  {%- comment -%} Collections navigation (horizontal category row) {%- endcomment -%}
   {%- if section.settings.show_collections_nav -%}
     <div class="page-width">
       {% render 'collections-nav', menu: section.settings.collections_nav_menu, heading: section.settings.collections_nav_heading, current: collection %}
     </div>
   {%- endif -%}
 
-  {%- comment -%} Banner {%- endcomment -%}
   {%- if section.settings.banner_style == 'image' and banner_image != blank -%}
     <div class="page-width">
       <div class="collection-banner collection-banner--image banner--text-light scroll-trigger" style="--overlay-opacity: {{ section.settings.overlay_opacity | divided_by: 100.0 }};">
@@ -36,9 +33,7 @@
         <div class="collection-banner__content">
           <span class="eyebrow">{{ 'sections.collection_template.title' | t }}</span>
           <h1 class="collection-banner__title h0">{{ collection.title | escape }}</h1>
-          {%- if collection.description != blank and section.settings.show_description -%}
-            <div class="collection-banner__desc rte">{{ collection.description | strip_html | truncatewords: 30 }}</div>
-          {%- endif -%}
+          {%- if collection.description != blank and section.settings.show_description -%}<div class="collection-banner__desc rte">{{ collection.description | strip_html | truncatewords: 30 }}</div>{%- endif -%}
         </div>
       </div>
     </div>
@@ -47,9 +42,7 @@
       <header class="collection-header {% if section.settings.header_alignment == 'center' %}collection-header--center{% endif %} scroll-trigger">
         <span class="eyebrow {% if section.settings.header_alignment == 'center' %}eyebrow--center{% endif %}">{{ 'sections.collection_template.title' | t }}</span>
         <h1 class="collection-header__title h0">{{ collection.title | escape }}</h1>
-        {%- if collection.description != blank and section.settings.show_description -%}
-          <div class="collection-header__desc rte">{{ collection.description }}</div>
-        {%- endif -%}
+        {%- if collection.description != blank and section.settings.show_description -%}<div class="collection-header__desc rte">{{ collection.description }}</div>{%- endif -%}
       </header>
     </div>
   {%- endif -%}
@@ -59,111 +52,97 @@
       <div class="facets" id="facets">
         <div class="facets__left">
           {%- if section.settings.enable_filtering and collection.filters.size > 0 -%}
-            <button type="button" class="facets__toggle" data-drawer-open="filter-drawer" aria-haspopup="dialog">
-              {% render 'icon', icon: 'sliders' %} {{ 'products.facets.filter_button' | t }}
-            </button>
+            <button type="button" class="facets__toggle" data-drawer-open="filter-drawer" aria-haspopup="dialog">{% render 'icon', icon: 'sliders' %} {{ 'products.facets.filter_button' | t }}</button>
           {%- endif -%}
-          <span class="product-count">{{ 'products.facets.product_count_simple' | t: count: collection.products_count }}</span>
+          <span class="product-count" data-product-count>{{ 'products.facets.product_count_simple' | t: count: collection.products_count }}</span>
         </div>
         {%- if section.settings.enable_sorting -%}
           <div class="facets__sort">
             <label for="SortBy">{{ 'products.facets.sort_by_label' | t }}</label>
             {%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
             <div class="select">
-              <select name="sort_by" id="SortBy" form="FacetFiltersForm" onchange="this.form.submit()">
+              <select name="sort_by" id="SortBy" form="FacetFiltersForm" aria-label="{{ 'products.facets.sort_button' | t }}">
                 {%- for option in collection.sort_options -%}<option value="{{ option.value }}"{% if option.value == sort_by %} selected{% endif %}>{{ option.name }}</option>{%- endfor -%}
               </select>
               {% render 'icon', icon: 'caret' %}
             </div>
+            <button type="submit" form="FacetFiltersForm" class="button button--compact facets__apply-nojs">{{ 'products.facets.apply' | t }}</button>
           </div>
         {%- endif -%}
       </div>
 
-      {%- assign has_active = false -%}
-      {%- for filter in collection.filters -%}{%- if filter.active_values.size > 0 or filter.min_value.value != nil or filter.max_value.value != nil -%}{%- assign has_active = true -%}{%- endif -%}{%- endfor -%}
-      {%- if has_active -%}
-        <div class="active-facets">
-          {%- for filter in collection.filters -%}
-            {%- for value in filter.active_values -%}
-              <a href="{{ value.url_to_remove }}" class="active-facet">{{ value.label | escape }} {% render 'icon', icon: 'close' %}</a>
+      <div class="active-facets-wrap">
+        {%- assign has_active = false -%}
+        {%- for filter in collection.filters -%}{%- if filter.active_values.size > 0 or filter.min_value.value != nil or filter.max_value.value != nil -%}{%- assign has_active = true -%}{%- endif -%}{%- endfor -%}
+        {%- if has_active -%}
+          <div class="active-facets">
+            {%- for filter in collection.filters -%}
+              {%- for value in filter.active_values -%}<a href="{{ value.url_to_remove }}" class="active-facet">{{ value.label | escape }} {% render 'icon', icon: 'close' %}</a>{%- endfor -%}
+              {%- if filter.type == 'price_range' and filter.min_value.value != nil or filter.max_value.value != nil -%}<a href="{{ filter.url_to_remove }}" class="active-facet">{{ filter.min_value.value | default: 0 | money }} – {{ filter.max_value.value | default: filter.range_max | money }} {% render 'icon', icon: 'close' %}</a>{%- endif -%}
             {%- endfor -%}
-            {%- if filter.type == 'price_range' and filter.min_value.value != nil or filter.max_value.value != nil -%}
-              <a href="{{ filter.url_to_remove }}" class="active-facet">{{ filter.min_value.value | default: 0 | money }} – {{ filter.max_value.value | default: filter.range_max | money }} {% render 'icon', icon: 'close' %}</a>
-            {%- endif -%}
+            <a href="{{ collection.url }}" class="link facets__clear-all">{{ 'products.facets.clear_all' | t }}</a>
+          </div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <div id="ProductGridContainer">
+      {%- if collection.products.size > 0 -%}
+        <div class="grid grid--{{ section.settings.columns_desktop }} grid--1-col-mobile product-grid" id="product-grid">
+          {%- for product in collection.products -%}
+            <div class="scroll-trigger scroll-trigger--delay-{{ forloop.index0 | modulo: 3 | plus: 1 }}">
+              {% render 'card-product', card_product: product, media_aspect_ratio: section.settings.image_ratio, show_quick_add: section.settings.show_quick_add, show_wishlist: section.settings.show_wishlist, show_rating: section.settings.show_rating, lazy_load: forloop.index > 8 %}
+            </div>
           {%- endfor -%}
-          <a href="{{ collection.url }}" class="link">{{ 'products.facets.clear_all' | t }}</a>
+        </div>
+        {% render 'pagination', paginate: paginate %}
+      {%- else -%}
+        <div class="empty-state">
+          <p class="h3">{{ 'sections.collection_template.empty' | t }}</p>
+          <a href="{{ collection.url }}" class="button button--secondary facets__clear-all">{{ 'products.facets.clear_all' | t }}</a>
         </div>
       {%- endif -%}
-    {%- endif -%}
-
-    {%- if collection.products.size > 0 -%}
-      <div class="grid grid--{{ section.settings.columns_desktop }} grid--1-col-mobile product-grid" id="product-grid">
-        {%- for product in collection.products -%}
-          <div class="scroll-trigger scroll-trigger--delay-{{ forloop.index0 | modulo: 3 | plus: 1 }}">
-            {% render 'card-product',
-              card_product: product,
-              media_aspect_ratio: section.settings.image_ratio,
-              show_quick_add: section.settings.show_quick_add,
-              show_wishlist: section.settings.show_wishlist,
-              show_rating: section.settings.show_rating,
-              lazy_load: forloop.index > 8 %}
-          </div>
-        {%- endfor -%}
-      </div>
-      {% render 'pagination', paginate: paginate %}
-    {%- else -%}
-      <div class="empty-state">
-        <p class="h3">{{ 'sections.collection_template.empty' | t }}</p>
-        <a href="{{ collection.url }}" class="button button--secondary">{{ 'products.facets.clear_all' | t }}</a>
-      </div>
-    {%- endif -%}
-  </div>
-</div>
-
-{%- comment -%} Filter drawer {%- endcomment -%}
-{%- if section.settings.enable_filtering and collection.filters.size > 0 -%}
-  <side-drawer id="filter-drawer" class="drawer filter-drawer menu-drawer" aria-hidden="true">
-    <div class="drawer__overlay" tabindex="-1"></div>
-    <div class="drawer__inner" role="dialog" aria-modal="true" aria-label="{{ 'products.facets.filter_button' | t }}">
-      <div class="drawer__header">
-        <span class="drawer__heading">{{ 'products.facets.filter_button' | t }}</span>
-        <button type="button" class="drawer__close" data-drawer-close aria-label="{{ 'general.accessibility.close' | t }}">{% render 'icon', icon: 'close' %}</button>
-      </div>
-      <form id="FacetFiltersForm" class="drawer__body facets__form">
-        {%- for filter in collection.filters -%}
-          <details class="accordion" open>
-            <summary>{{ filter.label | escape }} {% render 'icon', icon: 'caret' %}</summary>
-            <div class="accordion__content">
-              {%- case filter.type -%}
-                {%- when 'list', 'boolean' -%}
-                  <ul class="list-unstyled facet-values">
-                    {%- for value in filter.values -%}
-                      <li>
-                        <label class="facet-checkbox">
-                          <input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}"{% if value.active %} checked{% endif %}{% if value.count == 0 and value.active == false %} disabled{% endif %}>
-                          <span>{{ value.label | escape }} <span class="facet-count">{{ value.count }}</span></span>
-                        </label>
-                      </li>
-                    {%- endfor -%}
-                  </ul>
-                {%- when 'price_range' -%}
-                  <div class="facet-price">
-                    <div class="field"><label>{{ 'products.facets.from' | t }}</label><input type="number" name="{{ filter.min_value.param_name }}" value="{{ filter.min_value.value | money_without_currency | default: '' }}" placeholder="0" min="0" max="{{ filter.range_max | money_without_currency }}"></div>
-                    <div class="field"><label>{{ 'products.facets.to' | t }}</label><input type="number" name="{{ filter.max_value.param_name }}" value="{{ filter.max_value.value | money_without_currency | default: '' }}" placeholder="{{ filter.range_max | money_without_currency }}" min="0" max="{{ filter.range_max | money_without_currency }}"></div>
-                  </div>
-              {%- endcase -%}
-            </div>
-          </details>
-        {%- endfor -%}
-        <input type="hidden" name="sort_by" value="{{ collection.sort_by | default: collection.default_sort_by }}">
-      </form>
-      <div class="drawer__footer facets__actions">
-        <a href="{{ collection.url }}" class="button button--secondary button--full">{{ 'products.facets.clear_all' | t }}</a>
-        <button type="submit" form="FacetFiltersForm" class="button button--full">{{ 'products.facets.apply' | t }}</button>
-      </div>
     </div>
-  </side-drawer>
-{%- endif -%}
+  </div>
+
+  {%- if section.settings.enable_filtering and collection.filters.size > 0 -%}
+    <side-drawer id="filter-drawer" class="drawer filter-drawer menu-drawer" aria-hidden="true">
+      <div class="drawer__overlay" tabindex="-1"></div>
+      <div class="drawer__inner" role="dialog" aria-modal="true" aria-label="{{ 'products.facets.filter_button' | t }}">
+        <div class="drawer__header">
+          <span class="drawer__heading">{{ 'products.facets.filter_button' | t }}</span>
+          <button type="button" class="drawer__close" data-drawer-close aria-label="{{ 'general.accessibility.close' | t }}">{% render 'icon', icon: 'close' %}</button>
+        </div>
+        <form id="FacetFiltersForm" class="drawer__body facets__form">
+          {%- for filter in collection.filters -%}
+            <details class="accordion" open>
+              <summary>{{ filter.label | escape }} {% render 'icon', icon: 'caret' %}</summary>
+              <div class="accordion__content">
+                {%- case filter.type -%}
+                  {%- when 'list', 'boolean' -%}
+                    <ul class="list-unstyled facet-values">
+                      {%- for value in filter.values -%}
+                        <li><label class="facet-checkbox"><input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}"{% if value.active %} checked{% endif %}{% if value.count == 0 and value.active == false %} disabled{% endif %}><span>{{ value.label | escape }} <span class="facet-count">{{ value.count }}</span></span></label></li>
+                      {%- endfor -%}
+                    </ul>
+                  {%- when 'price_range' -%}
+                    <div class="facet-price">
+                      <div class="field"><label>{{ 'products.facets.from' | t }}</label><input type="number" name="{{ filter.min_value.param_name }}" value="{{ filter.min_value.value | money_without_currency | default: '' }}" placeholder="0" min="0" max="{{ filter.range_max | money_without_currency }}"></div>
+                      <div class="field"><label>{{ 'products.facets.to' | t }}</label><input type="number" name="{{ filter.max_value.param_name }}" value="{{ filter.max_value.value | money_without_currency | default: '' }}" placeholder="{{ filter.range_max | money_without_currency }}" min="0" max="{{ filter.range_max | money_without_currency }}"></div>
+                    </div>
+                {%- endcase -%}
+              </div>
+            </details>
+          {%- endfor -%}
+        </form>
+        <div class="drawer__footer facets__actions">
+          <a href="{{ collection.url }}" class="button button--secondary button--full facets__clear-all">{{ 'products.facets.clear_all' | t }}</a>
+          <button type="button" class="button button--full" data-drawer-close>{{ 'products.facets.apply' | t }}</button>
+        </div>
+      </div>
+    </side-drawer>
+  {%- endif -%}
+</facet-filters>
 {%- endpaginate -%}
 
 {% schema %}
@@ -206,7 +185,7 @@
     { "type": "checkbox", "id": "show_wishlist", "default": true, "label": "Show wishlist" },
     { "type": "checkbox", "id": "show_rating", "default": true, "label": "Show rating", "info": "Requires a product reviews app that sets the reviews.rating metafield." },
     { "type": "header", "content": "Filtering and sorting" },
-    { "type": "checkbox", "id": "enable_filtering", "default": true, "label": "Enable filtering" },
+    { "type": "checkbox", "id": "enable_filtering", "default": true, "label": "Enable filtering", "info": "Manage filters in Search & Discovery." },
     { "type": "checkbox", "id": "enable_sorting", "default": true, "label": "Enable sorting" }
   ]
 }

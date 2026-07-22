@@ -5,26 +5,22 @@
       "blocks": {
         "vendor": { "type": "vendor", "settings": {} },
         "title": { "type": "title", "settings": {} },
+        "rating": { "type": "rating", "settings": {} },
         "price": { "type": "price", "settings": { "show_taxes_note": true } },
         "variant_picker": { "type": "variant_picker", "settings": {} },
-        "buy_buttons": { "type": "buy_buttons", "settings": { "show_quantity": true, "show_dynamic_checkout": true } },
+        "buy_buttons": { "type": "buy_buttons", "settings": { "show_quantity": true, "show_dynamic_checkout": true, "show_secure": true, "secure_text": "Secure, encrypted checkout" } },
+        "guarantees": { "type": "guarantees", "settings": { "icon_1": "truck", "text_1": "Complimentary carbon-neutral shipping", "icon_2": "return", "text_2": "Thirty-day free returns", "icon_3": "shield", "text_3": "Backed by a lifetime guarantee" } },
         "description": { "type": "description", "settings": {} },
         "details": { "type": "collapsible_tab", "settings": { "heading": "Details & materials", "content": "<p>Describe the materials, dimensions, and craftsmanship behind this piece.</p>" } },
         "shipping": { "type": "collapsible_tab", "settings": { "heading": "Shipping & returns", "content": "<p>Carbon-neutral delivery and thirty-day free returns.</p>" } },
         "share": { "type": "share", "settings": { "share_label": "Share" } }
       },
-      "block_order": ["vendor", "title", "price", "variant_picker", "buy_buttons", "description", "details", "shipping", "share"],
-      "settings": {}
+      "block_order": ["vendor", "title", "rating", "price", "variant_picker", "buy_buttons", "guarantees", "description", "details", "shipping", "share"],
+      "settings": { "show_breadcrumbs": true }
     },
     "recommendations": {
       "type": "product-recommendations",
-      "settings": {
-        "heading": "You may also like",
-        "heading_size": "h2",
-        "products_to_show": 4,
-        "columns_desktop": "4",
-        "image_ratio": "portrait"
-      }
+      "settings": { "heading": "You may also like", "heading_size": "h2", "products_to_show": 4, "columns_desktop": "4", "image_ratio": "portrait" }
     }
   },
   "order": ["main", "recommendations"]

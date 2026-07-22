@@ -35,6 +35,10 @@
     {%- endif -%}
   </div>
 
+  {%- if show_savings and compare_at_price > price -%}
+    <span class="price__save">Save {{ compare_at_price | minus: price | money }}</span>
+  {%- endif -%}
+
   {%- if target.unit_price_measurement -%}
     <div class="unit-price caption">
       <span class="visually-hidden">{{ 'products.product.price.unit_price' | t }}</span>

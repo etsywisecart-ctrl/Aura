@@ -579,6 +579,74 @@
     });
   }
 
+  /* -----------------------------------------------------------------------
+     Facet filters — instant filtering/sorting via the Section Rendering API.
+     Uses collection.filters (Shopify Search & Discovery). Degrades to a
+     normal GET form submit without JS.
+     ----------------------------------------------------------------------- */
+  class FacetFilters extends HTMLElement {
+    connectedCallback() {
+      this.sectionId = this.dataset.section;
+      this.baseUrl = this.dataset.url;
+      this.debouncedApply = debounce(this.applyFromForm.bind(this), 500);
+      this.addEventListener('change', this.onChange.bind(this));
+      this.addEventListener('click', this.onClick.bind(this));
+      this.onPop = this.onPop.bind(this);
+      window.addEventListener('popstate', this.onPop);
+    }
+    disconnectedCallback() { window.removeEventListener('popstate', this.onPop); }
+    get form() { return this.querySelector('#FacetFiltersForm'); }
+
+    onChange(e) {
+      if (!this.form) return;
+      if (e.target.matches('input[type="number"]')) this.debouncedApply();
+      else this.applyFromForm();
+    }
+    applyFromForm() {
+      const params = new URLSearchParams(new FormData(this.form)).toString();
+      this.render(this.baseUrl + (params ? '?' + params : ''), true);
+    }
+    onClick(e) {
+      const link = e.target.closest('a[href]');
+      if (!link) return;
+      if (link.matches('.active-facet, .pagination__item, .facets__clear-all') || link.hasAttribute('data-facet-link')) {
+        e.preventDefault();
+        this.render(link.href, true);
+        this.closeDrawer();
+      }
+    }
+    onPop() { this.render(location.href, false); }
+    closeDrawer() {
+      const d = document.getElementById('filter-drawer');
+      if (d && d.classList.contains('active') && typeof d.close === 'function') d.close();
+    }
+    render(url, push) {
+      const u = new URL(url, location.origin);
+      u.searchParams.set('section_id', this.sectionId);
+      this.classList.add('facets--loading');
+      fetch(u.toString())
+        .then((r) => r.text())
+        .then((text) => {
+          const doc = new DOMParser().parseFromString(text, 'text/html');
+          ['#ProductGridContainer', '.active-facets-wrap', '[data-product-count]', '#FacetFiltersForm'].forEach((sel) => {
+            const nw = doc.querySelector(sel);
+            const cur = this.querySelector(sel);
+            if (nw && cur) cur.innerHTML = nw.innerHTML;
+          });
+          if (push) {
+            const clean = new URL(url, location.origin);
+            clean.searchParams.delete('section_id');
+            history.pushState({ aura: true }, '', clean.toString());
+          }
+          this.classList.remove('facets--loading');
+          initWishlist();
+          publish('facets:update', {});
+        })
+        .catch(() => this.classList.remove('facets--loading'));
+    }
+  }
+  customElements.define('facet-filters', FacetFilters);
+
   /* Wishlist — client-side, persisted in localStorage */
   const WISHLIST_KEY = 'aura-wishlist';
   function getWishlist() {

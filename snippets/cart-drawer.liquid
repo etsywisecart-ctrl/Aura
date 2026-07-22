@@ -12,6 +12,8 @@
       </button>
     </div>
 
+    {% render 'free-shipping-bar' %}
+
     {%- if cart == empty -%}
       <div class="drawer__body cart-drawer__empty">
         <div class="cart__empty">
@@ -90,19 +92,36 @@
         </cart-drawer-items>
 
         <div class="drawer__footer">
+          {%- if settings.show_cart_note -%}
+            <details class="cart-note-toggle">
+              <summary>{% render 'icon', icon: 'gift' %} <span>{{ 'sections.cart.note' | t }}</span> {% render 'icon', icon: 'caret' %}</summary>
+              <label class="visually-hidden" for="CartDrawer-Note">{{ 'sections.cart.note' | t }}</label>
+              <textarea class="cart-note" id="CartDrawer-Note" name="note" placeholder="{{ 'sections.cart.note' | t }}">{{ cart.note }}</textarea>
+            </details>
+          {%- endif -%}
           <div class="totals" role="status">
             <span>{{ 'sections.cart.estimated_total' | t }}</span>
             <span class="totals__total">{{ cart.total_price | money_with_currency }}</span>
           </div>
           <p class="tax-note">{{ 'sections.cart.taxes_and_shipping_at_checkout' | t }}</p>
           <div class="cart__ctas">
-            <a href="{{ routes.cart_url }}" class="button button--secondary button--full-width">
+            <a href="{{ routes.cart_url }}" class="button button--secondary button--full">
               {{ 'sections.cart.view_cart' | t }}
             </a>
-            <button type="submit" name="checkout" class="button button--full-width" {% if cart == empty %}disabled{% endif %}>
+            <button type="submit" name="checkout" class="button button--full" {% if cart == empty %}disabled{% endif %}>
               {{ 'sections.cart.checkout' | t }}
             </button>
           </div>
+          {%- if settings.show_secure_badge -%}
+            <div class="secure-checkout cart-secure">
+              <span class="secure-checkout__label">{% render 'icon', icon: 'lock' %} {{ 'sections.cart.secure_checkout' | t }}</span>
+              {%- if shop.enabled_payment_types.size > 0 -%}
+                <div class="payment-icons" role="list" aria-label="Payment methods">
+                  {%- for type in shop.enabled_payment_types limit: 6 -%}{{ type | payment_type_svg_tag: class: 'payment-icon' }}{%- endfor -%}
+                </div>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
         </div>
       </form>
     {%- endif -%}
