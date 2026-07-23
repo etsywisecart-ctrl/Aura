@@ -233,6 +233,34 @@
   .shiptrack{height:5px;border-radius:999px;background:color-mix(in srgb,var(--ink) 10%,transparent);overflow:hidden}
   .shipfill{height:100%;border-radius:999px;background:var(--accent);transition:width var(--ts) var(--ease)}
   .cart-secure2{display:flex;flex-direction:column;gap:8px;align-items:center;margin-top:6px}
+  /* ===== marquee, low-stock, cross-sell, quick-view ===== */
+  .pmarquee{overflow:hidden;background:#0D0E11;color:#f5f5f7}
+  .pmarquee__track{display:flex;width:max-content;animation:pmarq 30s linear infinite}
+  .pmarquee:hover .pmarquee__track{animation-play-state:paused}
+  .pmarquee__g{display:flex;flex-shrink:0}
+  .pmarquee__i{display:inline-flex;align-items:center;font-size:.8rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;padding:14px 0;white-space:nowrap}
+  .pmarquee__s{margin:0 28px;color:var(--accent)}
+  @keyframes pmarq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  .pinv{display:inline-flex;align-items:center;gap:7px;font-size:.82rem;color:#b3702f;margin:2px 0 2px}
+  .pinv .dot{width:8px;height:8px;border-radius:50%;background:#d08b3f;box-shadow:0 0 0 3px rgba(208,139,63,.18)}
+  .crec{margin-top:22px;padding-top:22px;border-top:1px solid var(--line)}
+  .crec__t{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2);font-weight:600;margin-bottom:12px}
+  .crec__i{display:grid;grid-template-columns:48px 1fr auto;gap:12px;align-items:center;padding:8px 0}
+  .crec__i .surface{width:48px;height:60px;border-radius:8px}
+  .crec__nm{font-size:.85rem;font-weight:500}.crec__p{font-size:.8rem;color:var(--ink-2)}
+  .crec__add{width:34px;height:34px;border-radius:50%;border:1px solid var(--line-2);background:transparent;color:var(--ink);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;transition:all var(--tq)}
+  .crec__add:hover{background:var(--ink);color:var(--bg)}.crec__add svg{width:15px}
+  .qvbtn{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(.96);z-index:3;opacity:0;padding:10px 22px;border-radius:999px;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid var(--line-2);color:var(--ink);font-size:.82rem;font-weight:500;cursor:pointer;transition:opacity var(--tb) var(--ease),transform var(--tb) var(--ease),background var(--tb)}
+  .card:hover .qvbtn{opacity:1;transform:translate(-50%,-50%) scale(1)}.qvbtn:hover{background:var(--ink);color:var(--bg)}
+  @media(hover:none){.qvbtn{display:none}}
+  .qv-scrim{position:fixed;inset:0;z-index:96;background:rgba(0,0,0,.5);opacity:0;visibility:hidden;transition:opacity var(--tb);backdrop-filter:blur(2px)}
+  .qv-scrim.open{opacity:1;visibility:visible}
+  .qv{position:fixed;top:50%;left:50%;transform:translate(-50%,-48%) scale(.98);z-index:97;width:min(760px,calc(100% - 32px));max-height:calc(100% - 32px);overflow-y:auto;background:var(--bg);border-radius:22px;box-shadow:var(--shadow);opacity:0;visibility:hidden;transition:opacity var(--tb),transform var(--tb) var(--ease),visibility var(--tb)}
+  .qv.open{opacity:1;visibility:visible;transform:translate(-50%,-50%) scale(1)}
+  .qv__grid{display:grid;grid-template-columns:1fr}@media(min-width:700px){.qv__grid{grid-template-columns:1fr 1fr}}
+  .qv__media{aspect-ratio:4/5;position:relative;overflow:hidden}.qv__media .surface{position:absolute;inset:0}
+  .qv__info{padding:32px;display:flex;flex-direction:column;gap:14px}
+  .qv__close{position:absolute;top:14px;right:14px;z-index:2;width:40px;height:40px;border-radius:50%;border:0;background:color-mix(in srgb,var(--bg) 85%,transparent);display:inline-flex;align-items:center;justify-content:center;cursor:pointer}.qv__close svg{width:16px}
   :focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:3px}
 </style>
 
@@ -270,6 +298,12 @@
         </div>
       </div>
     </section>
+
+    <!-- marquee trust bar -->
+    <div class="pmarquee"><div class="pmarquee__track">
+      <div class="pmarquee__g"><span class="pmarquee__i">Complimentary carbon-neutral shipping</span><span class="pmarquee__s">✦</span><span class="pmarquee__i">Lifetime guarantee</span><span class="pmarquee__s">✦</span><span class="pmarquee__i">Thirty-day returns</span><span class="pmarquee__s">✦</span><span class="pmarquee__i">Crafted in Portugal</span><span class="pmarquee__s">✦</span></div>
+      <div class="pmarquee__g" aria-hidden="true"><span class="pmarquee__i">Complimentary carbon-neutral shipping</span><span class="pmarquee__s">✦</span><span class="pmarquee__i">Lifetime guarantee</span><span class="pmarquee__s">✦</span><span class="pmarquee__i">Thirty-day returns</span><span class="pmarquee__s">✦</span><span class="pmarquee__i">Crafted in Portugal</span><span class="pmarquee__s">✦</span></div>
+    </div></div>
 
     <!-- showcase tiles -->
     <section class="sec">
@@ -342,6 +376,7 @@
           <h1 class="h1" style="margin:12px 0 6px">The Field Jacket</h1>
           <div class="prating"><span class="stars"><span class="fill" style="width:96%"></span></span><span class="rcount">4.8 · 214 reviews</span></div>
           <div class="price" id="pdpPrice"><s style="opacity:.5;margin-right:8px">$290.00</s>$248.00<span class="psave">Save $42</span></div>
+          <div class="pinv"><span class="dot"></span>Low stock — only 6 left</div>
           <div class="opt"><span class="lbl">Color <span class="sel" id="selColor">Olive</span></span><div class="swatches" data-group="color"><button class="swatch2 on" style="background:#6b7247" data-val="Olive" title="Olive" aria-label="Olive"></button><button class="swatch2" style="background:#b8ae9c" data-val="Stone" title="Stone" aria-label="Stone"></button><button class="swatch2" style="background:#1a1a1a" data-val="Black" title="Black" aria-label="Black"></button></div></div>
           <div class="opt"><span class="lbl">Size <span class="sel" id="selSize">M</span></span><div class="chips" data-group="size"><button class="chip">XS</button><button class="chip">S</button><button class="chip on">M</button><button class="chip">L</button><button class="chip">XL</button></div></div>
           <div class="qty"><button data-q="-1" aria-label="Decrease">–</button><input id="qty" value="1" inputmode="numeric" aria-label="Quantity"><button data-q="1" aria-label="Increase">+</button></div>
@@ -420,6 +455,12 @@
   <div class="foot"><button class="btn sec full" id="fclear">Clear</button><button class="btn full" id="fapply">Apply</button></div>
 </aside>
 
+<div class="qv-scrim" id="qvScrim"></div>
+<div class="qv" id="qv" role="dialog" aria-modal="true" aria-label="Quick view">
+  <button class="qv__close" id="qvClose" aria-label="Close"><svg viewBox="0 0 18 18" fill="none"><path d="m3 3 12 12M15 3 3 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+  <div class="qv__grid" id="qvBody"></div>
+</div>
+
 <div class="toast" id="toast"><svg viewBox="0 0 24 24" fill="none"><path d="m5 12 4 4 10-10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Added to bag</span></div>
 <div class="toolbar"><button class="on" data-nav="home">Home</button><button data-nav="collection">Collection</button><button data-nav="product">Product</button><span class="div"></span><button id="themeBtn">◐ Theme</button></div>
 
@@ -448,7 +489,7 @@
     window.scrollTo(0,0); setTimeout(reveal,30);
   }
   document.addEventListener('click',function(e){
-    if(e.target.closest('.wish,.qadd,[data-cscroll],#fopen,#fclose,#fapply,#fclear,.cnav-item,.fsort')) return;
+    if(e.target.closest('.wish,.qadd,.qvbtn,[data-crec],[data-cscroll],#fopen,#fclose,#fapply,#fclear,.cnav-item,.fsort,.qv,.qv-scrim')) return;
     var n=e.target.closest('[data-nav]');if(n){e.preventDefault();show(n.dataset.nav);}
   });
 
@@ -480,12 +521,17 @@
     if(!cart.length){body.innerHTML='<div class="cart-empty">Your bag is empty.</div>';ft.style.display='none';return;}
     ft.style.display='flex';
     body.innerHTML=cart.map(function(it,idx){return '<div class="li"><div class="surface ratio-sq"><svg class="glyph"><use href="#'+it.g+'"/></svg></div><div><div class="nm">'+it.n+'</div><div class="op">'+it.o+'</div><button class="rm" data-rm="'+idx+'">Remove</button></div><div class="lp">'+money(it.p*it.q)+'</div></div>';}).join('');
+    var recs=products.filter(function(p){return !cart.some(function(c){return c.n===p.n;});}).slice(0,2);
+    if(recs.length){body.innerHTML+='<div class="crec"><p class="crec__t">Pairs well with</p>'+recs.map(function(pr){return '<div class="crec__i"><div class="surface '+(pr.t||'')+'"><svg class="glyph"><use href="#'+pr.g+'"/></svg></div><div><div class="crec__nm">'+pr.n+'</div><div class="crec__p">'+money(pr.p)+'</div></div><button class="crec__add" data-crec="'+pr.n+'" aria-label="Add '+pr.n+'"><svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button></div>';}).join('')+'</div>';}
     document.getElementById('cartTotal').textContent=money(total);
   }
   function openCart(){document.getElementById('scrim').classList.add('open');document.getElementById('cart').classList.add('open');document.body.style.overflow='hidden';}
   function closeCart(){document.getElementById('scrim').classList.remove('open');document.getElementById('cart').classList.remove('open');document.body.style.overflow='';}
   document.getElementById('cartBtn').addEventListener('click',openCart);document.getElementById('cartClose').addEventListener('click',closeCart);document.getElementById('scrim').addEventListener('click',closeCart);
-  body.addEventListener('click',function(e){var r=e.target.closest('[data-rm]');if(r){cart.splice(+r.dataset.rm,1);renderCart();}});
+  body.addEventListener('click',function(e){
+    var r=e.target.closest('[data-rm]');if(r){cart.splice(+r.dataset.rm,1);renderCart();return;}
+    var a=e.target.closest('[data-crec]');if(a){var pr=products.find(function(p){return p.n===a.dataset.crec;});if(pr){cart.push({n:pr.n,o:'',p:pr.p,q:1,g:pr.g});renderCart();}return;}
+  });
   var toast=document.getElementById('toast');
   document.getElementById('addBtn').addEventListener('click',function(){
     var o=document.getElementById('selColor').textContent+' / '+document.getElementById('selSize').textContent;
@@ -519,6 +565,7 @@
       '<div class="cmedia"><div class="surface ratio-portrait '+pr.t+'" style="border-radius:var(--r-md)"><svg class="glyph"><use href="#'+pr.g+'"/></svg></div>'+
         '<div class="badges">'+badge+'</div>'+
         '<button class="wish'+(wished[pr.n]?' on':'')+'" data-wish="'+i+'" aria-label="Save '+pr.n+'"><svg viewBox="0 0 24 24" fill="none"><path d="M12 20s-7-4.35-9.5-8.5C1 8.5 2.5 5.5 5.5 5.5c1.9 0 3.2 1.1 4 2.2.8-1.1 2.1-2.2 4-2.2 3 0 4.5 3 3 6C19 15.65 12 20 12 20Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></button>'+
+        '<button class="qvbtn" data-qv="'+i+'">Quick view</button>'+
         '<div class="qadd"><button data-qadd="'+i+'">Add to bag</button></div>'+
       '</div>'+
       '<span class="vendor">'+pr.v+'</span><h3>'+pr.n+'</h3>'+
@@ -534,6 +581,7 @@
 
   var collGrid=document.getElementById('collGrid');
   collGrid.addEventListener('click',function(e){
+    var qb=e.target.closest('[data-qv]'); if(qb){e.stopPropagation();openQV(currentColl[+qb.dataset.qv]);return;}
     var w=e.target.closest('[data-wish]'); if(w){e.stopPropagation();var p=currentColl[+w.dataset.wish];wished[p.n]=!wished[p.n];w.classList.toggle('on',wished[p.n]);return;}
     var q=e.target.closest('[data-qadd]'); if(q){e.stopPropagation();var pr=currentColl[+q.dataset.qadd];
       var ex=cart.find(function(i){return i.n===pr.n&&!i.o});
@@ -559,6 +607,27 @@
   document.getElementById('fapply').addEventListener('click',closeFilter);
   fscrim.addEventListener('click',closeFilter);
   document.getElementById('fclear').addEventListener('click',function(){fdrawer.querySelectorAll('input').forEach(function(i){i.checked=false;});});
+
+  /* quick view (demo) */
+  var qv=document.getElementById('qv'),qvScrim=document.getElementById('qvScrim');
+  function closeQV(){qv.classList.remove('open');qvScrim.classList.remove('open');document.body.style.overflow='';}
+  function openQV(pr){
+    var price=pr.was?'<span class="was">'+money(pr.was)+'</span><span class="sale">'+money(pr.p)+'</span>':money(pr.p);
+    document.getElementById('qvBody').innerHTML=
+      '<div class="qv__media"><div class="surface '+(pr.t||'')+'"><svg class="glyph"><use href="#'+pr.g+'"/></svg></div></div>'+
+      '<div class="qv__info"><span class="eyebrow">'+pr.v+'</span><h2 style="font-size:1.7rem;font-weight:600;letter-spacing:-.02em">'+pr.n+'</h2>'+
+      '<div class="price">'+price+'</div>'+
+      '<div class="rating">'+stars(pr.r)+'<span class="rcount">('+pr.rc+')</span></div>'+
+      '<div class="opt"><span class="lbl">Size</span><div class="chips" data-qvsize><button class="chip">S</button><button class="chip on">M</button><button class="chip">L</button><button class="chip">XL</button></div></div>'+
+      '<button class="btn full" id="qvAdd">Add to bag — '+money(pr.p)+'</button>'+
+      '<button class="cta" id="qvFull" style="align-self:flex-start">View full details</button></div>';
+    qv.classList.add('open');qvScrim.classList.add('open');document.body.style.overflow='hidden';
+    document.getElementById('qvAdd').onclick=function(){var ex=cart.find(function(i){return i.n===pr.n&&!i.o});if(ex)ex.q+=1;else cart.push({n:pr.n,o:'',p:pr.p,q:1,g:pr.g});renderCart();closeQV();toast.classList.add('show');setTimeout(function(){toast.classList.remove('show')},1600);setTimeout(openCart,220);};
+    document.getElementById('qvFull').onclick=function(){closeQV();show('product');};
+  }
+  qv.addEventListener('click',function(e){var c=e.target.closest('[data-qvsize] .chip');if(c){c.parentNode.querySelectorAll('.chip').forEach(function(x){x.classList.remove('on')});c.classList.add('on');}});
+  document.getElementById('qvClose').addEventListener('click',closeQV);
+  qvScrim.addEventListener('click',closeQV);
 
   var root=document.documentElement;
   function cur(){return root.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light')}
