@@ -1,0 +1,12 @@
+{%- comment -%} Aura — Quick view modal (filled on demand by global.js) {%- endcomment -%}
+<quick-view id="quick-view" class="drawer quickview-modal" aria-hidden="true">
+  <div class="drawer__overlay" tabindex="-1"></div>
+  <div class="quickview__dialog" role="dialog" aria-modal="true" aria-label="{{ 'products.product.choose_options' | t }}">
+    <button class="drawer__close quickview__close" type="button" data-drawer-close aria-label="{{ 'general.accessibility.close' | t }}">
+      {% render 'icon', icon: 'close' %}
+    </button>
+    <div class="quickview__body" data-quickview-body>
+      <div class="quickview__loading"><div class="spinner"></div></div>
+    </div>
+  </div>
+</quick-view>

@@ -1,0 +1,53 @@
+{%- comment -%} Aura — Marquee (scrolling ticker) {%- endcomment -%}
+<div class="section marquee-section color-{{ section.settings.color_scheme }} gradient" style="--section-y: {{ section.settings.padding | divided_by: 10.0 }}rem;">
+  <div class="marquee">
+    <div class="marquee__track" style="--marquee-duration: {{ section.settings.speed }}s;">
+      {%- for n in (1..2) -%}
+        <div class="marquee__group" {% if n == 2 %}aria-hidden="true"{% endif %}>
+          {%- for block in section.blocks -%}
+            <span class="marquee__item" {{ block.shopify_attributes }}>
+              {%- if block.settings.image != blank -%}
+                <img src="{{ block.settings.image | image_url: width: 240 }}" alt="{{ block.settings.text | escape }}" height="26" loading="lazy">
+              {%- else -%}
+                {{ block.settings.text | escape }}
+              {%- endif -%}
+            </span>
+            <span class="marquee__sep" aria-hidden="true">{{ section.settings.separator | default: '✦' }}</span>
+          {%- endfor -%}
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Marquee",
+  "tag": "section",
+  "class": "section-marquee",
+  "max_blocks": 12,
+  "settings": [
+    { "type": "range", "id": "speed", "min": 10, "max": 60, "step": 2, "unit": "s", "label": "Scroll duration", "default": 30 },
+    { "type": "text", "id": "separator", "label": "Separator", "default": "✦" },
+    { "type": "color_scheme", "id": "color_scheme", "default": "scheme-3", "label": "Color scheme" },
+    { "type": "range", "id": "padding", "min": 0, "max": 40, "step": 2, "unit": "px", "label": "Vertical padding", "default": 4 }
+  ],
+  "blocks": [{
+    "type": "item",
+    "name": "Item",
+    "settings": [
+      { "type": "text", "id": "text", "label": "Text", "default": "Crafted to last" },
+      { "type": "image_picker", "id": "image", "label": "Image (optional)" }
+    ]
+  }],
+  "presets": [{
+    "name": "Marquee",
+    "blocks": [
+      { "type": "item", "settings": { "text": "Complimentary carbon-neutral shipping" } },
+      { "type": "item", "settings": { "text": "Lifetime guarantee" } },
+      { "type": "item", "settings": { "text": "Thirty-day returns" } },
+      { "type": "item", "settings": { "text": "Crafted in Portugal" } }
+    ]
+  }]
+}
+{% endschema %}

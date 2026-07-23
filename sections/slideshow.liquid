@@ -1,0 +1,86 @@
+{%- comment -%} Aura — Slideshow (multi-slide hero) {%- endcomment -%}
+<div class="section" style="--section-y: 0;">
+  <slideshow-component class="slideshow" data-autoplay="{{ section.settings.autoplay }}" data-speed="{{ section.settings.speed }}">
+    <div class="slideshow__track" data-slides>
+      {%- for block in section.blocks -%}
+        {%- assign light = false -%}
+        {%- if block.settings.text_color == 'light' -%}{%- assign light = true -%}{%- endif -%}
+        <div class="slideshow__slide banner banner--{{ section.settings.height }} banner--{{ block.settings.content_position }}{% if light %} banner--text-light{% endif %}" data-slide {{ block.shopify_attributes }} role="group" aria-roledescription="Slide" aria-label="{{ forloop.index }} of {{ section.blocks.size }}">
+          {%- if block.settings.image != blank -%}
+            <div class="banner__media">
+              <img src="{{ block.settings.image | image_url: width: 2200 }}" srcset="{{ block.settings.image | image_url: width: 1100 }} 1100w, {{ block.settings.image | image_url: width: 2200 }} 2200w" sizes="100vw" alt="{{ block.settings.image.alt | escape }}" width="{{ block.settings.image.width }}" height="{{ block.settings.image.height }}" loading="{% if forloop.first %}eager{% else %}lazy{% endif %}">
+            </div>
+            {%- if block.settings.overlay_opacity > 0 -%}<div class="banner__overlay" style="--overlay-opacity: {{ block.settings.overlay_opacity | divided_by: 100.0 }};"></div>{%- endif -%}
+          {%- else -%}
+            <div class="banner__media banner__media--{{ block.settings.solid_scheme | default: 'scheme-3' }}" style="background: rgb(var(--color-background));"></div>
+          {%- endif -%}
+          <div class="banner__content-wrap page-width">
+            <div class="banner__box">
+              {%- if block.settings.eyebrow != blank -%}<span class="eyebrow{% if block.settings.content_position contains 'center' %} eyebrow--center{% endif %}">{{ block.settings.eyebrow | escape }}</span>{%- endif -%}
+              {%- if block.settings.heading != blank -%}<h2 class="banner__heading {{ block.settings.heading_size | default: 'h0' }}">{{ block.settings.heading | escape }}</h2>{%- endif -%}
+              {%- if block.settings.text != blank -%}<div class="banner__text lead">{{ block.settings.text | escape }}</div>{%- endif -%}
+              {%- if block.settings.button_label != blank -%}
+                <div class="banner__buttons">
+                  <a href="{{ block.settings.button_link | default: '#' }}" class="button">{{ block.settings.button_label | escape }}</a>
+                  {%- if block.settings.button_label_2 != blank -%}<a href="{{ block.settings.button_link_2 | default: '#' }}" class="button button--secondary">{{ block.settings.button_label_2 | escape }}</a>{%- endif -%}
+                </div>
+              {%- endif -%}
+            </div>
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+
+    {%- if section.settings.show_arrows and section.blocks.size > 1 -%}
+      <button type="button" class="slideshow__arrow slideshow__arrow--prev" data-slide-prev aria-label="{{ 'general.pagination.previous' | t }}">{% render 'icon', icon: 'arrow' %}</button>
+      <button type="button" class="slideshow__arrow slideshow__arrow--next" data-slide-next aria-label="{{ 'general.pagination.next' | t }}">{% render 'icon', icon: 'arrow' %}</button>
+    {%- endif -%}
+    {%- if section.settings.show_dots and section.blocks.size > 1 -%}
+      <div class="slideshow__dots" data-dots role="tablist">
+        {%- for block in section.blocks -%}<button type="button" class="slideshow__dot" data-slide-to="{{ forloop.index0 }}" aria-label="{{ 'general.pagination.page' | t: number: forloop.index }}"></button>{%- endfor -%}
+      </div>
+    {%- endif -%}
+  </slideshow-component>
+</div>
+
+{% schema %}
+{
+  "name": "Slideshow",
+  "tag": "section",
+  "class": "section-slideshow",
+  "max_blocks": 6,
+  "settings": [
+    { "type": "select", "id": "height", "options": [
+      { "value": "small", "label": "Small" }, { "value": "medium", "label": "Medium" }, { "value": "large", "label": "Large" }
+    ], "default": "large", "label": "Height" },
+    { "type": "checkbox", "id": "autoplay", "default": true, "label": "Auto-rotate" },
+    { "type": "range", "id": "speed", "min": 3, "max": 10, "step": 1, "unit": "s", "label": "Change every", "default": 6 },
+    { "type": "checkbox", "id": "show_arrows", "default": true, "label": "Show arrows" },
+    { "type": "checkbox", "id": "show_dots", "default": true, "label": "Show dots" }
+  ],
+  "blocks": [{
+    "type": "slide",
+    "name": "Slide",
+    "settings": [
+      { "type": "image_picker", "id": "image", "label": "Image" },
+      { "type": "range", "id": "overlay_opacity", "min": 0, "max": 80, "step": 5, "unit": "%", "label": "Overlay", "default": 20 },
+      { "type": "select", "id": "text_color", "options": [{ "value": "light", "label": "Light" }, { "value": "auto", "label": "From scheme" }], "default": "light", "label": "Text color" },
+      { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "New arrival" },
+      { "type": "text", "id": "heading", "label": "Heading", "default": "The essential object" },
+      { "type": "select", "id": "heading_size", "options": [{ "value": "h1", "label": "Medium" }, { "value": "h0", "label": "Large" }, { "value": "display", "label": "Display" }], "default": "display", "label": "Heading size" },
+      { "type": "text", "id": "text", "label": "Text", "default": "Considered essentials, made to last." },
+      { "type": "select", "id": "content_position", "options": [
+        { "value": "middle-left", "label": "Middle left" }, { "value": "middle-center", "label": "Middle center" }, { "value": "bottom-left", "label": "Bottom left" }
+      ], "default": "middle-center", "label": "Content position" },
+      { "type": "text", "id": "button_label", "label": "Button label", "default": "Shop now" },
+      { "type": "url", "id": "button_link", "label": "Button link" },
+      { "type": "text", "id": "button_label_2", "label": "Second button label" },
+      { "type": "url", "id": "button_link_2", "label": "Second button link" }
+    ]
+  }],
+  "presets": [{
+    "name": "Slideshow",
+    "blocks": [{ "type": "slide" }, { "type": "slide", "settings": { "eyebrow": "The winter edit", "heading": "Layers, considered", "content_position": "middle-left" } }]
+  }]
+}
+{% endschema %}

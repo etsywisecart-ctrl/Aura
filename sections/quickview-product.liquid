@@ -1,0 +1,67 @@
+{%- comment -%}
+  Aura — Quick view. Rendered on demand via the Section Rendering API
+  (product.url?section_id=quickview-product) into the quick-view modal.
+{%- endcomment -%}
+{%- liquid
+  assign qv = 'quickview-' | append: product.id
+  assign product_form_id = 'product-form-' | append: qv
+  assign current_variant = product.selected_or_first_available_variant
+-%}
+<div class="quickview__grid">
+  <div class="quickview__media">
+    {%- if product.featured_media -%}
+      <img src="{{ product.featured_media | image_url: width: 900 }}" alt="{{ product.featured_media.alt | escape }}" width="{{ product.featured_media.width }}" height="{{ product.featured_media.height }}" loading="lazy">
+    {%- else -%}
+      {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+    {%- endif -%}
+  </div>
+
+  <div class="quickview__info">
+    {%- if product.vendor != blank -%}<span class="eyebrow">{{ product.vendor }}</span>{%- endif -%}
+    <h2 class="h3">{{ product.title | escape }}</h2>
+    <div id="price-{{ qv }}" class="quickview__price">{% render 'price', product: product, use_variant: true, show_badges: true, show_savings: true %}</div>
+
+    {%- unless product.has_only_default_variant -%}
+      <variant-selects class="product-form__input" data-section="{{ qv }}" data-url="{{ product.url }}">
+        {%- for option in product.options_with_values -%}
+          <fieldset class="product-form__input variant-fieldset">
+            <legend>{{ option.name }}<span class="selected-value" data-option="{{ option.position }}">{{ option.selected_value }}</span></legend>
+            <div class="variant-options">
+              {%- for value in option.values -%}
+                <input type="radio" class="variant-option-input" id="{{ qv }}-{{ option.position }}-{{ forloop.index0 }}" name="{{ option.name }}-{{ option.position }}" value="{{ value | escape }}"{% if option.selected_value == value %} checked{% endif %}>
+                <label class="variant-option-label" for="{{ qv }}-{{ option.position }}-{{ forloop.index0 }}">{{ value }}</label>
+              {%- endfor -%}
+            </div>
+          </fieldset>
+        {%- endfor -%}
+        <script type="application/json">{{ product.variants | json }}</script>
+      </variant-selects>
+    {%- endunless -%}
+
+    <product-form class="product-form">
+      <div class="product-form__error-message-wrapper hidden" role="alert"></div>
+      {%- form 'product', product, id: product_form_id, novalidate: 'novalidate' -%}
+        <input type="hidden" name="id" value="{{ current_variant.id }}">
+        <div class="product-form__buttons">
+          <button type="submit" name="add" class="button button--full"{% unless current_variant.available %} disabled{% endunless %}
+            data-add-label="{{ 'products.product.add_to_cart' | t }}" data-sold-out-label="{{ 'products.product.sold_out' | t }}">
+            <span>{% if current_variant.available %}{{ 'products.product.add_to_cart' | t }}{% else %}{{ 'products.product.sold_out' | t }}{% endif %}</span>
+            {% render 'loading-spinner' %}
+          </button>
+        </div>
+      {%- endform -%}
+    </product-form>
+
+    {%- if product.description != blank -%}
+      <div class="quickview__desc rte">{{ product.description | strip_html | truncatewords: 30 }}</div>
+    {%- endif -%}
+
+    <a href="{{ product.url }}" class="cta-link quickview__full">{{ 'products.product.view_full_details' | t }}</a>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Quick view"
+}
+{% endschema %}
