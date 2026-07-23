@@ -1,0 +1,202 @@
+{{ 'component-sticky-showcase.css' | asset_url | stylesheet_tag }}
+
+<sticky-showcase class="sticky-showcase color-{{ section.settings.color_scheme }}" data-count="{{ section.blocks.size }}">
+  <div class="sticky-showcase__track" style="--panel-count: {{ section.blocks.size }};">
+    <div class="sticky-showcase__pin">
+
+      <div class="sticky-showcase__media" aria-hidden="true">
+        {% for block in section.blocks %}
+          <div class="sticky-showcase__media-item" data-panel-media="{{ forloop.index0 }}" {{ block.shopify_attributes }}>
+            {%- if block.settings.image != blank -%}
+              <img
+                src="{{ block.settings.image | image_url: width: 1600 }}"
+                srcset="{{ block.settings.image | image_url: width: 800 }} 800w,
+                        {{ block.settings.image | image_url: width: 1600 }} 1600w,
+                        {{ block.settings.image | image_url: width: 2400 }} 2400w"
+                sizes="100vw"
+                alt=""
+                width="{{ block.settings.image.width }}"
+                height="{{ block.settings.image.height }}"
+                loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+                fetchpriority="{% if forloop.first %}high{% else %}auto{% endif %}"
+                class="sticky-showcase__img">
+            {%- else -%}
+              <div class="sticky-showcase__placeholder">{{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}</div>
+            {%- endif -%}
+          </div>
+        {% endfor %}
+      </div>
+
+      <div class="sticky-showcase__copy">
+        {% for block in section.blocks %}
+          <div class="sticky-showcase__copy-item scroll-trigger" data-panel-copy="{{ forloop.index0 }}" {{ block.shopify_attributes }}>
+            {%- if block.settings.eyebrow != blank -%}
+              <p class="eyebrow sticky-showcase__eyebrow">{{ block.settings.eyebrow }}</p>
+            {%- endif -%}
+            {%- if block.settings.heading != blank -%}
+              <h2 class="h2 sticky-showcase__heading">{{ block.settings.heading }}</h2>
+            {%- endif -%}
+            {%- if block.settings.text != blank -%}
+              <div class="sticky-showcase__text">{{ block.settings.text }}</div>
+            {%- endif -%}
+            {%- if block.settings.button_label != blank -%}
+              <a href="{{ block.settings.button_url | default: '#' }}" class="button button--ghost sticky-showcase__cta">
+                {{ block.settings.button_label }}
+                {% render 'icon', icon: 'arrow' %}
+              </a>
+            {%- endif -%}
+          </div>
+        {% endfor %}
+      </div>
+
+      {%- if section.blocks.size > 1 -%}
+        <div class="sticky-showcase__progress" aria-hidden="true">
+          {% for block in section.blocks %}
+            <span class="sticky-showcase__dot" data-panel-dot="{{ forloop.index0 }}"></span>
+          {% endfor %}
+        </div>
+      {%- endif -%}
+
+    </div>
+  </div>
+</sticky-showcase>
+
+<script>
+  (function () {
+    'use strict';
+    if (customElements.get('sticky-showcase')) return;
+
+    class StickyShowcase extends HTMLElement {
+      connectedCallback() {
+        this.count = parseInt(this.dataset.count, 10) || 1;
+        this.track = this.querySelector('.sticky-showcase__track');
+        this.mediaItems = Array.from(this.querySelectorAll('[data-panel-media]'));
+        this.copyItems = Array.from(this.querySelectorAll('[data-panel-copy]'));
+        this.dots = Array.from(this.querySelectorAll('[data-panel-dot]'));
+        this.reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        if (this.count <= 1 || this.reduce || !('IntersectionObserver' in window)) {
+          this.classList.add('sticky-showcase--static');
+          return;
+        }
+
+        this.ticking = false;
+        this.onScroll = this.onScroll.bind(this);
+        this.update = this.update.bind(this);
+        window.addEventListener('scroll', this.onScroll, { passive: true });
+        window.addEventListener('resize', this.onScroll, { passive: true });
+        this.onScroll();
+      }
+
+      disconnectedCallback() {
+        window.removeEventListener('scroll', this.onScroll);
+        window.removeEventListener('resize', this.onScroll);
+      }
+
+      onScroll() {
+        if (this.ticking) return;
+        this.ticking = true;
+        requestAnimationFrame(this.update);
+      }
+
+      update() {
+        this.ticking = false;
+        const rect = this.track.getBoundingClientRect();
+        const total = this.track.offsetHeight - window.innerHeight;
+        if (total <= 0) return;
+
+        const scrolled = Math.min(Math.max(-rect.top, 0), total);
+        const progress = scrolled / total; // 0 -> 1 across the whole track
+        const virtual = progress * (this.count - 1); // continuous "active index"
+        const active = Math.round(virtual);
+
+        this.mediaItems.forEach((el, i) => {
+          const dist = Math.min(1, Math.abs(virtual - i));
+          el.style.opacity = String(1 - dist);
+          el.style.transform = 'scale(' + (1.04 - dist * 0.04) + ')';
+        });
+
+        this.copyItems.forEach((el, i) => {
+          const dist = Math.min(1, Math.abs(virtual - i));
+          el.style.opacity = String(1 - dist);
+          el.style.transform = 'translateY(' + (dist * 14) + 'px)';
+          el.style.pointerEvents = dist < 0.5 ? 'auto' : 'none';
+        });
+
+        this.dots.forEach((el, i) => {
+          el.classList.toggle('is-active', i === active);
+        });
+      }
+    }
+
+    customElements.define('sticky-showcase', StickyShowcase);
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Sticky showcase",
+  "tag": "section",
+  "class": "section section--sticky-showcase",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "panel",
+      "name": "Panel",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "eyebrow",
+          "label": "Eyebrow text",
+          "default": "New"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Designed to feel effortless."
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>Every detail considered, every interaction refined.</p>"
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button label"
+        },
+        {
+          "type": "url",
+          "id": "button_url",
+          "label": "Button link"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 6,
+  "presets": [
+    {
+      "name": "Sticky showcase",
+      "blocks": [
+        { "type": "panel" },
+        { "type": "panel" },
+        { "type": "panel" }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,177 @@
+/* ==========================================================================
+   Sticky Showcase — Apple-style scroll-pinned reveal
+   Uses Aura's existing tokens: --ease-aura, --t-ambient, --color-*, --s-*
+   ========================================================================== */
+
+.sticky-showcase {
+  display: block;
+  position: relative;
+}
+
+.sticky-showcase__track {
+  position: relative;
+  /* Each panel gets one full viewport height of scroll distance */
+  height: calc(var(--panel-count, 1) * 100vh);
+}
+
+.sticky-showcase__pin {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: center;
+  background: rgb(var(--color-background));
+}
+
+/* Media layer — full-bleed, cross-fading images */
+.sticky-showcase__media {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.sticky-showcase__media-item {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  will-change: opacity, transform;
+}
+
+.sticky-showcase__media-item:first-child {
+  opacity: 1;
+}
+
+.sticky-showcase__img,
+.sticky-showcase__placeholder {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.sticky-showcase__media::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(var(--color-shadow), 0.35) 0%, rgba(var(--color-shadow), 0.05) 30%, rgba(var(--color-shadow), 0.05) 70%, rgba(var(--color-shadow), 0.4) 100%);
+  pointer-events: none;
+}
+
+/* Copy layer */
+.sticky-showcase__copy {
+  position: relative;
+  z-index: 2;
+  padding: 0 var(--page-margin, 2rem);
+  max-width: 64rem;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.sticky-showcase__copy-item {
+  grid-column: 1;
+  grid-row: 1;
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  will-change: opacity, transform;
+}
+
+.sticky-showcase__copy-item:first-child {
+  opacity: 1;
+}
+
+.sticky-showcase__eyebrow {
+  color: rgb(var(--color-background));
+  opacity: 0.8;
+  margin-bottom: var(--s-3);
+}
+
+.sticky-showcase__heading {
+  color: rgb(var(--color-background));
+  margin-bottom: var(--s-4);
+}
+
+.sticky-showcase__text {
+  color: rgb(var(--color-background));
+  opacity: 0.85;
+  font-size: 1.8rem;
+  max-width: 46rem;
+}
+
+.sticky-showcase__cta {
+  margin-top: var(--s-6);
+  color: rgb(var(--color-background));
+  border-color: rgba(var(--color-background), 0.4);
+}
+
+/* Progress dots */
+.sticky-showcase__progress {
+  position: absolute;
+  z-index: 3;
+  bottom: var(--s-8);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: var(--s-2);
+}
+
+.sticky-showcase__dot {
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 50%;
+  background: rgba(var(--color-background), 0.35);
+  transition: background var(--t-base) var(--ease-aura), transform var(--t-base) var(--ease-aura);
+}
+
+.sticky-showcase__dot.is-active {
+  background: rgb(var(--color-background));
+  transform: scale(1.25);
+}
+
+/* Reduced-motion / single-panel fallback: normal stacked flow, no pin */
+.sticky-showcase--static .sticky-showcase__track {
+  height: auto;
+}
+
+.sticky-showcase--static .sticky-showcase__pin {
+  position: relative;
+  height: auto;
+  display: block;
+}
+
+.sticky-showcase--static .sticky-showcase__media,
+.sticky-showcase--static .sticky-showcase__media-item {
+  position: relative;
+  inset: auto;
+  opacity: 1;
+  height: 60vh;
+}
+
+.sticky-showcase--static .sticky-showcase__copy-item {
+  position: relative;
+  inset: auto;
+  opacity: 0;
+  transform: translateY(24px);
+  padding: var(--s-16) 0;
+  transition: opacity var(--t-slow) var(--ease-move), transform var(--t-slow) var(--ease-aura);
+}
+
+.sticky-showcase--static .sticky-showcase__copy-item.aura-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.sticky-showcase--static .sticky-showcase__progress {
+  display: none;
+}
+
+@media screen and (max-width: 749px) {
+  .sticky-showcase__heading { font-size: clamp(2.6rem, 8vw, 3.4rem); }
+  .sticky-showcase__text { font-size: 1.5rem; }
+}
