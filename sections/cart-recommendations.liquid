@@ -1,0 +1,44 @@
+{%- comment -%}
+  Aura — Cart recommendations. Rendered into the cart drawer via the
+  recommendations endpoint: /recommendations/products?section_id=cart-recommendations
+{%- endcomment -%}
+{%- if recommendations.performed and recommendations.products_count > 0 -%}
+  <div class="cart-rec__inner">
+    <p class="cart-rec__title">{{ 'sections.cart.recommendations_title' | t }}</p>
+    <ul class="cart-rec__list list-unstyled">
+      {%- for product in recommendations.products limit: 3 -%}
+        <li class="cart-rec__item">
+          <a href="{{ product.url }}" class="cart-rec__media" tabindex="-1" aria-hidden="true">
+            {%- if product.featured_media -%}
+              <img src="{{ product.featured_media | image_url: width: 140 }}" alt="{{ product.featured_media.alt | escape }}" width="56" height="70" loading="lazy">
+            {%- endif -%}
+          </a>
+          <div class="cart-rec__info">
+            <a href="{{ product.url }}" class="cart-rec__name">{{ product.title | escape }}</a>
+            {% render 'price', product: product, use_variant: true %}
+          </div>
+          {%- if product.variants.size == 1 and product.available -%}
+            <product-form class="cart-rec__form">
+              {%- form 'product', product, id: 'CartRec-', class: 'cart-rec__form-el' -%}
+                <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+                <button type="submit" name="add" class="cart-rec__add" aria-label="{{ 'products.product.add_to_cart' | t }}">
+                  {% render 'icon', icon: 'plus' %}
+                  {% render 'loading-spinner' %}
+                </button>
+              {%- endform -%}
+            </product-form>
+          {%- else -%}
+            <a href="{{ product.url }}" class="cart-rec__add" aria-label="{{ 'products.product.choose_options' | t }}">{% render 'icon', icon: 'arrow' %}</a>
+          {%- endif -%}
+        </li>
+      {%- endfor -%}
+    </ul>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Cart recommendations",
+  "settings": []
+}
+{% endschema %}

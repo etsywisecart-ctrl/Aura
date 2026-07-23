@@ -85,6 +85,21 @@
               </div>
               {%- if block.settings.show_taxes_note -%}<p class="caption product__tax-note">{{ 'sections.cart.taxes_included_but_shipping_at_checkout' | t }}</p>{%- endif -%}
 
+            {%- when 'inventory' -%}
+              {%- assign v = current_variant -%}
+              <div class="product__inventory" id="Inventory-{{ section.id }}" data-threshold="{{ block.settings.threshold }}"
+                data-in="{{ 'products.product.inventory_in_stock' | t }}"
+                data-low="{{ 'products.product.inventory_low_stock_show_count' | t: quantity: '[q]' }}"
+                {{ block.shopify_attributes }}>
+                {%- if v.available -%}
+                  {%- if v.inventory_management != blank and v.inventory_quantity > 0 and v.inventory_quantity <= block.settings.threshold -%}
+                    <span class="inv inv--low"><span class="inv__dot"></span>{{ 'products.product.inventory_low_stock_show_count' | t: quantity: v.inventory_quantity }}</span>
+                  {%- else -%}
+                    <span class="inv inv--in"><span class="inv__dot"></span>{{ 'products.product.inventory_in_stock' | t }}</span>
+                  {%- endif -%}
+                {%- endif -%}
+              </div>
+
             {%- when 'variant_picker' -%}
               {%- unless product.has_only_default_variant -%}
                 <variant-selects class="product-form__input" data-section="{{ section.id }}" data-url="{{ product.url }}" {{ block.shopify_attributes }}>
@@ -240,6 +255,9 @@
     { "type": "price", "name": "Price", "limit": 1, "settings": [
       { "type": "checkbox", "id": "show_taxes_note", "default": true, "label": "Show tax note" }
     ]},
+    { "type": "inventory", "name": "Inventory status", "limit": 1, "settings": [
+      { "type": "range", "id": "threshold", "min": 1, "max": 25, "step": 1, "label": "Low-stock threshold", "default": 10 }
+    ]},
     { "type": "variant_picker", "name": "Variant picker", "limit": 1, "settings": [] },
     { "type": "buy_buttons", "name": "Buy buttons", "limit": 1, "settings": [
       { "type": "checkbox", "id": "show_quantity", "default": true, "label": "Show quantity selector" },
@@ -279,7 +297,7 @@
   "presets": [{
     "name": "Product",
     "blocks": [
-      { "type": "vendor" }, { "type": "title" }, { "type": "rating" }, { "type": "price" },
+      { "type": "vendor" }, { "type": "title" }, { "type": "rating" }, { "type": "price" }, { "type": "inventory" },
       { "type": "variant_picker" }, { "type": "buy_buttons" }, { "type": "guarantees" },
       { "type": "description" }, { "type": "collapsible_tab" }, { "type": "share" }
     ]

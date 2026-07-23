@@ -90,7 +90,7 @@
                 {%- endform -%}
               </product-form>
             {%- else -%}
-              <a href="{{ card_product.url }}" class="quick-add__btn">{{ 'products.product.choose_options' | t }}</a>
+              <button type="button" class="quick-add__btn" data-quick-view-url="{{ card_product.url }}">{{ 'products.product.choose_options' | t }}</button>
             {%- endif -%}
           </div>
         {%- endif -%}

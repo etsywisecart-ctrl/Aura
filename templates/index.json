@@ -17,6 +17,17 @@
         "color_scheme": "scheme-4"
       }
     },
+    "ticker": {
+      "type": "marquee",
+      "blocks": {
+        "m1": { "type": "item", "settings": { "text": "Complimentary carbon-neutral shipping" } },
+        "m2": { "type": "item", "settings": { "text": "Lifetime guarantee" } },
+        "m3": { "type": "item", "settings": { "text": "Thirty-day returns" } },
+        "m4": { "type": "item", "settings": { "text": "Crafted in Portugal" } }
+      },
+      "block_order": ["m1", "m2", "m3", "m4"],
+      "settings": { "speed": 30, "separator": "✦", "color_scheme": "scheme-3", "padding": 4 }
+    },
     "showcase": {
       "type": "showcase",
       "blocks": {
@@ -83,5 +94,5 @@
       }
     }
   },
-  "order": ["hero", "showcase", "featured", "craft", "why", "reviews", "newsletter"]
+  "order": ["hero", "ticker", "showcase", "featured", "craft", "why", "reviews", "newsletter"]
 }

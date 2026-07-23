@@ -211,7 +211,24 @@
         this.updateFormId();
         this.updatePrice();
         this.updateAvailability();
+        this.updateInventory();
       }
+    }
+
+    updateInventory() {
+      const el = document.getElementById(`Inventory-${this.dataset.section}`);
+      if (!el) return;
+      const v = this.currentVariant;
+      const threshold = parseInt(el.dataset.threshold, 10) || 10;
+      let html = '';
+      if (v && v.available) {
+        if (v.inventory_management && typeof v.inventory_quantity === 'number' && v.inventory_quantity > 0 && v.inventory_quantity <= threshold) {
+          html = `<span class="inv inv--low"><span class="inv__dot"></span>${(el.dataset.low || 'Low stock: [q] left').replace('[q]', v.inventory_quantity)}</span>`;
+        } else {
+          html = `<span class="inv inv--in"><span class="inv__dot"></span>${el.dataset.in || 'In stock'}</span>`;
+        }
+      }
+      el.innerHTML = html;
     }
 
     updateSelectedOptions() {
@@ -475,6 +492,58 @@
   }
   customElements.define('cart-drawer', CartDrawer);
 
+  /* -----------------------------------------------------------------------
+     Quick view — compact product modal loaded via Section Rendering
+     ----------------------------------------------------------------------- */
+  class QuickView extends SideDrawer {
+    connectedCallback() {
+      super.connectedCallback();
+      this.body = this.querySelector('[data-quickview-body]');
+      subscribe(PUB_SUB_EVENTS.cartUpdate, () => { if (this.classList.contains('active')) this.close(); });
+    }
+    load(url, opener) {
+      if (!this.body) return;
+      this.open(opener);
+      this.body.innerHTML = '<div class="quickview__loading"><div class="spinner"></div></div>';
+      const u = url + (url.indexOf('?') > -1 ? '&' : '?') + 'section_id=quickview-product';
+      fetch(u)
+        .then((r) => r.text())
+        .then((text) => {
+          const grid = new DOMParser().parseFromString(text, 'text/html').querySelector('.quickview__grid');
+          this.body.innerHTML = grid ? grid.outerHTML : '';
+        })
+        .catch(() => { this.body.innerHTML = ''; });
+    }
+  }
+  customElements.define('quick-view', QuickView);
+
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-quick-view-url]');
+    if (!btn) return;
+    e.preventDefault();
+    const qv = document.getElementById('quick-view');
+    if (qv && typeof qv.load === 'function') qv.load(btn.getAttribute('data-quick-view-url'), btn);
+  });
+
+  /* Cart cross-sell — complementary products loaded into the drawer */
+  class CartRecommendations extends HTMLElement {
+    connectedCallback() {
+      const id = this.dataset.productId;
+      if (!id) { this.hidden = true; return; }
+      const root = (window.Shopify && window.Shopify.routes && window.Shopify.routes.root) || '/';
+      const url = `${root}recommendations/products?product_id=${id}&intent=${this.dataset.intent || 'complementary'}&limit=${this.dataset.limit || 3}&section_id=cart-recommendations`;
+      fetch(url)
+        .then((r) => r.text())
+        .then((text) => {
+          const inner = new DOMParser().parseFromString(text, 'text/html').querySelector('.cart-rec__inner');
+          if (inner && inner.children.length) { this.innerHTML = inner.outerHTML; this.hidden = false; }
+          else { this.hidden = true; }
+        })
+        .catch(() => { this.hidden = true; });
+    }
+  }
+  customElements.define('cart-recommendations', CartRecommendations);
+
   /* Keep the header cart bubble in sync after AJAX updates */
   subscribe(PUB_SUB_EVENTS.cartUpdate, () => {
     fetch(`${window.routes.cart_url}?sections=cart-icon-bubble`)
@@ -546,6 +615,56 @@
     }
   }
   customElements.define('media-gallery', MediaGallery);
+
+  /* -----------------------------------------------------------------------
+     Slideshow
+     ----------------------------------------------------------------------- */
+  class SlideshowComponent extends HTMLElement {
+    connectedCallback() {
+      this.track = this.querySelector('[data-slides]');
+      this.slides = Array.from(this.querySelectorAll('[data-slide]'));
+      this.dots = Array.from(this.querySelectorAll('[data-slide-to]'));
+      this.index = 0;
+      if (this.slides.length < 2) return;
+      const prev = this.querySelector('[data-slide-prev]');
+      const next = this.querySelector('[data-slide-next]');
+      if (prev) prev.addEventListener('click', () => this.go(this.index - 1));
+      if (next) next.addEventListener('click', () => this.go(this.index + 1));
+      this.dots.forEach((d, i) => d.addEventListener('click', () => this.go(i)));
+      this.setupSwipe();
+      this.reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (this.dataset.autoplay === 'true' && !this.reduce) {
+        this.startAuto();
+        this.addEventListener('mouseenter', () => this.stopAuto());
+        this.addEventListener('mouseleave', () => this.startAuto());
+      }
+      this.update();
+    }
+    go(i) { this.index = (i + this.slides.length) % this.slides.length; this.update(); this.startAuto(); }
+    update() {
+      if (this.track) this.track.style.transform = 'translateX(' + (-this.index * 100) + '%)';
+      this.dots.forEach((d, i) => d.classList.toggle('is-active', i === this.index));
+      this.slides.forEach((s, i) => s.setAttribute('aria-hidden', i === this.index ? 'false' : 'true'));
+    }
+    startAuto() {
+      if (this.dataset.autoplay !== 'true' || this.reduce) return;
+      this.stopAuto();
+      const s = (parseInt(this.dataset.speed, 10) || 6) * 1000;
+      this.timer = setInterval(() => this.go(this.index + 1), s);
+    }
+    stopAuto() { if (this.timer) { clearInterval(this.timer); this.timer = null; } }
+    setupSwipe() {
+      let x0 = null;
+      this.addEventListener('touchstart', (e) => { x0 = e.touches[0].clientX; }, { passive: true });
+      this.addEventListener('touchend', (e) => {
+        if (x0 === null) return;
+        const dx = e.changedTouches[0].clientX - x0;
+        if (Math.abs(dx) > 40) this.go(this.index + (dx < 0 ? 1 : -1));
+        x0 = null;
+      });
+    }
+  }
+  customElements.define('slideshow-component', SlideshowComponent);
 
   /* -----------------------------------------------------------------------
      Scroll-reveal animations
@@ -688,6 +807,30 @@
     const amount = Math.round(scroller.clientWidth * 0.8);
     scroller.scrollBy({ left: arrow.getAttribute('data-scroll') === 'next' ? amount : -amount, behavior: 'smooth' });
   });
+
+  /* Product media zoom lightbox */
+  (function () {
+    let zoom;
+    document.addEventListener('click', (e) => {
+      const img = e.target.closest('.product__media img');
+      if (!img) return;
+      if (!zoom) {
+        zoom = document.createElement('div');
+        zoom.className = 'media-zoom';
+        zoom.innerHTML = '<button class="media-zoom__close" type="button" aria-label="Close">&times;</button><img alt="">';
+        const close = () => { zoom.classList.remove('active'); document.body.classList.remove('overflow-hidden'); };
+        zoom.addEventListener('click', close);
+        document.addEventListener('keyup', (ev) => { if (ev.key === 'Escape' && zoom.classList.contains('active')) close(); });
+        document.body.appendChild(zoom);
+      }
+      const src = img.currentSrc || img.src || '';
+      const big = /[?&]width=\d+/.test(src) ? src.replace(/([?&]width=)\d+/, '$12000') : src;
+      const z = zoom.querySelector('img');
+      z.src = big; z.alt = img.alt || '';
+      zoom.classList.add('active');
+      document.body.classList.add('overflow-hidden');
+    });
+  })();
 
   function init() {
     initScrollAnimations();
