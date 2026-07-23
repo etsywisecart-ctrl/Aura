@@ -1,0 +1,253 @@
+{% comment %}
+  Renders a fullscreen product image zoom modal.
+  Usage: {% render 'image-zoom-modal', section_id: section.id, media_list: product.media %}
+{% endcomment %}
+
+{{ 'component-image-zoom.css' | asset_url | stylesheet_tag }}
+
+<image-zoom-modal id="ZoomModal-{{ section_id }}" class="image-zoom-modal" aria-hidden="true">
+  <div class="image-zoom__overlay" data-zoom-close></div>
+  <div class="image-zoom__inner" role="dialog" aria-modal="true" aria-label="{{ 'products.product.media.zoom_label' | t: default: 'Product image, zoomed' }}">
+    <button type="button" class="image-zoom__close" data-zoom-close aria-label="{{ 'accessibility.close' | t: default: 'Close' }}">
+      <span class="icon icon-close" aria-hidden="true">&times;</span>
+    </button>
+
+    <div class="image-zoom__stage" data-zoom-stage>
+      {%- for media in media_list -%}
+        {%- if media.media_type == 'image' -%}
+          <img
+            data-zoom-image
+            data-zoom-index="{{ forloop.index0 }}"
+            src="{{ media | image_url: width: 2200 }}"
+            srcset="{{ media | image_url: width: 1200 }} 1200w, {{ media | image_url: width: 2200 }} 2200w"
+            sizes="100vw"
+            alt="{{ media.alt | escape }}"
+            width="{{ media.width }}"
+            height="{{ media.height }}"
+            loading="lazy"
+            draggable="false"
+            class="image-zoom__img{% if forloop.first %} is-active{% endif %}">
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+
+    {%- if media_list.size > 1 -%}
+      <button type="button" class="image-zoom__nav image-zoom__nav--prev" data-zoom-prev aria-label="{{ 'general.slider.previous_slide' | t: default: 'Previous image' }}">
+        <span class="icon icon-caret" aria-hidden="true">&#8249;</span>
+      </button>
+      <button type="button" class="image-zoom__nav image-zoom__nav--next" data-zoom-next aria-label="{{ 'general.slider.next_slide' | t: default: 'Next image' }}">
+        <span class="icon icon-caret" aria-hidden="true">&#8250;</span>
+      </button>
+    {%- endif -%}
+
+    <p class="image-zoom__hint">{{ 'products.product.media.zoom_hint' | t: default: 'Pinch or scroll to zoom · drag to pan' }}</p>
+  </div>
+</image-zoom-modal>
+
+<script>
+  (function () {
+    'use strict';
+    if (customElements.get('image-zoom-modal')) return;
+
+    function distance(a, b) {
+      return Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY);
+    }
+
+    class ImageZoomModal extends HTMLElement {
+      constructor() {
+        super();
+        this.scale = 1;
+        this.originX = 0;
+        this.originY = 0;
+        this.pointers = new Map();
+        this.startDistance = 0;
+        this.startScale = 1;
+        this.panStart = null;
+        this.lastTap = 0;
+        this.activeIndex = 0;
+        this.activeElement = null;
+
+        this.onKeyUp = this.onKeyUp.bind(this);
+        this.onDocClick = this.onDocClick.bind(this);
+        this.onDocKeydown = this.onDocKeydown.bind(this);
+        this.onPointerDown = this.onPointerDown.bind(this);
+        this.onPointerMove = this.onPointerMove.bind(this);
+        this.onPointerUp = this.onPointerUp.bind(this);
+        this.onWheel = this.onWheel.bind(this);
+        this.onDoubleClick = this.onDoubleClick.bind(this);
+      }
+
+      connectedCallback() {
+        this.stage = this.querySelector('[data-zoom-stage]');
+        this.images = Array.from(this.querySelectorAll('[data-zoom-image]'));
+        this.prevBtn = this.querySelector('[data-zoom-prev]');
+        this.nextBtn = this.querySelector('[data-zoom-next]');
+
+        this.querySelectorAll('[data-zoom-close]').forEach((el) =>
+          el.addEventListener('click', () => this.close())
+        );
+        if (this.prevBtn) this.prevBtn.addEventListener('click', () => this.step(-1));
+        if (this.nextBtn) this.nextBtn.addEventListener('click', () => this.step(1));
+
+        this.stage.addEventListener('pointerdown', this.onPointerDown);
+        this.stage.addEventListener('wheel', this.onWheel, { passive: false });
+        this.stage.addEventListener('dblclick', this.onDoubleClick);
+
+        /* Global delegation: any element with data-zoom-open + data-zoom-index opens this modal */
+        document.addEventListener('click', this.onDocClick);
+        document.addEventListener('keydown', this.onDocKeydown);
+      }
+
+      disconnectedCallback() {
+        document.removeEventListener('click', this.onDocClick);
+        document.removeEventListener('keydown', this.onDocKeydown);
+      }
+
+      onDocClick(e) {
+        const trigger = e.target.closest('[data-zoom-open]');
+        if (!trigger) return;
+        e.preventDefault();
+        const index = parseInt(trigger.dataset.zoomIndex || '0', 10);
+        this.open(index, trigger);
+      }
+
+      onDocKeydown(e) {
+        if (e.key !== 'Enter' && e.key !== ' ') return;
+        const trigger = e.target.closest('[data-zoom-open]');
+        if (!trigger) return;
+        e.preventDefault();
+        const index = parseInt(trigger.dataset.zoomIndex || '0', 10);
+        this.open(index, trigger);
+      }
+
+      open(index, opener) {
+        this.activeElement = opener || document.activeElement;
+        this.showImage(index);
+        this.classList.add('active');
+        this.setAttribute('aria-hidden', 'false');
+        document.body.classList.add('overflow-hidden');
+        document.addEventListener('keyup', this.onKeyUp);
+        const closeBtn = this.querySelector('.image-zoom__close');
+        if (closeBtn) setTimeout(() => closeBtn.focus(), 150);
+      }
+
+      close() {
+        this.resetZoom();
+        this.classList.remove('active');
+        this.setAttribute('aria-hidden', 'true');
+        document.body.classList.remove('overflow-hidden');
+        document.removeEventListener('keyup', this.onKeyUp);
+        if (this.activeElement && typeof this.activeElement.focus === 'function') {
+          this.activeElement.focus();
+        }
+      }
+
+      onKeyUp(e) {
+        if (e.key === 'Escape') this.close();
+        if (e.key === 'ArrowRight') this.step(1);
+        if (e.key === 'ArrowLeft') this.step(-1);
+      }
+
+      showImage(index) {
+        if (!this.images.length) return;
+        this.activeIndex = (index + this.images.length) % this.images.length;
+        this.images.forEach((img, i) => img.classList.toggle('is-active', i === this.activeIndex));
+        this.resetZoom();
+      }
+
+      step(dir) {
+        this.showImage(this.activeIndex + dir);
+      }
+
+      getActiveImage() {
+        return this.images[this.activeIndex];
+      }
+
+      resetZoom() {
+        this.scale = 1;
+        this.originX = 0;
+        this.originY = 0;
+        this.applyTransform(false);
+      }
+
+      applyTransform(animate) {
+        const img = this.getActiveImage();
+        if (!img) return;
+        img.style.transition = animate ? '' : 'none';
+        img.style.transform = 'translate(' + this.originX + 'px,' + this.originY + 'px) scale(' + this.scale + ')';
+        img.style.cursor = this.scale > 1 ? 'grab' : 'zoom-in';
+      }
+
+      clampScale(s) {
+        return Math.min(4, Math.max(1, s));
+      }
+
+      onDoubleClick(e) {
+        e.preventDefault();
+        if (this.scale > 1) {
+          this.resetZoom();
+        } else {
+          this.scale = 2.4;
+          this.applyTransform(true);
+        }
+      }
+
+      onWheel(e) {
+        e.preventDefault();
+        const delta = -e.deltaY * 0.0025;
+        this.scale = this.clampScale(this.scale + delta);
+        if (this.scale === 1) { this.originX = 0; this.originY = 0; }
+        this.applyTransform(false);
+      }
+
+      onPointerDown(e) {
+        this.pointers.set(e.pointerId, e);
+        this.stage.setPointerCapture(e.pointerId);
+        this.stage.addEventListener('pointermove', this.onPointerMove);
+        this.stage.addEventListener('pointerup', this.onPointerUp);
+        this.stage.addEventListener('pointercancel', this.onPointerUp);
+
+        if (this.pointers.size === 2) {
+          const pts = Array.from(this.pointers.values());
+          this.startDistance = distance(pts[0], pts[1]);
+          this.startScale = this.scale;
+        } else if (this.pointers.size === 1) {
+          this.panStart = { x: e.clientX, y: e.clientY, originX: this.originX, originY: this.originY };
+        }
+      }
+
+      onPointerMove(e) {
+        if (!this.pointers.has(e.pointerId)) return;
+        this.pointers.set(e.pointerId, e);
+
+        if (this.pointers.size === 2) {
+          const pts = Array.from(this.pointers.values());
+          const dist = distance(pts[0], pts[1]);
+          if (this.startDistance > 0) {
+            this.scale = this.clampScale(this.startScale * (dist / this.startDistance));
+            this.applyTransform(false);
+          }
+        } else if (this.pointers.size === 1 && this.scale > 1 && this.panStart) {
+          const dx = e.clientX - this.panStart.x;
+          const dy = e.clientY - this.panStart.y;
+          this.originX = this.panStart.originX + dx;
+          this.originY = this.panStart.originY + dy;
+          this.applyTransform(false);
+        }
+      }
+
+      onPointerUp(e) {
+        this.pointers.delete(e.pointerId);
+        this.panStart = null;
+        if (this.pointers.size < 2) this.startDistance = 0;
+        if (this.pointers.size === 0) {
+          this.stage.removeEventListener('pointermove', this.onPointerMove);
+          this.stage.removeEventListener('pointerup', this.onPointerUp);
+          if (this.scale < 1.05) this.resetZoom();
+        }
+      }
+    }
+
+    customElements.define('image-zoom-modal', ImageZoomModal);
+  })();
+</script>

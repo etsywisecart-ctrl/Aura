@@ -1,0 +1,135 @@
+/* ==========================================================================
+   Image Zoom Modal — fullscreen pinch/scroll zoom for product galleries
+   ========================================================================== */
+
+.image-zoom-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity var(--t-base) var(--ease-move), visibility var(--t-base);
+}
+
+.image-zoom-modal.active {
+  visibility: visible;
+  opacity: 1;
+}
+
+.image-zoom__overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(var(--color-shadow), 0.9);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.image-zoom__inner {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.image-zoom__stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  touch-action: none;
+}
+
+.image-zoom__img {
+  position: absolute;
+  max-width: 90vw;
+  max-height: 88vh;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  opacity: 0;
+  pointer-events: none;
+  transform-origin: center center;
+  transition: transform var(--t-base) var(--ease-aura);
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.image-zoom__img.is-active {
+  opacity: 1;
+  pointer-events: auto;
+  cursor: zoom-in;
+}
+
+.image-zoom__close {
+  position: absolute;
+  top: var(--s-4);
+  right: var(--s-4);
+  z-index: 3;
+  width: 4.4rem;
+  height: 4.4rem;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(var(--color-background), 0.12);
+  color: rgb(var(--color-background));
+  border: 1px solid rgba(var(--color-background), 0.25);
+  font-size: 2.4rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background var(--t-quick), transform var(--t-quick) var(--ease-aura);
+}
+
+.image-zoom__close:hover {
+  background: rgba(var(--color-background), 0.22);
+  transform: scale(1.06);
+}
+
+.image-zoom__nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 3;
+  width: 5rem;
+  height: 5rem;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(var(--color-background), 0.1);
+  color: rgb(var(--color-background));
+  border: 1px solid rgba(var(--color-background), 0.22);
+  font-size: 2.6rem;
+  cursor: pointer;
+  transition: background var(--t-quick), transform var(--t-quick) var(--ease-aura);
+}
+
+.image-zoom__nav:hover { background: rgba(var(--color-background), 0.2); }
+.image-zoom__nav--prev { left: var(--s-4); }
+.image-zoom__nav--next { right: var(--s-4); }
+
+.image-zoom__hint {
+  position: absolute;
+  bottom: var(--s-4);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+  color: rgba(var(--color-background), 0.6);
+  font-size: 1.2rem;
+  letter-spacing: 0.02em;
+  pointer-events: none;
+}
+
+@media screen and (max-width: 749px) {
+  .image-zoom__nav { width: 4.2rem; height: 4.2rem; font-size: 2.2rem; }
+  .image-zoom__hint { display: none; }
+}
+
+/* Trigger cursor on the gallery thumbnails/images that open this modal */
+[data-zoom-open] {
+  cursor: zoom-in;
+}
