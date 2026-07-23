@@ -1,8 +1,18 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "hero": {
       "type": "image-banner",
       "settings": {
+        "image": "shopify://shop_images/jewlery.png",
         "height": "large",
         "overlay_opacity": 20,
         "text_color": "light",
@@ -12,33 +22,160 @@
         "text": "<p>Considered essentials, made to last a lifetime.</p>",
         "content_position": "middle-center",
         "button_label_1": "Shop the collection",
+        "button_link_1": "",
         "button_style_1": "primary",
         "button_label_2": "Our story",
+        "button_link_2": "",
         "color_scheme": "scheme-4"
       }
     },
     "ticker": {
       "type": "marquee",
       "blocks": {
-        "m1": { "type": "item", "settings": { "text": "Complimentary carbon-neutral shipping" } },
-        "m2": { "type": "item", "settings": { "text": "Lifetime guarantee" } },
-        "m3": { "type": "item", "settings": { "text": "Thirty-day returns" } },
-        "m4": { "type": "item", "settings": { "text": "Crafted in Portugal" } }
+        "m1": {
+          "type": "item",
+          "settings": {
+            "text": "Complimentary carbon-neutral shipping"
+          }
+        },
+        "m2": {
+          "type": "item",
+          "settings": {
+            "text": "Lifetime guarantee"
+          }
+        },
+        "m3": {
+          "type": "item",
+          "settings": {
+            "text": "Thirty-day returns"
+          }
+        },
+        "m4": {
+          "type": "item",
+          "settings": {
+            "text": "Crafted in Portugal"
+          }
+        }
       },
-      "block_order": ["m1", "m2", "m3", "m4"],
-      "settings": { "speed": 30, "separator": "✦", "color_scheme": "scheme-3", "padding": 4 }
+      "block_order": [
+        "m1",
+        "m2",
+        "m3",
+        "m4"
+      ],
+      "settings": {
+        "speed": 30,
+        "separator": "✦",
+        "color_scheme": "scheme-3",
+        "padding": 4
+      }
     },
     "showcase": {
       "type": "showcase",
       "blocks": {
-        "t1": { "type": "tile", "settings": { "size": "full", "height": "tall", "background_color": "#0D0E11", "text_color": "light", "content_position": "top", "eyebrow": "The Winter Edit", "heading": "Layers, considered", "subheading": "Warmth without weight — the pieces the season is built around.", "cta1_label": "Explore the edit", "cta2_label": "Shop now" } },
-        "t2": { "type": "tile", "settings": { "size": "half", "height": "default", "background_color": "#F5F5F7", "text_color": "dark", "content_position": "top", "heading": "Outerwear", "subheading": "Built for a decade of weather.", "cta1_label": "Learn more", "cta2_label": "Shop" } },
-        "t3": { "type": "tile", "settings": { "size": "half", "height": "default", "background_color": "#ECE7DE", "text_color": "dark", "content_position": "top", "heading": "Knitwear", "subheading": "Merino, milled in Scotland.", "cta1_label": "Learn more", "cta2_label": "Shop" } },
-        "t4": { "type": "tile", "settings": { "size": "half", "height": "default", "background_color": "#1D1D1F", "text_color": "light", "content_position": "top", "heading": "Leather goods", "subheading": "Vegetable-tanned, made to age.", "cta1_label": "Learn more", "cta2_label": "Shop" } },
-        "t5": { "type": "tile", "settings": { "size": "half", "height": "default", "background_color": "#F5F5F7", "text_color": "dark", "content_position": "top", "heading": "The Journal", "subheading": "On craft, care, and permanence.", "cta1_label": "Read", "cta2_label": "" } }
+        "t1": {
+          "type": "tile",
+          "settings": {
+            "size": "full",
+            "height": "tall",
+            "image": "shopify://shop_images/flatlay-of-jade-face-roller-laying-on-a-grey-stone.jpg",
+            "background_color": "#0d0e11",
+            "overlay_opacity": 0,
+            "text_color": "light",
+            "content_position": "top",
+            "eyebrow": "The Winter Edit",
+            "heading": "Layers, considered",
+            "subheading": "Warmth without weight — the pieces the season is built around.",
+            "cta1_label": "Explore the edit",
+            "cta1_link": "",
+            "cta2_label": "Shop now",
+            "cta2_link": ""
+          }
+        },
+        "t2": {
+          "type": "tile",
+          "settings": {
+            "size": "half",
+            "height": "default",
+            "background_color": "#f5f5f7",
+            "overlay_opacity": 0,
+            "text_color": "dark",
+            "content_position": "top",
+            "eyebrow": "",
+            "heading": "Outerwear",
+            "subheading": "Built for a decade of weather.",
+            "cta1_label": "Learn more",
+            "cta1_link": "",
+            "cta2_label": "Shop",
+            "cta2_link": ""
+          }
+        },
+        "t3": {
+          "type": "tile",
+          "settings": {
+            "size": "half",
+            "height": "default",
+            "background_color": "#ece7de",
+            "overlay_opacity": 0,
+            "text_color": "dark",
+            "content_position": "top",
+            "eyebrow": "",
+            "heading": "Knitwear",
+            "subheading": "Merino, milled in Scotland.",
+            "cta1_label": "Learn more",
+            "cta1_link": "",
+            "cta2_label": "Shop",
+            "cta2_link": ""
+          }
+        },
+        "t4": {
+          "type": "tile",
+          "settings": {
+            "size": "half",
+            "height": "default",
+            "background_color": "#1d1d1f",
+            "overlay_opacity": 0,
+            "text_color": "light",
+            "content_position": "top",
+            "eyebrow": "",
+            "heading": "Leather goods",
+            "subheading": "Vegetable-tanned, made to age.",
+            "cta1_label": "Learn more",
+            "cta1_link": "",
+            "cta2_label": "Shop",
+            "cta2_link": ""
+          }
+        },
+        "t5": {
+          "type": "tile",
+          "settings": {
+            "size": "half",
+            "height": "default",
+            "background_color": "#f5f5f7",
+            "overlay_opacity": 0,
+            "text_color": "dark",
+            "content_position": "top",
+            "eyebrow": "",
+            "heading": "The Journal",
+            "subheading": "On craft, care, and permanence.",
+            "cta1_label": "Read",
+            "cta1_link": "",
+            "cta2_label": "",
+            "cta2_link": ""
+          }
+        }
       },
-      "block_order": ["t1", "t2", "t3", "t4", "t5"],
-      "settings": { "gap": 16, "padding": 100 }
+      "block_order": [
+        "t1",
+        "t2",
+        "t3",
+        "t4",
+        "t5"
+      ],
+      "settings": {
+        "gap": 16,
+        "padding": 100
+      }
     },
     "featured": {
       "type": "featured-collection",
@@ -46,41 +183,119 @@
         "eyebrow": "Curated",
         "title": "New this season",
         "heading_size": "h1",
+        "collection": "",
         "products_to_show": 4,
         "columns_desktop": "4",
         "image_ratio": "portrait",
         "show_view_all": true,
+        "show_view_all_button": false,
         "color_scheme": "scheme-1"
       }
     },
     "craft": {
       "type": "image-with-text",
       "blocks": {
-        "eyebrow": { "type": "eyebrow", "settings": { "text": "The craft" } },
-        "heading": { "type": "heading", "settings": { "heading": "Made by hand, meant for years", "size": "h2" } },
-        "text": { "type": "text", "settings": { "text": "<p>Each piece is finished by hand and inspected against a single question — will it still feel right in ten years?</p>" } },
-        "button": { "type": "button", "settings": { "button_label": "Our story", "button_style": "secondary" } }
+        "eyebrow": {
+          "type": "eyebrow",
+          "settings": {
+            "text": "The craft"
+          }
+        },
+        "heading": {
+          "type": "heading",
+          "settings": {
+            "heading": "Made by hand, meant for years",
+            "size": "h2"
+          }
+        },
+        "text": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Each piece is finished by hand and inspected against a single question — will it still feel right in ten years?</p>"
+          }
+        },
+        "button": {
+          "type": "button",
+          "settings": {
+            "button_label": "Our story",
+            "button_link": "",
+            "button_style": "secondary"
+          }
+        }
       },
-      "block_order": ["eyebrow", "heading", "text", "button"],
-      "settings": { "image_ratio": "portrait", "layout": "default", "color_scheme": "scheme-1" }
+      "block_order": [
+        "eyebrow",
+        "heading",
+        "text",
+        "button"
+      ],
+      "settings": {
+        "image_ratio": "portrait",
+        "layout": "default",
+        "color_scheme": "scheme-1"
+      }
     },
     "why": {
       "type": "multicolumn",
       "blocks": {
-        "b1": { "type": "column", "settings": { "icon": "check", "heading": "Made to last", "text": "<p>Materials chosen for permanence, backed by a lifetime guarantee.</p>" } },
-        "b2": { "type": "column", "settings": { "icon": "cart", "heading": "Considered shipping", "text": "<p>Carbon-neutral delivery in recyclable packaging, always.</p>" } },
-        "b3": { "type": "column", "settings": { "icon": "arrow", "heading": "Simple returns", "text": "<p>Thirty days to decide. Free, effortless returns.</p>" } }
+        "b1": {
+          "type": "column",
+          "settings": {
+            "icon": "check",
+            "heading": "Made to last",
+            "text": "<p>Materials chosen for permanence, backed by a lifetime guarantee.</p>"
+          }
+        },
+        "b2": {
+          "type": "column",
+          "settings": {
+            "icon": "cart",
+            "heading": "Considered shipping",
+            "text": "<p>Carbon-neutral delivery in recyclable packaging, always.</p>"
+          }
+        },
+        "b3": {
+          "type": "column",
+          "settings": {
+            "icon": "arrow",
+            "heading": "Simple returns",
+            "text": "<p>Thirty days to decide. Free, effortless returns.</p>"
+          }
+        }
       },
-      "block_order": ["b1", "b2", "b3"],
-      "settings": { "title": "Why Aura", "heading_size": "h1", "columns_desktop": "3", "alignment": "center", "color_scheme": "scheme-2" }
+      "block_order": [
+        "b1",
+        "b2",
+        "b3"
+      ],
+      "settings": {
+        "eyebrow": "",
+        "title": "Why Aura",
+        "heading_size": "h1",
+        "columns_desktop": "3",
+        "alignment": "center",
+        "color_scheme": "scheme-2"
+      }
     },
     "reviews": {
       "type": "quote",
       "blocks": {
-        "q1": { "type": "quote", "settings": { "rating": 5, "text": "<p>The best-made piece I own. Three years in and it looks better than the day it arrived.</p>", "author": "A. Mercer, verified buyer" } }
+        "q1": {
+          "type": "quote",
+          "settings": {
+            "rating": 5,
+            "text": "<p>The best-made piece I own. Three years in and it looks better than the day it arrived.</p>",
+            "author": "A. Mercer, verified buyer"
+          }
+        }
       },
-      "block_order": ["q1"],
-      "settings": { "show_glow": false, "color_scheme": "scheme-2" }
+      "block_order": [
+        "q1"
+      ],
+      "settings": {
+        "show_glow": false,
+        "color_scheme": "scheme-2"
+      }
     },
     "newsletter": {
       "type": "newsletter",
@@ -94,5 +309,14 @@
       }
     }
   },
-  "order": ["hero", "ticker", "showcase", "featured", "craft", "why", "reviews", "newsletter"]
+  "order": [
+    "hero",
+    "ticker",
+    "showcase",
+    "featured",
+    "craft",
+    "why",
+    "reviews",
+    "newsletter"
+  ]
 }
