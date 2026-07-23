@@ -808,30 +808,6 @@
     scroller.scrollBy({ left: arrow.getAttribute('data-scroll') === 'next' ? amount : -amount, behavior: 'smooth' });
   });
 
-  /* Product media zoom lightbox */
-  (function () {
-    let zoom;
-    document.addEventListener('click', (e) => {
-      const img = e.target.closest('.product__media img');
-      if (!img) return;
-      if (!zoom) {
-        zoom = document.createElement('div');
-        zoom.className = 'media-zoom';
-        zoom.innerHTML = '<button class="media-zoom__close" type="button" aria-label="Close">&times;</button><img alt="">';
-        const close = () => { zoom.classList.remove('active'); document.body.classList.remove('overflow-hidden'); };
-        zoom.addEventListener('click', close);
-        document.addEventListener('keyup', (ev) => { if (ev.key === 'Escape' && zoom.classList.contains('active')) close(); });
-        document.body.appendChild(zoom);
-      }
-      const src = img.currentSrc || img.src || '';
-      const big = /[?&]width=\d+/.test(src) ? src.replace(/([?&]width=)\d+/, '$12000') : src;
-      const z = zoom.querySelector('img');
-      z.src = big; z.alt = img.alt || '';
-      zoom.classList.add('active');
-      document.body.classList.add('overflow-hidden');
-    });
-  })();
-
   function init() {
     initScrollAnimations();
     initImageFade();

@@ -27,6 +27,10 @@
       "next": "Next",
       "previous": "Previous"
     },
+    "slider": {
+      "previous_slide": "Previous image",
+      "next_slide": "Next image"
+    },
     "search": {
       "search": "Search",
       "placeholder": "Search for products…",
@@ -221,7 +225,10 @@
       "media": {
         "gallery_viewer": "Gallery Viewer",
         "load_image": "Load image {{ index }} in gallery view",
-        "image_available": "Image {{ index }} is now available in gallery view"
+        "image_available": "Image {{ index }} is now available in gallery view",
+        "open_zoom": "Open zoomed image",
+        "zoom_label": "Product image, zoomed",
+        "zoom_hint": "Pinch or scroll to zoom · drag to pan"
       },
       "value_unavailable": "{{ option_value }} - Unavailable",
       "variant_sold_out_or_unavailable": "Variant sold out or unavailable",

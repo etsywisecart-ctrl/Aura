@@ -35,7 +35,9 @@
                 {%- endif -%}
                 {%- case media.media_type -%}
                   {%- when 'image' -%}
-                    <div class="media" style="padding-bottom: {{ 1 | divided_by: media.aspect_ratio | times: 100 }}%;">
+                    <div class="media" style="padding-bottom: {{ 1 | divided_by: media.aspect_ratio | times: 100 }}%;"
+                      data-zoom-open data-zoom-index="{{ forloop.index0 }}" role="button" tabindex="0"
+                      aria-label="{{ 'products.product.media.open_zoom' | t }}">
                       <img src="{{ media | image_url: width: 1400 }}"
                         srcset="{{ media | image_url: width: 700 }} 700w, {{ media | image_url: width: 1100 }} 1100w, {{ media | image_url: width: 1400 }} 1400w"
                         sizes="(min-width: 990px) 55vw, 100vw" alt="{{ media.alt | escape }}"
@@ -58,6 +60,8 @@
           {%- endif -%}
         </div>
       </div>
+
+      {%- render 'image-zoom-modal', section_id: section.id, media_list: product.media -%}
 
       {%- comment -%} Info — the decision zone {%- endcomment -%}
       <div class="product__info">

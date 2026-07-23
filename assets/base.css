@@ -844,13 +844,6 @@ body.overflow-hidden { overflow: hidden; }
 .inv--low { color: #b3702f; }
 .inv--low .inv__dot { background: #d08b3f; box-shadow: 0 0 0 3px rgba(208,139,63,0.18); }
 
-/* Media zoom lightbox */
-.product__media { cursor: zoom-in; }
-.media-zoom { position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,0.92); display: none; align-items: center; justify-content: center; padding: 4vmin; cursor: zoom-out; }
-.media-zoom.active { display: flex; }
-.media-zoom img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 0.4rem; }
-.media-zoom__close { position: fixed; top: 2rem; right: 2rem; width: 4.6rem; height: 4.6rem; border-radius: 50%; border: 0; background: rgba(255,255,255,0.16); color: #fff; font-size: 2.2rem; line-height: 1; cursor: pointer; }
-
 /* -------------------------------------------------------------------------
    16. Collection & facets
    ------------------------------------------------------------------------- */
