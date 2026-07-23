@@ -1,0 +1,1016 @@
+<title>Aura — Design Language</title>
+
+<style>
+  /* ============================================================
+     AURA — DESIGN LANGUAGE
+     Token-driven. Dual theme. Restraint over decoration.
+     ============================================================ */
+
+  *, *::before, *::after { box-sizing: border-box; }
+
+  :root {
+    /* ---- Neutrals (light) — cool, reference-tuned ---- */
+    --bg:        #FFFFFF;
+    --surface:   #F5F5F7;
+    --surface-2: #FFFFFF;
+    --ink:       #1D1D1F;
+    --ink-2:     #6E6E73;
+    --ink-3:     #86868B;
+    --line:      rgba(29, 29, 31, 0.10);
+    --line-2:    rgba(29, 29, 31, 0.16);
+
+    /* ---- Accent: Champagne ---- */
+    --accent:      #C2A268;
+    --accent-ink:  #9A7B44;   /* accessible on light ground */
+    --halo:        rgba(194, 162, 104, 0.22);
+    --halo-soft:   rgba(194, 162, 104, 0.10);
+
+    /* ---- Type ---- */
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --serif: "Hoefler Text", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, ui-serif, serif;
+    --mono: ui-monospace, "SF Mono", "SFMono-Regular", Menlo, Consolas, monospace;
+
+    /* ---- Radius ---- */
+    --r-xs: 6px;
+    --r-sm: 10px;
+    --r-md: 16px;
+    --r-lg: 24px;
+    --r-pill: 999px;
+
+    /* ---- Elevation (soft, ambient) ---- */
+    --shadow-sm: 0 1px 2px rgba(23,24,27,0.05);
+    --shadow-md: 0 10px 34px rgba(23,24,27,0.07);
+    --shadow-lg: 0 30px 70px rgba(23,24,27,0.11);
+
+    /* ---- Motion ---- */
+    --t-instant: 90ms;
+    --t-quick:   180ms;
+    --t-base:    280ms;
+    --t-slow:    480ms;
+    --t-ambient: 800ms;
+    --ease-aura: cubic-bezier(0.22, 1, 0.36, 1);
+    --ease-move: cubic-bezier(0.4, 0, 0.2, 1);
+
+    /* ---- Spacing rhythm (4pt base, 8pt system) ---- */
+    --s-1: 4px;  --s-2: 8px;  --s-3: 12px; --s-4: 16px;
+    --s-6: 24px; --s-8: 32px; --s-12: 48px; --s-16: 64px;
+    --s-24: 96px; --s-32: 128px;
+
+    --shell: 1360px;
+    color-scheme: light;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg:        #0D0E11;
+      --surface:   #16171B;
+      --surface-2: #1C1D22;
+      --ink:       #ECEAE3;
+      --ink-2:     #A2A4AB;
+      --ink-3:     #6E7077;
+      --line:      rgba(236, 234, 227, 0.12);
+      --line-2:    rgba(236, 234, 227, 0.20);
+      --accent:      #CBAE78;
+      --accent-ink:  #D8BE8A;
+      --halo:        rgba(203, 174, 120, 0.20);
+      --halo-soft:   rgba(203, 174, 120, 0.08);
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.4);
+      --shadow-md: 0 10px 34px rgba(0,0,0,0.45);
+      --shadow-lg: 0 30px 70px rgba(0,0,0,0.55);
+      color-scheme: dark;
+    }
+  }
+
+  /* Explicit toggle overrides media query in both directions */
+  :root[data-theme="light"] {
+    --bg:#FFFFFF; --surface:#F5F5F7; --surface-2:#FFFFFF;
+    --ink:#1D1D1F; --ink-2:#6E6E73; --ink-3:#86868B;
+    --line:rgba(29,29,31,0.10); --line-2:rgba(29,29,31,0.16);
+    --accent:#C2A268; --accent-ink:#9A7B44;
+    --halo:rgba(194,162,104,0.22); --halo-soft:rgba(194,162,104,0.10);
+    --shadow-sm:0 1px 2px rgba(29,29,31,0.05);
+    --shadow-md:0 10px 34px rgba(29,29,31,0.07);
+    --shadow-lg:0 30px 70px rgba(29,29,31,0.11);
+    color-scheme: light;
+  }
+  :root[data-theme="dark"] {
+    --bg:#0D0E11; --surface:#16171B; --surface-2:#1C1D22;
+    --ink:#ECEAE3; --ink-2:#A2A4AB; --ink-3:#6E7077;
+    --line:rgba(236,234,227,0.12); --line-2:rgba(236,234,227,0.20);
+    --accent:#CBAE78; --accent-ink:#D8BE8A;
+    --halo:rgba(203,174,120,0.20); --halo-soft:rgba(203,174,120,0.08);
+    --shadow-sm:0 1px 2px rgba(0,0,0,0.4);
+    --shadow-md:0 10px 34px rgba(0,0,0,0.45);
+    --shadow-lg:0 30px 70px rgba(0,0,0,0.55);
+    color-scheme: dark;
+  }
+
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    font-family: var(--sans);
+    font-size: 17px;
+    line-height: 1.65;
+    color: var(--ink);
+    background: var(--bg);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition: background var(--t-base) var(--ease-move), color var(--t-base) var(--ease-move);
+  }
+
+  ::selection { background: var(--halo); color: var(--ink); }
+
+  a { color: inherit; text-decoration: none; }
+
+  /* ---- Type primitives ---- */
+  .display {
+    font-family: var(--sans);
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    line-height: 1.04;
+    font-size: clamp(3.4rem, 9vw, 7.2rem);
+    text-wrap: balance;
+  }
+  h1,h2,h3,h4 { text-wrap: balance; margin: 0; }
+  .h1 { font-size: clamp(2.6rem, 5vw, 3.4rem); font-weight: 600; letter-spacing: -0.021em; line-height: 1.07; }
+  .h2 { font-size: clamp(1.9rem, 3.2vw, 2.4rem); font-weight: 600; letter-spacing: -0.018em; line-height: 1.1; }
+  .h3 { font-size: 1.25rem; font-weight: 550; letter-spacing: -0.01em; line-height: 1.3; }
+  .lead { font-size: clamp(1.15rem, 2vw, 1.35rem); color: var(--ink-2); font-weight: 380; line-height: 1.55; max-width: 62ch; }
+  .body { max-width: 66ch; color: var(--ink-2); }
+  .body strong { color: var(--ink); font-weight: 560; }
+  .caption { font-size: 0.82rem; color: var(--ink-3); line-height: 1.5; }
+  .mono { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+  .serif-quote { font-family: var(--serif); font-weight: 400; font-style: italic; }
+
+  .eyebrow {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent-ink);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7em;
+  }
+  .eyebrow::before {
+    content: "";
+    width: 22px; height: 1px;
+    background: var(--accent);
+    display: inline-block;
+  }
+
+  /* ============================================================
+     Masthead
+     ============================================================ */
+  .masthead {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px clamp(20px, 4vw, 44px);
+    background: color-mix(in srgb, var(--bg) 82%, transparent);
+    backdrop-filter: saturate(160%) blur(18px);
+    -webkit-backdrop-filter: saturate(160%) blur(18px);
+    border-bottom: 1px solid var(--line);
+  }
+  .brand { display: flex; align-items: baseline; gap: 12px; }
+  .brand__mark {
+    font-weight: 500; letter-spacing: 0.34em; text-transform: uppercase;
+    font-size: 0.9rem;
+  }
+  .brand__sub { font-size: 0.72rem; color: var(--ink-3); letter-spacing: 0.14em; text-transform: uppercase; }
+  .masthead__right { display: flex; align-items: center; gap: 10px; }
+  .pill {
+    font-size: 0.72rem; letter-spacing: 0.08em; color: var(--ink-3);
+    border: 1px solid var(--line); border-radius: var(--r-pill);
+    padding: 5px 12px; font-family: var(--mono);
+  }
+  .toggle {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: transparent; border: 1px solid var(--line-2);
+    color: var(--ink); border-radius: var(--r-pill);
+    padding: 6px 14px; font-size: 0.78rem; cursor: pointer;
+    font-family: var(--sans); letter-spacing: 0.02em;
+    transition: border-color var(--t-quick) var(--ease-move), background var(--t-quick) var(--ease-move);
+  }
+  .toggle:hover { border-color: var(--accent); }
+  .toggle__dot { width: 9px; height: 9px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 4px var(--halo-soft); }
+
+  /* ============================================================
+     Shell / layout
+     ============================================================ */
+  .shell { max-width: var(--shell); margin: 0 auto; padding: 0 clamp(20px, 4vw, 44px); }
+
+  .doc {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  @media (min-width: 1080px) {
+    .doc { grid-template-columns: 210px minmax(0, 1fr); column-gap: clamp(48px, 6vw, 96px); }
+  }
+
+  /* ---- Phase index rail ---- */
+  .rail { display: none; }
+  @media (min-width: 1080px) {
+    .rail {
+      display: block;
+      position: sticky;
+      top: 92px;
+      align-self: start;
+      height: max-content;
+      padding-top: 8px;
+    }
+  }
+  .rail__title { font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 18px; }
+  .rail__list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px; }
+  .rail__link {
+    display: grid; grid-template-columns: 26px 1fr; align-items: baseline; gap: 8px;
+    padding: 7px 10px 7px 0; border-radius: var(--r-xs);
+    color: var(--ink-3); font-size: 0.82rem; letter-spacing: 0.01em;
+    transition: color var(--t-quick) var(--ease-move);
+  }
+  .rail__num { font-family: var(--mono); font-size: 0.68rem; color: var(--ink-3); }
+  .rail__link:hover { color: var(--ink); }
+  .rail__link.is-active { color: var(--ink); }
+  .rail__link.is-active .rail__num { color: var(--accent-ink); }
+
+  /* ============================================================
+     Hero
+     ============================================================ */
+  .hero { position: relative; padding: clamp(56px, 12vh, 132px) 0 clamp(40px, 8vh, 88px); overflow: hidden; }
+  .hero__glow {
+    position: absolute; z-index: 0; pointer-events: none;
+    width: 70vw; height: 70vw; max-width: 900px; max-height: 900px;
+    top: -22%; right: -12%;
+    background: radial-gradient(circle at 50% 50%, var(--halo) 0%, var(--halo-soft) 34%, transparent 66%);
+    filter: blur(10px);
+  }
+  .hero__inner { position: relative; z-index: 1; }
+  .hero .display { margin: 20px 0 26px; }
+  .hero .display em { font-family: var(--serif); font-style: italic; font-weight: 400; letter-spacing: -0.01em; color: var(--accent-ink); }
+  .hero__meta {
+    display: flex; flex-wrap: wrap; gap: 10px 28px; margin-top: 40px;
+    padding-top: 24px; border-top: 1px solid var(--line);
+    font-family: var(--mono); font-size: 0.76rem; color: var(--ink-3); letter-spacing: 0.02em;
+  }
+  .hero__meta b { color: var(--ink-2); font-weight: 500; }
+
+  /* ============================================================
+     Sections
+     ============================================================ */
+  .section { padding: clamp(48px, 9vh, 104px) 0; border-top: 1px solid var(--line); }
+  .section__head { margin-bottom: clamp(28px, 4vw, 52px); }
+  .section__index { font-family: var(--mono); font-size: 0.8rem; color: var(--accent-ink); letter-spacing: 0.06em; }
+  .section__head .h1 { margin-top: 12px; }
+  .section__head .lead { margin-top: 18px; }
+
+  .subhead { margin: clamp(40px, 6vw, 64px) 0 22px; display: flex; align-items: baseline; gap: 14px; }
+  .subhead .h3 { color: var(--ink); }
+  .subhead__tag { font-family: var(--mono); font-size: 0.72rem; color: var(--ink-3); }
+
+  /* ---- Grids ---- */
+  .grid { display: grid; gap: 18px; }
+  .grid-2 { grid-template-columns: 1fr; }
+  .grid-3 { grid-template-columns: 1fr; }
+  .grid-4 { grid-template-columns: repeat(2, 1fr); }
+  @media (min-width: 720px) {
+    .grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .grid-3 { grid-template-columns: repeat(3, 1fr); }
+    .grid-4 { grid-template-columns: repeat(4, 1fr); }
+  }
+
+  /* ---- Card ---- */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    padding: 26px;
+    transition: transform var(--t-base) var(--ease-aura), box-shadow var(--t-base) var(--ease-aura), border-color var(--t-base) var(--ease-move);
+  }
+  .card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); border-color: var(--line-2); }
+  .card__k { font-family: var(--mono); font-size: 0.72rem; color: var(--accent-ink); letter-spacing: 0.08em; }
+  .card h3 { margin: 14px 0 8px; }
+  .card p { margin: 0; color: var(--ink-2); font-size: 0.96rem; }
+
+  /* principle card - numbered sequence is meaningful (the 6 tenets) */
+  .tenet { display: flex; flex-direction: column; gap: 10px; padding: 26px 0; border-top: 1px solid var(--line); }
+  .tenet__n { font-family: var(--mono); font-size: 0.72rem; color: var(--accent-ink); }
+  .tenet h3 { font-weight: 450; letter-spacing: -0.01em; }
+  .tenet p { margin: 0; color: var(--ink-2); font-size: 0.98rem; max-width: 60ch; }
+
+  /* ============================================================
+     Visual identity specimens
+     ============================================================ */
+  /* Swatches */
+  .swatches { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  @media (min-width: 720px) { .swatches { grid-template-columns: repeat(4, 1fr); } }
+  .swatch { border: 1px solid var(--line); border-radius: var(--r-sm); overflow: hidden; background: var(--surface); }
+  .swatch__chip { height: 92px; }
+  .swatch__meta { padding: 12px 14px; display: flex; flex-direction: column; gap: 3px; }
+  .swatch__name { font-size: 0.86rem; font-weight: 550; }
+  .swatch__hex { font-family: var(--mono); font-size: 0.72rem; color: var(--ink-3); text-transform: uppercase; }
+  .swatch__role { font-size: 0.74rem; color: var(--ink-3); }
+
+  /* Type scale */
+  .typescale { border-top: 1px solid var(--line); }
+  .typerow {
+    display: grid; grid-template-columns: 1fr; gap: 4px;
+    padding: 20px 0; border-bottom: 1px solid var(--line); align-items: baseline;
+  }
+  @media (min-width: 760px) { .typerow { grid-template-columns: 150px 1fr; gap: 28px; } }
+  .typerow__spec { font-family: var(--mono); font-size: 0.72rem; color: var(--ink-3); line-height: 1.7; }
+  .typerow__sample { color: var(--ink); overflow: hidden; }
+
+  /* Spacing ruler */
+  .ruler { display: flex; flex-direction: column; gap: 10px; }
+  .ruler__row { display: grid; grid-template-columns: 108px 1fr; align-items: center; gap: 16px; }
+  .ruler__label { font-family: var(--mono); font-size: 0.74rem; color: var(--ink-3); }
+  .ruler__bar { height: 12px; background: linear-gradient(90deg, var(--accent), var(--halo)); border-radius: var(--r-pill); }
+
+  /* Grid diagram */
+  .griddiag { display: grid; grid-template-columns: repeat(12, 1fr); gap: 8px; height: 120px; }
+  .griddiag span { background: var(--halo-soft); border: 1px solid var(--line); border-radius: 4px; }
+
+  /* Elevation demo */
+  .elev { display: grid; grid-template-columns: repeat(2,1fr); gap: 18px; }
+  @media (min-width: 720px){ .elev { grid-template-columns: repeat(4,1fr); } }
+  .elev__tile { height: 108px; border-radius: var(--r-md); background: var(--surface-2); border: 1px solid var(--line);
+    display: flex; align-items: flex-end; padding: 12px; font-family: var(--mono); font-size: 0.7rem; color: var(--ink-3); }
+  .elev__tile.s0 { box-shadow: none; }
+  .elev__tile.s1 { box-shadow: var(--shadow-sm); }
+  .elev__tile.s2 { box-shadow: var(--shadow-md); }
+  .elev__tile.s3 { box-shadow: var(--shadow-lg); }
+
+  /* Radius demo */
+  .radii { display: flex; flex-wrap: wrap; gap: 16px; }
+  .radii__item { display: flex; flex-direction: column; gap: 8px; align-items: center; }
+  .radii__box { width: 78px; height: 78px; background: var(--surface-2); border: 1px solid var(--line-2); }
+
+  /* Component previews */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 9px;
+    font-family: var(--sans); font-size: 0.86rem; font-weight: 550; letter-spacing: 0.01em;
+    padding: 13px 26px; border-radius: var(--r-pill); cursor: pointer;
+    border: 1px solid transparent;
+    transition: transform var(--t-quick) var(--ease-aura), opacity var(--t-quick) var(--ease-move), background var(--t-base) var(--ease-move), color var(--t-base) var(--ease-move);
+  }
+  .btn:hover { transform: translateY(-1.5px); }
+  .btn:active { transform: translateY(0); }
+  .btn--primary { background: var(--ink); color: var(--bg); }
+  .btn--secondary { background: transparent; color: var(--ink); border-color: var(--line-2); }
+  .btn--secondary:hover { border-color: var(--ink); }
+  .btn--ghost { background: transparent; color: var(--accent-ink); padding-left: 4px; padding-right: 4px; border-radius: 0; }
+  .btn--ghost:hover { opacity: 0.7; }
+  .btn__arrow { transition: transform var(--t-base) var(--ease-aura); }
+  .btn:hover .btn__arrow { transform: translateX(4px); }
+
+  .field { display: flex; flex-direction: column; gap: 8px; max-width: 320px; }
+  .field label { font-size: 0.78rem; color: var(--ink-2); letter-spacing: 0.01em; }
+  .field input {
+    font-family: var(--sans); font-size: 0.95rem; color: var(--ink);
+    background: var(--surface-2); border: 1px solid var(--line-2);
+    border-radius: var(--r-sm); padding: 13px 15px;
+    transition: border-color var(--t-quick) var(--ease-move), box-shadow var(--t-quick) var(--ease-move);
+  }
+  .field input::placeholder { color: var(--ink-3); }
+  .field input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--halo-soft); }
+
+  .demo-panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-md); padding: 30px; }
+  .demo-row { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; }
+
+  /* Icon spec */
+  .icons { display: flex; flex-wrap: wrap; gap: 14px; }
+  .icons svg { width: 26px; height: 26px; }
+  .icon-tile { width: 58px; height: 58px; border: 1px solid var(--line); border-radius: var(--r-sm); display: flex; align-items: center; justify-content: center; color: var(--ink); background: var(--surface); }
+
+  /* Product page anatomy */
+  .anatomy { display: grid; grid-template-columns: 1fr; gap: 14px; }
+  @media (min-width: 860px) { .anatomy { grid-template-columns: 1.05fr 0.95fr; } }
+  .anatomy__media { aspect-ratio: 4/5; border-radius: var(--r-md); border: 1px solid var(--line);
+    background:
+      radial-gradient(120% 90% at 70% 20%, var(--halo) 0%, transparent 55%),
+      var(--surface-2);
+    position: relative; overflow: hidden; }
+  .anatomy__media::after { content: "Product · hero · quiet"; position: absolute; left: 18px; bottom: 16px; font-family: var(--mono); font-size: 0.7rem; color: var(--ink-3); }
+  .anatomy__thumb { position: absolute; top: 16px; left: 16px; display: flex; gap: 8px; }
+  .anatomy__thumb i { width: 34px; height: 34px; border-radius: var(--r-xs); background: var(--surface); border: 1px solid var(--line-2); display: block; }
+  .anatomy__info { padding: 6px 0; display: flex; flex-direction: column; gap: 14px; }
+
+  /* Journey flow (ordered sequence) */
+  .flow { border-top: 1px solid var(--line); }
+  .flow__step { display: grid; grid-template-columns: 1fr; gap: 6px; padding: 22px 0; border-bottom: 1px solid var(--line); }
+  @media (min-width: 760px) { .flow__step { grid-template-columns: 34px 148px 1fr; gap: 24px; align-items: baseline; } }
+  .flow__n { font-family: var(--mono); font-size: 0.74rem; color: var(--accent-ink); }
+  .flow__stage { font-weight: 560; letter-spacing: -0.005em; }
+  .flow__do { color: var(--ink-2); font-size: 0.97rem; max-width: 60ch; }
+
+  /* Motion easing canvas */
+  .motion-grid { display: grid; grid-template-columns: 1fr; gap: 22px; }
+  @media (min-width: 820px) { .motion-grid { grid-template-columns: 300px 1fr; align-items: start; } }
+  .curve-wrap { border: 1px solid var(--line); border-radius: var(--r-md); background: var(--surface); padding: 16px; }
+  #curve { width: 100%; height: auto; display: block; }
+  .timing { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+  .timing li { display: grid; grid-template-columns: 96px 74px 1fr; gap: 14px; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--line); font-size: 0.9rem; }
+  .timing .k { font-weight: 550; }
+  .timing .v { font-family: var(--mono); font-size: 0.78rem; color: var(--accent-ink); }
+  .timing .d { color: var(--ink-3); font-size: 0.85rem; }
+
+  /* Rules table */
+  .rules { border-top: 1px solid var(--line); }
+  .rules__row { display: grid; grid-template-columns: 1fr; gap: 4px; padding: 16px 0; border-bottom: 1px solid var(--line); }
+  @media (min-width: 720px) { .rules__row { grid-template-columns: 190px 1fr; gap: 24px; } }
+  .rules__k { font-weight: 550; font-size: 0.95rem; }
+  .rules__v { color: var(--ink-2); font-size: 0.95rem; }
+  .rules__v .always { color: var(--accent-ink); font-weight: 560; }
+
+  /* Review checklist */
+  .check { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+  .check li {
+    display: flex; align-items: flex-start; gap: 14px;
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-sm);
+    padding: 16px 18px; cursor: pointer;
+    transition: border-color var(--t-quick) var(--ease-move), background var(--t-quick) var(--ease-move);
+  }
+  .check li:hover { border-color: var(--line-2); }
+  .check li.done { border-color: var(--accent); background: var(--halo-soft); }
+  .check__box { flex: none; width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid var(--line-2); display: flex; align-items: center; justify-content: center; margin-top: 1px; transition: border-color var(--t-quick), background var(--t-quick); }
+  .check li.done .check__box { border-color: var(--accent); background: var(--accent); }
+  .check__box svg { width: 13px; height: 13px; color: var(--bg); opacity: 0; transition: opacity var(--t-quick); }
+  .check li.done .check__box svg { opacity: 1; }
+  .check__q { font-size: 0.98rem; color: var(--ink); }
+
+  /* Callout */
+  .callout {
+    position: relative; margin: clamp(36px,6vw,60px) 0;
+    padding: clamp(30px, 5vw, 54px);
+    border: 1px solid var(--line); border-radius: var(--r-lg);
+    background: var(--surface); overflow: hidden;
+  }
+  .callout__glow { position: absolute; inset: -40% -10% auto auto; width: 60%; height: 200%; background: radial-gradient(circle at 70% 30%, var(--halo) 0%, transparent 60%); pointer-events: none; }
+  .callout p { position: relative; margin: 0; }
+  .callout .serif-quote { font-size: clamp(1.4rem, 3.4vw, 2.1rem); line-height: 1.35; color: var(--ink); max-width: 26ch; }
+
+  /* Footer */
+  .footer { border-top: 1px solid var(--line); padding: clamp(48px,8vh,96px) 0 64px; }
+  .status { display: inline-flex; align-items: center; gap: 10px; font-family: var(--mono); font-size: 0.78rem; color: var(--ink-2); letter-spacing: 0.04em; }
+  .status__dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 4px var(--halo-soft); animation: pulse 2.6s var(--ease-move) infinite; }
+  @keyframes pulse { 0%,100% { box-shadow: 0 0 0 4px var(--halo-soft);} 50% { box-shadow: 0 0 0 8px transparent; } }
+
+  /* Reveal */
+  [data-reveal] { opacity: 0; transform: translateY(16px); transition: opacity var(--t-slow) var(--ease-aura), transform var(--t-slow) var(--ease-aura); }
+  [data-reveal].in { opacity: 1; transform: none; }
+
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 3px; }
+
+  .divider { height: 1px; background: var(--line); border: 0; margin: 0; }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+    [data-reveal] { opacity: 1; transform: none; }
+  }
+</style>
+
+<header class="masthead">
+  <div class="brand">
+    <span class="brand__mark">Aura</span>
+    <span class="brand__sub">Design Language</span>
+  </div>
+  <div class="masthead__right">
+    <span class="pill">v0.2 · Reference-tuned</span>
+    <button class="toggle" id="themeToggle" type="button" aria-label="Switch color theme">
+      <span class="toggle__dot" aria-hidden="true"></span>
+      <span id="themeLabel">Theme</span>
+    </button>
+  </div>
+</header>
+
+<div class="shell">
+  <!-- HERO -->
+  <section class="hero" id="top">
+    <div class="hero__glow" aria-hidden="true"></div>
+    <div class="hero__inner">
+      <span class="eyebrow">The system before the store</span>
+      <h1 class="display">A store that feels like<br>an <em>object</em>, not a template.</h1>
+      <p class="lead">Aura is a single design language — one set of decisions about light, type, space, and motion — from which every page, component, and interaction is derived. Nothing generic. Nothing borrowed. Everything intentional.</p>
+      <div class="hero__meta">
+        <span><b>Discipline</b> — Design only</span>
+        <span><b>Reference</b> — Apple · Tesla · B&amp;O</span>
+        <span><b>Status</b> — Approved &amp; in build</span>
+        <span class="mono"><b>2026.07</b></span>
+      </div>
+    </div>
+  </section>
+
+  <div class="doc">
+    <!-- RAIL -->
+    <nav class="rail" aria-label="Phases">
+      <p class="rail__title">Twelve Phases</p>
+      <ul class="rail__list" id="railList">
+        <li><a class="rail__link" href="#philosophy"><span class="rail__num">01</span><span>Philosophy</span></a></li>
+        <li><a class="rail__link" href="#personality"><span class="rail__num">02</span><span>Personality</span></a></li>
+        <li><a class="rail__link" href="#identity"><span class="rail__num">03</span><span>Visual Identity</span></a></li>
+        <li><a class="rail__link" href="#homepage"><span class="rail__num">04</span><span>Homepage</span></a></li>
+        <li><a class="rail__link" href="#product"><span class="rail__num">05</span><span>Product</span></a></li>
+        <li><a class="rail__link" href="#collection"><span class="rail__num">06</span><span>Collection</span></a></li>
+        <li><a class="rail__link" href="#motion"><span class="rail__num">07</span><span>Motion</span></a></li>
+        <li><a class="rail__link" href="#ux"><span class="rail__num">08</span><span>Experience</span></a></li>
+        <li><a class="rail__link" href="#mobile"><span class="rail__num">09</span><span>Mobile</span></a></li>
+        <li><a class="rail__link" href="#details"><span class="rail__num">10</span><span>Details</span></a></li>
+        <li><a class="rail__link" href="#consistency"><span class="rail__num">11</span><span>Consistency</span></a></li>
+        <li><a class="rail__link" href="#review"><span class="rail__num">12</span><span>Review</span></a></li>
+      </ul>
+    </nav>
+
+    <!-- MAIN -->
+    <main>
+
+      <!-- 01 PHILOSOPHY -->
+      <section class="section" id="philosophy" data-reveal>
+        <div class="section__head">
+          <span class="section__index">01 — Design Philosophy</span>
+          <h2 class="h1">Restraint is the product.</h2>
+          <p class="lead">Premium is not what you add — it is what you have the confidence to remove. Every decision in Aura answers to six tenets. If a choice can't be justified by one of them, it doesn't ship.</p>
+        </div>
+
+        <div class="tenet">
+          <span class="tenet__n">Tenet 01</span>
+          <h3 class="h3">Less creates more</h3>
+          <p>One idea per screen. When a page carries a single message, that message becomes unmistakable. We measure quality by what a page chooses not to say. Emptiness is not missing content — it is the frame that makes content valuable.</p>
+        </div>
+        <div class="tenet">
+          <span class="tenet__n">Tenet 02</span>
+          <h3 class="h3">Whitespace is architecture</h3>
+          <p>Space is a structural material, not a leftover. Generous margins signal that the brand is unhurried and self-assured. Density signals discount; air signals worth. We spend space the way luxury spends silence.</p>
+        </div>
+        <div class="tenet">
+          <span class="tenet__n">Tenet 03</span>
+          <h3 class="h3">Typography carries emotion</h3>
+          <p>Before a customer reads a word, the letterforms have already told them how to feel. Weight, rhythm, and restraint do the work that decoration pretends to. Type is the interface; everything else supports it.</p>
+        </div>
+        <div class="tenet">
+          <span class="tenet__n">Tenet 04</span>
+          <h3 class="h3">Motion is a courtesy</h3>
+          <p>Animation exists to explain cause and effect, never to perform. The best transition is the one a customer feels but cannot describe. If motion draws attention to itself, it has failed. Invisible, intentional, immediate.</p>
+        </div>
+        <div class="tenet">
+          <span class="tenet__n">Tenet 05</span>
+          <h3 class="h3">One material, everywhere</h3>
+          <p>The same tokens govern a button and a checkout. Consistency is how trust compounds — a customer who recognizes the system on page one relaxes by page five. Surprise is for content, never for the interface.</p>
+        </div>
+        <div class="tenet">
+          <span class="tenet__n">Tenet 06</span>
+          <h3 class="h3">The product is the protagonist</h3>
+          <p>The interface is set design; the product is the lead. We light it, frame it, and give it room, then step back. When the UI disappears and the object remains, the design is done.</p>
+        </div>
+
+        <div class="callout" data-reveal>
+          <div class="callout__glow" aria-hidden="true"></div>
+          <p class="serif-quote">“When the interface disappears and only the object remains, the design is finished.”</p>
+        </div>
+      </section>
+
+      <!-- 02 PERSONALITY -->
+      <section class="section" id="personality" data-reveal>
+        <div class="section__head">
+          <span class="section__index">02 — Brand Personality</span>
+          <h2 class="h1">Nine traits, one voice.</h2>
+          <p class="lead">Aura should read the same way a well-made object feels in the hand: quiet, precise, and quietly expensive. These traits are the tuning forks we hold every screen against.</p>
+        </div>
+
+        <div class="grid grid-3">
+          <div class="card"><span class="card__k">01</span><h3>Luxurious</h3><p>Value shown through space and material honesty, never through ornament or gold-plating.</p></div>
+          <div class="card"><span class="card__k">02</span><h3>Modern</h3><p>Current without chasing trends. Clean geometry, honest surfaces, no nostalgia.</p></div>
+          <div class="card"><span class="card__k">03</span><h3>Minimal</h3><p>Only what earns its place. Every element defends its own existence.</p></div>
+          <div class="card"><span class="card__k">04</span><h3>Innovative</h3><p>Familiar enough to trust, fresh enough to remember. Novelty in feel, not gimmick.</p></div>
+          <div class="card"><span class="card__k">05</span><h3>Premium</h3><p>Considered at every scale — the 4px detail matters as much as the hero.</p></div>
+          <div class="card"><span class="card__k">06</span><h3>Sophisticated</h3><p>Speaks softly. Assumes an intelligent customer and never over-explains.</p></div>
+          <div class="card"><span class="card__k">07</span><h3>Human</h3><p>Warm neutrals, real language, generous touch targets. Precision with empathy.</p></div>
+          <div class="card"><span class="card__k">08</span><h3>Confident</h3><p>One clear action, no anxious badges or countdowns. Calm sells.</p></div>
+          <div class="card"><span class="card__k">09</span><h3>Timeless</h3><p>Designed to look intentional in five years, not dated by this season's effect.</p></div>
+        </div>
+
+        <div class="subhead"><span class="h3">Voice</span><span class="subhead__tag">how words behave</span></div>
+        <p class="body">We write in the active voice, in short declaratives. A control states exactly what it will do — <strong>Add to Bag</strong>, then a confirmation that says <strong>Added</strong>. No exclamation marks, no urgency theatre, no apologies. The tone is a knowledgeable friend with excellent taste: certain, unhurried, never loud.</p>
+      </section>
+
+      <!-- 03 VISUAL IDENTITY -->
+      <section class="section" id="identity" data-reveal>
+        <div class="section__head">
+          <span class="section__index">03 — Visual Identity</span>
+          <h2 class="h1">The material system.</h2>
+          <p class="lead">Every visible thing is built from a small, fixed set of tokens. Designers don't invent values — they compose from these. This is what makes twelve pages feel like one object.</p>
+        </div>
+
+        <!-- Color -->
+        <div class="subhead"><span class="h3">Color language</span><span class="subhead__tag">near-monochrome · one accent</span></div>
+        <p class="body">A clean white ground, cool grey surfaces, and ink text form a calm, photographic canvas — tuned to the reference standard. A single champagne accent is spent sparingly — focus states, a key mark, the soft light of the <em>aura</em> glow. Color never competes with product photography; it frames it.</p>
+        <div class="swatches" style="margin-top:22px">
+          <div class="swatch"><div class="swatch__chip" style="background:#FFFFFF;box-shadow:inset 0 0 0 1px rgba(0,0,0,0.08)"></div><div class="swatch__meta"><span class="swatch__name">Snow</span><span class="swatch__hex">#FFFFFF</span><span class="swatch__role">Ground · light</span></div></div>
+          <div class="swatch"><div class="swatch__chip" style="background:#F5F5F7"></div><div class="swatch__meta"><span class="swatch__name">Cloud</span><span class="swatch__hex">#F5F5F7</span><span class="swatch__role">Surface · light</span></div></div>
+          <div class="swatch"><div class="swatch__chip" style="background:#1D1D1F"></div><div class="swatch__meta"><span class="swatch__name">Ink</span><span class="swatch__hex">#1D1D1F</span><span class="swatch__role">Text · primary</span></div></div>
+          <div class="swatch"><div class="swatch__chip" style="background:#6E6E73"></div><div class="swatch__meta"><span class="swatch__name">Slate</span><span class="swatch__hex">#6E6E73</span><span class="swatch__role">Text · secondary</span></div></div>
+          <div class="swatch"><div class="swatch__chip" style="background:#C2A268"></div><div class="swatch__meta"><span class="swatch__name">Champagne</span><span class="swatch__hex">#C2A268</span><span class="swatch__role">Accent · restraint</span></div></div>
+          <div class="swatch"><div class="swatch__chip" style="background:#0D0E11"></div><div class="swatch__meta"><span class="swatch__name">Obsidian</span><span class="swatch__hex">#0D0E11</span><span class="swatch__role">Ground · dark</span></div></div>
+          <div class="swatch"><div class="swatch__chip" style="background:#16171B"></div><div class="swatch__meta"><span class="swatch__name">Surface Dark</span><span class="swatch__hex">#16171B</span><span class="swatch__role">Raised · dark</span></div></div>
+          <div class="swatch"><div class="swatch__chip" style="background:linear-gradient(135deg,#C2A268,rgba(194,162,104,0.12))"></div><div class="swatch__meta"><span class="swatch__name">Aura Halo</span><span class="swatch__hex">glow</span><span class="swatch__role">Light · signature</span></div></div>
+        </div>
+
+        <!-- Typography -->
+        <div class="subhead"><span class="h3">Typography</span><span class="subhead__tag">three deliberate roles</span></div>
+        <p class="body">A single grotesque sans carries structure — set at confident semibold weights for display, with tight optical tracking, and disciplined spacing for labels. A serif appears only for a rare editorial line, a whisper of craft. A monospace holds spec and numeric data. Body measure stays near 65 characters; numerals are always tabular.</p>
+        <div class="typescale" style="margin-top:12px">
+          <div class="typerow"><div class="typerow__spec">Display<br>600 · -2.5% · 1.04</div><div class="typerow__sample display" style="font-size:clamp(2.4rem,6vw,4rem)">Considered.</div></div>
+          <div class="typerow"><div class="typerow__spec">H1<br>350 · -2% · 1.08</div><div class="typerow__sample h1">The essential object</div></div>
+          <div class="typerow"><div class="typerow__spec">H2<br>400 · -1.5% · 1.14</div><div class="typerow__sample h2">Made to be kept</div></div>
+          <div class="typerow"><div class="typerow__spec">Serif accent<br>italic · editorial</div><div class="typerow__sample serif-quote" style="font-size:1.5rem">A quiet confidence.</div></div>
+          <div class="typerow"><div class="typerow__spec">Body<br>380 · 1.65 · 66ch</div><div class="typerow__sample" style="color:var(--ink-2)">Reading should feel effortless — comfortable measure, warm contrast, and rhythm that never rushes the eye.</div></div>
+          <div class="typerow"><div class="typerow__spec">Label<br>600 · +20% · caps</div><div class="typerow__sample eyebrow" style="color:var(--ink-3)">Complimentary shipping</div></div>
+          <div class="typerow"><div class="typerow__spec">Mono / data<br>tabular</div><div class="typerow__sample mono" style="color:var(--ink-2)">USD 248.00 · SKU AUR-014</div></div>
+        </div>
+
+        <!-- Spacing -->
+        <div class="subhead"><span class="h3">Spacing</span><span class="subhead__tag">4pt base · 8pt system</span></div>
+        <p class="body">All spacing steps from a 4px base on an 8px system. Consistent rhythm is what the eye reads as “made by one hand.” Sections breathe on the large steps; components align on the small ones.</p>
+        <div class="ruler" style="margin-top:20px">
+          <div class="ruler__row"><span class="ruler__label">4 · 3xs</span><div class="ruler__bar" style="width:4px"></div></div>
+          <div class="ruler__row"><span class="ruler__label">8 · 2xs</span><div class="ruler__bar" style="width:8px"></div></div>
+          <div class="ruler__row"><span class="ruler__label">16 · sm</span><div class="ruler__bar" style="width:16px"></div></div>
+          <div class="ruler__row"><span class="ruler__label">24 · md</span><div class="ruler__bar" style="width:24px"></div></div>
+          <div class="ruler__row"><span class="ruler__label">48 · xl</span><div class="ruler__bar" style="width:48px"></div></div>
+          <div class="ruler__row"><span class="ruler__label">96 · 3xl</span><div class="ruler__bar" style="width:96px"></div></div>
+          <div class="ruler__row"><span class="ruler__label">128 · 4xl</span><div class="ruler__bar" style="width:128px"></div></div>
+        </div>
+
+        <!-- Grid -->
+        <div class="subhead"><span class="h3">Grid</span><span class="subhead__tag">12 · 8 · 4</span></div>
+        <p class="body">A 12-column grid with 24px gutters on desktop, collapsing to 8 columns on tablet and 4 on mobile. Content maxes at 1360px with generous outer margins so the layout always feels framed, never edge-to-edge.</p>
+        <div class="griddiag" style="margin-top:20px" aria-hidden="true">
+          <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+        </div>
+
+        <!-- Elevation -->
+        <div class="subhead"><span class="h3">Elevation &amp; shadow</span><span class="subhead__tag">ambient, not dropped</span></div>
+        <p class="body">Shadows imitate soft, diffuse light — large blur, low opacity, no hard edges. Elevation separates layers by a whisper. A raised surface should feel lit, not stacked.</p>
+        <div class="elev" style="margin-top:20px">
+          <div class="elev__tile s0">flat · 0</div>
+          <div class="elev__tile s1">sm · rest</div>
+          <div class="elev__tile s2">md · hover</div>
+          <div class="elev__tile s3">lg · overlay</div>
+        </div>
+
+        <!-- Radius -->
+        <div class="subhead"><span class="h3">Radius</span><span class="subhead__tag">precise, not bubbly</span></div>
+        <p class="body">Corners are softened just enough to feel crafted — never so much that they read as playful. Buttons are pill-shaped; surfaces sit around 16px; media around 16–24px.</p>
+        <div class="radii" style="margin-top:20px">
+          <div class="radii__item"><div class="radii__box" style="border-radius:6px"></div><span class="caption mono">6</span></div>
+          <div class="radii__item"><div class="radii__box" style="border-radius:10px"></div><span class="caption mono">10</span></div>
+          <div class="radii__item"><div class="radii__box" style="border-radius:16px"></div><span class="caption mono">16</span></div>
+          <div class="radii__item"><div class="radii__box" style="border-radius:24px"></div><span class="caption mono">24</span></div>
+          <div class="radii__item"><div class="radii__box" style="border-radius:999px"></div><span class="caption mono">pill</span></div>
+        </div>
+
+        <!-- Components -->
+        <div class="subhead"><span class="h3">Components</span><span class="subhead__tag">rendered in-system</span></div>
+        <div class="demo-panel" style="margin-top:12px">
+          <div class="demo-row" style="margin-bottom:26px">
+            <button class="btn btn--primary" type="button">Add to Bag</button>
+            <button class="btn btn--secondary" type="button">Save</button>
+            <button class="btn btn--ghost" type="button">Learn more <span class="btn__arrow">→</span></button>
+          </div>
+          <div class="demo-row" style="align-items:flex-end; gap:24px">
+            <div class="field">
+              <label for="demoEmail">Email</label>
+              <input id="demoEmail" type="email" placeholder="you@studio.com">
+            </div>
+            <div style="display:flex; flex-direction:column; gap:8px">
+              <span class="caption">Card · rest &amp; hover</span>
+              <div class="card" style="width:190px; padding:18px"><span class="card__k">AUR-014</span><h3 style="font-size:1rem; margin:10px 0 4px">Field Jacket</h3><p class="mono" style="font-size:0.82rem; color:var(--ink-2)">USD 248.00</p></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Icons -->
+        <div class="subhead"><span class="h3">Iconography</span><span class="subhead__tag">1.5px stroke · 24 grid · round joins</span></div>
+        <p class="body">Icons are line-drawn on a 24px grid with a 1.5px stroke and rounded joins — never filled, never colored. They read as engraved marks, consistent in weight with the type around them.</p>
+        <div class="icons" style="margin-top:20px">
+          <div class="icon-tile"><svg viewBox="0 0 24 24" fill="none"><path d="M6 7h12l-1 12H7L6 7Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M9 7a3 3 0 0 1 6 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+          <div class="icon-tile"><svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="6" stroke="currentColor" stroke-width="1.5"/><path d="m20 20-4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+          <div class="icon-tile"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.5"/><path d="M5 20a7 7 0 0 1 14 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+          <div class="icon-tile"><svg viewBox="0 0 24 24" fill="none"><path d="M4 12h16m0 0-6-6m6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div class="icon-tile"><svg viewBox="0 0 24 24" fill="none"><path d="m5 12 4 4 10-10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div class="icon-tile"><svg viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+        </div>
+
+        <!-- Surface & light -->
+        <div class="subhead"><span class="h3">Surface &amp; light</span><span class="subhead__tag">the aura motif</span></div>
+        <p class="body">The signature is light, not color. A soft radial <em>halo</em> sits behind heroes and key products — a warm ambient glow that suggests the “aura” of a well-lit object. Glass surfaces (the header, sheets) use a saturated blur over the ground. Borders are hairlines at 10–16% ink. Photography is styled: single subject, natural light, deep negative space, a clean neutral grade — the product on a considered surface, never a busy scene.</p>
+      </section>
+
+      <!-- 04 HOMEPAGE -->
+      <section class="section" id="homepage" data-reveal>
+        <div class="section__head">
+          <span class="section__index">04 — Homepage Experience</span>
+          <h2 class="h1">An arrival, not a landing.</h2>
+          <p class="lead">The homepage is a choreographed descent from curiosity to confidence. Each stage has exactly one job and hands the visitor to the next. No filler, no carousel of noise — a single narrative told in scroll.</p>
+        </div>
+        <div class="flow">
+          <div class="flow__step"><span class="flow__n">01</span><span class="flow__stage">Arrival</span><span class="flow__do">A full-height hero: one product or one line, immense space, a slow light-reveal. The first impression is silence and confidence — “this is different.”</span></div>
+          <div class="flow__step"><span class="flow__n">02</span><span class="flow__stage">Curiosity</span><span class="flow__do">A single editorial statement of intent. Who this is for and why it exists — set in large, calm type against the ground.</span></div>
+          <div class="flow__step"><span class="flow__n">03</span><span class="flow__stage">Discovery</span><span class="flow__do">A curated shelf — three or four hero products, generously spaced, each a small story. Quality over quantity; the grid breathes.</span></div>
+          <div class="flow__step"><span class="flow__n">04</span><span class="flow__stage">Excitement</span><span class="flow__do">One immersive feature moment: a large image or muted video revealing craft and detail as it scrolls into view.</span></div>
+          <div class="flow__step"><span class="flow__n">05</span><span class="flow__stage">Trust</span><span class="flow__do">Proof, told quietly — materials, guarantees, a line of press or a single genuine review. Understated, never shouted.</span></div>
+          <div class="flow__step"><span class="flow__n">06</span><span class="flow__stage">Decision</span><span class="flow__do">A clear, singular invitation to explore the full collection. One button, unmistakable, with room around it.</span></div>
+          <div class="flow__step"><span class="flow__n">07</span><span class="flow__stage">Belonging</span><span class="flow__do">A calm close — join the list, in the brand's voice. Not a popup fighting the exit, but an open hand.</span></div>
+        </div>
+      </section>
+
+      <!-- 05 PRODUCT -->
+      <section class="section" id="product" data-reveal>
+        <div class="section__head">
+          <span class="section__index">05 — Product Experience</span>
+          <h2 class="h1">The product becomes the hero.</h2>
+          <p class="lead">The heart of the store. The customer should feel they are turning the object over in their hands. Imagery leads; the decision zone stays effortless; the story unfolds only as they choose to go deeper.</p>
+        </div>
+        <div class="anatomy">
+          <div class="anatomy__media">
+            <div class="anatomy__thumb" aria-hidden="true"><i></i><i></i><i></i></div>
+          </div>
+          <div class="anatomy__info">
+            <span class="eyebrow" style="color:var(--ink-3)">Outerwear</span>
+            <h3 class="h2" style="font-weight:420">The Field Jacket</h3>
+            <p class="mono" style="color:var(--ink-2); font-size:0.95rem">USD 248.00</p>
+            <p class="body" style="font-size:0.98rem">A single, quiet decision zone: name, price, one line of essence. Options as calm chips, one clear primary action. No clutter around the moment that matters.</p>
+            <div class="demo-row"><button class="btn btn--primary" type="button">Add to Bag</button><button class="btn btn--secondary" type="button">♡ Save</button></div>
+          </div>
+        </div>
+        <div class="grid grid-3" style="margin-top:28px">
+          <div class="card"><span class="card__k">Immersion</span><h3>Gallery as hero</h3><p>Oversized imagery, generous frame, gentle zoom on hover. The object is lit and centered; the UI recedes.</p></div>
+          <div class="card"><span class="card__k">Story</span><h3>Scroll-told craft</h3><p>Features reveal as vignettes — image and one line at a time — building desire without a spec dump.</p></div>
+          <div class="card"><span class="card__k">Detail</span><h3>Disclosure on demand</h3><p>Specs, materials, care and shipping live in calm accordions. Depth for those who want it, never in the way.</p></div>
+          <div class="card"><span class="card__k">Confidence</span><h3>Quiet proof</h3><p>Reviews, guarantee, returns — presented as reassurance, not pressure. Trust is stated once, clearly.</p></div>
+          <div class="card"><span class="card__k">Persistence</span><h3>Sticky decision</h3><p>On long pages the name, price and action follow gently, so buying is always one glance away.</p></div>
+          <div class="card"><span class="card__k">Continuation</span><h3>Considered pairings</h3><p>A short, curated “completes the look” — three items, editorially chosen, never an algorithmic wall.</p></div>
+        </div>
+      </section>
+
+      <!-- 06 COLLECTION -->
+      <section class="section" id="collection" data-reveal>
+        <div class="section__head">
+          <span class="section__index">06 — Collection Experience</span>
+          <h2 class="h1">A gallery, not a grid.</h2>
+          <p class="lead">Collections are curated rooms. Products hang with space between them; the eye moves without effort. Filtering feels intelligent and calm; search feels instant.</p>
+        </div>
+        <div class="grid grid-2">
+          <div class="card"><span class="card__k">Editorial header</span><h3>Set the scene</h3><p>Each collection opens with a title, a sentence of intent, and air — an editorial cover, not a banner ad.</p></div>
+          <div class="card"><span class="card__k">Breathing grid</span><h3>Room to consider</h3><p>Two to three columns at most, tall imagery, wide gutters. Fewer products, better shown, load elegantly as you scroll.</p></div>
+          <div class="card"><span class="card__k">Calm filters</span><h3>Intelligent, not busy</h3><p>Filters live in a quiet slide-over. Selections read as removable chips; results update without a jarring reload.</p></div>
+          <div class="card"><span class="card__k">Instant search</span><h3>Answer as they type</h3><p>Predictive results appear in a soft sheet — products first, thumbnail and price, reachable in two keystrokes.</p></div>
+        </div>
+        <p class="body" style="margin-top:26px">On hover, a card reveals its second image with a slow cross-fade and the faintest lift — a glance behind the object. The price is tabular and settled; nothing shifts as content loads.</p>
+      </section>
+
+      <!-- 07 MOTION -->
+      <section class="section" id="motion" data-reveal>
+        <div class="section__head">
+          <span class="section__index">07 — Motion Design</span>
+          <h2 class="h1">Felt, never watched.</h2>
+          <p class="lead">Motion clarifies change. It has a single signature easing — a confident deceleration we call <span class="mono">aura-ease</span> — and a small set of durations. Everything moves on the same clock, so the whole store feels physically consistent.</p>
+        </div>
+        <div class="motion-grid">
+          <div class="curve-wrap">
+            <canvas id="curve" width="560" height="560" aria-label="aura-ease easing curve"></canvas>
+            <p class="caption mono" style="margin:12px 4px 2px">cubic-bezier(0.22, 1, 0.36, 1)</p>
+            <p class="caption" style="margin:0 4px">aura-ease — quick to leave, gentle to settle.</p>
+          </div>
+          <div>
+            <ul class="timing">
+              <li><span class="k">Instant</span><span class="v">90ms</span><span class="d">Taps, toggles, state flips</span></li>
+              <li><span class="k">Quick</span><span class="v">180ms</span><span class="d">Hover, focus, small reveals</span></li>
+              <li><span class="k">Base</span><span class="v">280ms</span><span class="d">Cards, drawers, cross-fades</span></li>
+              <li><span class="k">Slow</span><span class="v">480ms</span><span class="d">Scroll reveals, page moments</span></li>
+              <li><span class="k">Ambient</span><span class="v">800ms</span><span class="d">Light, hero, background drift</span></li>
+            </ul>
+            <div class="subhead"><span class="h3">Choreography</span><span class="subhead__tag">rules</span></div>
+            <p class="body" style="font-size:0.97rem">Things enter with a small rise and fade, never a bounce. One element moves at a time in a sequence; groups stagger by ~60ms. Images reveal with a blur-up, never a pop-in. Skeletons shimmer softly while data loads. The cart and search glide in as sheets. Reduced-motion replaces every movement with an instant, tasteful cross-fade.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 08 UX -->
+      <section class="section" id="ux" data-reveal>
+        <div class="section__head">
+          <span class="section__index">08 — User Experience</span>
+          <h2 class="h1">Design the experience, not the interface.</h2>
+          <p class="lead">Every screen reduces cognitive load and increases confidence. We manage attention deliberately: one primary action, a clear hierarchy, and a path that never traps.</p>
+        </div>
+        <div class="grid grid-3">
+          <div class="card"><span class="card__k">Attention</span><h3>One primary action</h3><p>Each screen has a single obvious next step. Secondary options are present but visibly quieter.</p></div>
+          <div class="card"><span class="card__k">Hierarchy</span><h3>Size, weight, space</h3><p>Importance is expressed through scale and air — not through color or boxes. The eye is led, never shouted at.</p></div>
+          <div class="card"><span class="card__k">Reading</span><h3>Respect the scan</h3><p>Layouts follow natural F and Z paths. The most valuable information sits where the eye lands first.</p></div>
+          <div class="card"><span class="card__k">Friction</span><h3>Fewer decisions</h3><p>Every removed choice is a gift. Defaults are smart; forms ask only for what is truly needed.</p></div>
+          <div class="card"><span class="card__k">Feedback</span><h3>Always acknowledged</h3><p>Every action gets an immediate, proportional response — a state change, a soft confirmation, never silence.</p></div>
+          <div class="card"><span class="card__k">Safety</span><h3>Never a dead end</h3><p>Errors explain what happened and how to fix it. There is always a way back and a way forward.</p></div>
+        </div>
+      </section>
+
+      <!-- 09 MOBILE -->
+      <section class="section" id="mobile" data-reveal>
+        <div class="section__head">
+          <span class="section__index">09 — Mobile Experience</span>
+          <h2 class="h1">Redesigned for the thumb.</h2>
+          <p class="lead">Mobile is not a shrunken desktop — it is designed first for one hand. Primary actions live within the thumb's reach; gestures feel native; performance is a feature.</p>
+        </div>
+        <div class="grid grid-3">
+          <div class="card"><span class="card__k">Reach</span><h3>Bottom-anchored actions</h3><p>The primary CTA and cart sit in the thumb zone. Buying never requires a stretch to the top of the screen.</p></div>
+          <div class="card"><span class="card__k">Touch</span><h3>Generous targets</h3><p>Minimum 44px tap areas with comfortable spacing. Nothing precious or cramped; every hit feels certain.</p></div>
+          <div class="card"><span class="card__k">Native feel</span><h3>Sheets over modals</h3><p>Cart, filters and search rise as bottom sheets with momentum and a drag handle — the platform's own language.</p></div>
+          <div class="card"><span class="card__k">Rhythm</span><h3>Single-column calm</h3><p>One idea per fold, larger type, more air. Content stacks in a clear vertical story.</p></div>
+          <div class="card"><span class="card__k">Speed</span><h3>Performance budget</h3><p>Images sized to device, motion trimmed, first paint fast. On mobile, speed is the luxury.</p></div>
+          <div class="card"><span class="card__k">Navigation</span><h3>Condensed, honest</h3><p>A compact header and a full-height menu sheet. Wayfinding is obvious; the back path is always clear.</p></div>
+        </div>
+      </section>
+
+      <!-- 10 DETAILS -->
+      <section class="section" id="details" data-reveal>
+        <div class="section__head">
+          <span class="section__index">10 — Premium Details</span>
+          <h2 class="h1">The 4-pixel decisions.</h2>
+          <p class="lead">These are the details a customer never names but always feels. Together they are the difference between a template and a flagship.</p>
+        </div>
+        <div class="rules">
+          <div class="rules__row"><span class="rules__k">Spacing rhythm</span><span class="rules__v">Everything lands on the 8pt system. Optical alignment beats mathematical when the eye disagrees.</span></div>
+          <div class="rules__row"><span class="rules__k">Hover timing</span><span class="rules__v">180ms on aura-ease. A lift of 1–3px and a whisper of shadow — presence, not performance.</span></div>
+          <div class="rules__row"><span class="rules__k">Image loading</span><span class="rules__v">Blur-up reveals from a color placeholder. Fixed aspect ratios mean zero layout shift, ever.</span></div>
+          <div class="rules__row"><span class="rules__k">Focus states</span><span class="rules__v">A champagne ring with breathing room. Keyboard users get a first-class, visible path.</span></div>
+          <div class="rules__row"><span class="rules__k">Numerals</span><span class="rules__v">Prices and specs use tabular figures so columns of numbers align to the pixel.</span></div>
+          <div class="rules__row"><span class="rules__k">Sticky behavior</span><span class="rules__v">The header hides on scroll-down, returns on scroll-up. Help is present the instant it's wanted.</span></div>
+          <div class="rules__row"><span class="rules__k">Feedback</span><span class="rules__v">Add-to-bag confirms with a soft count tick and a gentle sheet — a tactile, near-haptic reply.</span></div>
+          <div class="rules__row"><span class="rules__k">Cursor &amp; selection</span><span class="rules__v">Selection uses the halo tint. Interactive things look interactive before they're touched.</span></div>
+        </div>
+      </section>
+
+      <!-- 11 CONSISTENCY -->
+      <section class="section" id="consistency" data-reveal>
+        <div class="section__head">
+          <span class="section__index">11 — Consistency Rules</span>
+          <h2 class="h1">One system, no exceptions.</h2>
+          <p class="lead">Every future component inherits these. When a new need appears, we extend the system — we don't invent beside it.</p>
+        </div>
+        <div class="rules">
+          <div class="rules__row"><span class="rules__k">Typography</span><span class="rules__v"><span class="always">Always</span> from the scale. Three roles only — sans, serif accent, mono. Never a new size by hand.</span></div>
+          <div class="rules__row"><span class="rules__k">Spacing</span><span class="rules__v"><span class="always">Always</span> a token from the 8pt system. Layout owns spacing via gap, not stray margins.</span></div>
+          <div class="rules__row"><span class="rules__k">Color</span><span class="rules__v"><span class="always">Always</span> a role token. Accent is spent sparingly; product photography is never tinted.</span></div>
+          <div class="rules__row"><span class="rules__k">Motion</span><span class="rules__v"><span class="always">Always</span> aura-ease and a named duration. No bounce, no spring, no bespoke curves.</span></div>
+          <div class="rules__row"><span class="rules__k">Alignment</span><span class="rules__v"><span class="always">Always</span> to the grid. Prefer left-aligned editorial composition; center only with intent.</span></div>
+          <div class="rules__row"><span class="rules__k">Components</span><span class="rules__v"><span class="always">Always</span> reuse before you create. A new variant must justify itself against an existing one.</span></div>
+          <div class="rules__row"><span class="rules__k">Contrast</span><span class="rules__v"><span class="always">Always</span> meet legibility on both themes. Test the accent on white and obsidian alike.</span></div>
+          <div class="rules__row"><span class="rules__k">Restraint</span><span class="rules__v"><span class="always">Never</span> decorate. If an element has no job, it doesn't exist.</span></div>
+        </div>
+      </section>
+
+      <!-- 12 REVIEW -->
+      <section class="section" id="review" data-reveal>
+        <div class="section__head">
+          <span class="section__index">12 — Design Review</span>
+          <h2 class="h1">The gate every screen passes.</h2>
+          <p class="lead">Before any page or component ships, it answers all eight. A single “no” sends it back. Tap each to mark it cleared.</p>
+        </div>
+        <ul class="check" id="checklist">
+          <li><span class="check__box"><svg viewBox="0 0 24 24" fill="none"><path d="m5 12 4 4 10-10" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="check__q">Does it feel premium and luxurious?</span></li>
+          <li><span class="check__box"><svg viewBox="0 0 24 24" fill="none"><path d="m5 12 4 4 10-10" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="check__q">Does it feel timeless — still modern in five years?</span></li>
+          <li><span class="check__box"><svg viewBox="0 0 24 24" fill="none"><path d="m5 12 4 4 10-10" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="check__q">Does it improve the experience, not just the look?</span></li>
+          <li><span class="check__box"><svg viewBox="0 0 24 24" fill="none"><path d="m5 12 4 4 10-10" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="check__q">Does it reduce friction and cognitive load?</span></li>
+          <li><span class="check__box"><svg viewBox="0 0 24 24" fill="none"><path d="m5 12 4 4 10-10" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="check__q">Does it increase trust and purchase confidence?</span></li>
+          <li><span class="check__box"><svg viewBox="0 0 24 24" fill="none"><path d="m5 12 4 4 10-10" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="check__q">Does every element earn its place?</span></li>
+          <li><span class="check__box"><svg viewBox="0 0 24 24" fill="none"><path d="m5 12 4 4 10-10" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="check__q">Is it faithful to the one system — type, space, motion, color?</span></li>
+          <li><span class="check__box"><svg viewBox="0 0 24 24" fill="none"><path d="m5 12 4 4 10-10" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="check__q">Would a visitor mistake this for a flagship product, not a Shopify theme?</span></li>
+        </ul>
+      </section>
+
+      <!-- FOOTER -->
+      <footer class="footer" data-reveal>
+        <span class="status"><span class="status__dot" aria-hidden="true"></span>Phase: design language — awaiting approval</span>
+        <h2 class="h1" style="margin:22px 0 14px; max-width:20ch">Approve the language, and Aura gets built to it — pixel for pixel.</h2>
+        <p class="body">Every token, principle, and rule above becomes the specification the theme is engineered against. Nothing generic ships. When you're ready, we begin development.</p>
+      </footer>
+    </main>
+  </div>
+</div>
+
+<script>
+  (function () {
+    /* ---- Theme toggle ---- */
+    var root = document.documentElement;
+    var toggle = document.getElementById('themeToggle');
+    var label = document.getElementById('themeLabel');
+
+    function current() {
+      var set = root.getAttribute('data-theme');
+      if (set) return set;
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+    function apply(mode) {
+      root.setAttribute('data-theme', mode);
+      if (label) label.textContent = mode === 'dark' ? 'Dark' : 'Light';
+      try { localStorage.setItem('aura-theme', mode); } catch (e) {}
+      drawCurve();
+    }
+    try {
+      var saved = localStorage.getItem('aura-theme');
+      if (saved) apply(saved); else if (label) label.textContent = current() === 'dark' ? 'Dark' : 'Light';
+    } catch (e) {}
+    if (toggle) toggle.addEventListener('click', function () { apply(current() === 'dark' ? 'light' : 'dark'); });
+
+    /* ---- Scroll reveal ---- */
+    var reveals = document.querySelectorAll('[data-reveal]');
+    if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } });
+      }, { rootMargin: '0px 0px -8% 0px' });
+      reveals.forEach(function (el) { io.observe(el); });
+    } else {
+      reveals.forEach(function (el) { el.classList.add('in'); });
+    }
+
+    /* ---- Rail active state ---- */
+    var links = Array.prototype.slice.call(document.querySelectorAll('.rail__link'));
+    var map = {};
+    links.forEach(function (l) { var id = l.getAttribute('href').slice(1); map[id] = l; });
+    if ('IntersectionObserver' in window) {
+      var spy = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          if (en.isIntersecting) {
+            links.forEach(function (l) { l.classList.remove('is-active'); });
+            if (map[en.target.id]) map[en.target.id].classList.add('is-active');
+          }
+        });
+      }, { rootMargin: '-45% 0px -50% 0px' });
+      document.querySelectorAll('main section[id]').forEach(function (s) { spy.observe(s); });
+    }
+
+    /* ---- Review checklist ---- */
+    document.querySelectorAll('#checklist li').forEach(function (li) {
+      li.setAttribute('role', 'button');
+      li.setAttribute('tabindex', '0');
+      function flip() { li.classList.toggle('done'); }
+      li.addEventListener('click', flip);
+      li.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); flip(); } });
+    });
+
+    /* ---- Easing curve ---- */
+    function cssVar(name) { return getComputedStyle(root).getPropertyValue(name).trim(); }
+    function drawCurve() {
+      var c = document.getElementById('curve');
+      if (!c || !c.getContext) return;
+      var ctx = c.getContext('2d');
+      var W = c.width, H = c.height, pad = 48;
+      ctx.clearRect(0, 0, W, H);
+      var ink = cssVar('--ink'), line = cssVar('--line'), accent = cssVar('--accent'), muted = cssVar('--ink-3');
+
+      /* grid */
+      ctx.strokeStyle = line; ctx.lineWidth = 1;
+      for (var i = 0; i <= 4; i++) {
+        var g = pad + (W - 2 * pad) * (i / 4);
+        ctx.beginPath(); ctx.moveTo(g, pad); ctx.lineTo(g, H - pad); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(pad, g); ctx.lineTo(W - pad, g); ctx.stroke();
+      }
+      /* axes baseline */
+      ctx.strokeStyle = muted; ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.moveTo(pad, H - pad); ctx.lineTo(W - pad, H - pad); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(pad, pad); ctx.lineTo(pad, H - pad); ctx.stroke();
+
+      /* bezier 0.22,1,0.36,1 mapped into box (y inverted) */
+      function pt(t) {
+        var x = 3*(1-t)*(1-t)*t*0.22 + 3*(1-t)*t*t*0.36 + t*t*t;
+        var y = 3*(1-t)*(1-t)*t*1.0  + 3*(1-t)*t*t*1.0  + t*t*t;
+        return { x: pad + x * (W - 2*pad), y: (H - pad) - y * (H - 2*pad) };
+      }
+      ctx.strokeStyle = accent; ctx.lineWidth = 3; ctx.lineCap = 'round';
+      ctx.beginPath();
+      for (var s = 0; s <= 100; s++) { var p = pt(s/100); if (s===0) ctx.moveTo(p.x,p.y); else ctx.lineTo(p.x,p.y); }
+      ctx.stroke();
+
+      /* endpoints */
+      ctx.fillStyle = ink;
+      [pt(0), pt(1)].forEach(function (p) { ctx.beginPath(); ctx.arc(p.x, p.y, 5, 0, Math.PI*2); ctx.fill(); });
+    }
+    /* HiDPI + responsive sizing */
+    function sizeCurve() {
+      var c = document.getElementById('curve'); if (!c) return;
+      var parent = c.parentElement.clientWidth - 32;
+      var dpr = window.devicePixelRatio || 1;
+      var css = Math.max(220, Math.min(parent, 420));
+      c.style.width = css + 'px'; c.style.height = css + 'px';
+      c.width = css * dpr; c.height = css * dpr;
+      c.getContext('2d').scale(dpr, dpr);
+      /* redraw using CSS pixel space */
+      c.width = css; c.height = css;
+      drawCurve();
+    }
+    sizeCurve();
+    window.addEventListener('resize', function () { clearTimeout(window.__rt); window.__rt = setTimeout(sizeCurve, 150); });
+  })();
+</script>

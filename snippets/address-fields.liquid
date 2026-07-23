@@ -1,0 +1,67 @@
+{%- comment -%}
+  Renders the shared fields for a customer address form.
+  Accepts: form_id {String}, address {Object} (optional)
+{%- endcomment -%}
+<div class="customer__form" style="margin-bottom:1.6rem;">
+  <div class="grid grid--2" style="gap:1.2rem;">
+    <div class="field">
+      <label for="AddressFirstName_{{ form_id }}">{{ 'customer.addresses.first_name' | t }}</label>
+      <input type="text" id="AddressFirstName_{{ form_id }}" name="address[first_name]" value="{{ address.first_name }}" autocomplete="given-name">
+    </div>
+    <div class="field">
+      <label for="AddressLastName_{{ form_id }}">{{ 'customer.addresses.last_name' | t }}</label>
+      <input type="text" id="AddressLastName_{{ form_id }}" name="address[last_name]" value="{{ address.last_name }}" autocomplete="family-name">
+    </div>
+  </div>
+  <div class="field">
+    <label for="AddressCompany_{{ form_id }}">{{ 'customer.addresses.company' | t }}</label>
+    <input type="text" id="AddressCompany_{{ form_id }}" name="address[company]" value="{{ address.company }}" autocomplete="organization">
+  </div>
+  <div class="field">
+    <label for="AddressAddress1_{{ form_id }}">{{ 'customer.addresses.address1' | t }}</label>
+    <input type="text" id="AddressAddress1_{{ form_id }}" name="address[address1]" value="{{ address.address1 }}" autocomplete="address-line1">
+  </div>
+  <div class="field">
+    <label for="AddressAddress2_{{ form_id }}">{{ 'customer.addresses.address2' | t }}</label>
+    <input type="text" id="AddressAddress2_{{ form_id }}" name="address[address2]" value="{{ address.address2 }}" autocomplete="address-line2">
+  </div>
+  <div class="grid grid--2" style="gap:1.2rem;">
+    <div class="field">
+      <label for="AddressCity_{{ form_id }}">{{ 'customer.addresses.city' | t }}</label>
+      <input type="text" id="AddressCity_{{ form_id }}" name="address[city]" value="{{ address.city }}" autocomplete="address-level2">
+    </div>
+    <div class="field">
+      <label for="AddressZip_{{ form_id }}">{{ 'customer.addresses.zip' | t }}</label>
+      <input type="text" id="AddressZip_{{ form_id }}" name="address[zip]" value="{{ address.zip }}" autocomplete="postal-code" autocapitalize="characters">
+    </div>
+  </div>
+  <div class="grid grid--2" style="gap:1.2rem;">
+    <div class="field">
+      <label for="AddressCountry_{{ form_id }}">{{ 'customer.addresses.country' | t }}</label>
+      <div class="select">
+        <select id="AddressCountry_{{ form_id }}" name="address[country]" autocomplete="country">{{ country_option_tags }}</select>
+        {% render 'icon', icon: 'caret' %}
+      </div>
+    </div>
+    <div class="field">
+      <label for="AddressProvince_{{ form_id }}">{{ 'customer.addresses.province' | t }}</label>
+      <input type="text" id="AddressProvince_{{ form_id }}" name="address[province]" value="{{ address.province }}" autocomplete="address-level1">
+    </div>
+  </div>
+  <div class="field">
+    <label for="AddressPhone_{{ form_id }}">{{ 'customer.addresses.phone' | t }}</label>
+    <input type="tel" id="AddressPhone_{{ form_id }}" name="address[phone]" value="{{ address.phone }}" autocomplete="tel">
+  </div>
+  <label style="display:flex;align-items:center;gap:0.8rem;cursor:pointer;">
+    {{ form.set_as_default_checkbox }}
+    <span>{{ 'customer.addresses.set_default' | t }}</span>
+  </label>
+</div>
+{%- if address -%}
+  <script>
+    (function () {
+      var country = document.getElementById('AddressCountry_{{ form_id }}');
+      if (country) country.value = {{ address.country | json }};
+    })();
+  </script>
+{%- endif -%}

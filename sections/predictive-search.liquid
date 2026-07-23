@@ -1,0 +1,46 @@
+{%- comment -%}
+  Aura — Predictive search results (rendered via the Predictive Search API and
+  injected into the header search drawer by global.js).
+{%- endcomment -%}
+{%- if predictive_search.performed -%}
+  {%- if predictive_search.resources.products.size > 0 -%}
+    <p class="predictive-search__heading">{{ 'general.search.results_products' | t }}</p>
+    <ul class="predictive-search__list list-unstyled" role="list">
+      {%- for product in predictive_search.resources.products -%}
+        <li class="predictive-search__item">
+          <a href="{{ product.url }}" style="display:flex;align-items:center;gap:1.4rem;width:100%;">
+            {%- if product.featured_media -%}
+              <img src="{{ product.featured_media | image_url: width: 120 }}" alt="{{ product.featured_media.alt | escape }}" width="52" height="64" loading="lazy">
+            {%- endif -%}
+            <span style="flex:1;">
+              <span class="predictive-search__item-title">{{ product.title | escape }}</span>
+              {% render 'price', product: product, use_variant: true %}
+            </span>
+          </a>
+        </li>
+      {%- endfor -%}
+    </ul>
+  {%- endif -%}
+
+  {%- if predictive_search.resources.pages.size > 0 -%}
+    <p class="predictive-search__heading">{{ 'general.search.results_pages' | t }}</p>
+    <ul class="predictive-search__list list-unstyled" role="list">
+      {%- for page in predictive_search.resources.pages -%}
+        <li class="predictive-search__item"><a href="{{ page.url }}">{{ page.title | escape }}</a></li>
+      {%- endfor -%}
+    </ul>
+  {%- endif -%}
+
+  {%- if predictive_search.resources.products.size == 0 and predictive_search.resources.pages.size == 0 -%}
+    <p class="caption" style="padding:1rem 0;">{{ 'general.search.no_results' | t: terms: predictive_search.terms }}</p>
+  {%- else -%}
+    <a href="{{ routes.search_url }}?q={{ predictive_search.terms | url_encode }}" class="predictive-search__all link">{{ 'general.search.results_for' | t }} “{{ predictive_search.terms }}”</a>
+  {%- endif -%}
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Predictive search",
+  "settings": []
+}
+{% endschema %}

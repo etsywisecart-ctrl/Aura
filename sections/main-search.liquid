@@ -1,0 +1,57 @@
+{%- comment -%} Aura — Search results {%- endcomment -%}
+<section class="section">
+  <div class="page-width">
+    <header class="collection-hero scroll-trigger">
+      <h1 class="collection-hero__title h1">{{ 'templates.search.title' | t }}</h1>
+      <form action="{{ routes.search_url }}" method="get" role="search" class="search-form" style="max-width:52rem;margin-top:2rem;">
+        <div class="field">
+          <label class="visually-hidden" for="Search">{{ 'general.search.search' | t }}</label>
+          <input type="search" id="Search" name="q" value="{{ search.terms | escape }}" placeholder="{{ 'general.search.placeholder' | t }}">
+        </div>
+        <button type="submit" class="button">{{ 'general.search.search' | t }}</button>
+      </form>
+    </header>
+
+    {%- if search.performed -%}
+      {%- if search.results_count == 0 -%}
+        <div class="empty-state">
+          <p class="lead">{{ 'general.search.no_results' | t: terms: search.terms }}</p>
+        </div>
+      {%- else -%}
+        <p class="product-count" style="margin-bottom:2.4rem;">{{ 'general.search.results_with_count' | t: count: search.results_count }}</p>
+        {%- paginate search.results by 24 -%}
+          <div class="grid grid--{{ section.settings.columns_desktop }} grid--1-col-mobile">
+            {%- for item in search.results -%}
+              {%- if item.object_type == 'product' -%}
+                {% render 'card-product', card_product: item, media_aspect_ratio: 'portrait', lazy_load: forloop.index > 8 %}
+              {%- else -%}
+                <div class="card-wrapper">
+                  <a href="{{ item.url }}" class="card">
+                    {%- if item.image -%}
+                      <span class="card__media media media--landscape"><img src="{{ item.image | image_url: width: 540 }}" alt="{{ item.title | escape }}" width="540" height="360" loading="lazy" class="image-fade"></span>
+                    {%- endif -%}
+                    <div class="card__content"><h3 class="card__heading">{{ item.title | escape }}</h3><p class="caption">{{ item.content | strip_html | truncatewords: 18 }}</p></div>
+                  </a>
+                </div>
+              {%- endif -%}
+            {%- endfor -%}
+          </div>
+          {% render 'pagination', paginate: paginate %}
+        {%- endpaginate -%}
+      {%- endif -%}
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Search results",
+  "tag": "section",
+  "settings": [
+    { "type": "select", "id": "columns_desktop", "options": [
+      { "value": "3", "label": "3 columns" },
+      { "value": "4", "label": "4 columns" }
+    ], "default": "4", "label": "Columns on desktop" }
+  ]
+}
+{% endschema %}

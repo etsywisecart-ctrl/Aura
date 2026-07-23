@@ -1,0 +1,48 @@
+{%- comment -%} Aura — Cart footer (page) {%- endcomment -%}
+<section class="section cart-footer-section{% if cart == empty %} hidden{% endif %}">
+  <div class="page-width page-width--medium">
+    <div id="main-cart-footer" class="js-contents">
+      <div class="cart-page__footer-grid">
+        {%- if settings.show_cart_note -%}
+          <form action="{{ routes.cart_url }}" method="post" id="cart-note-form" class="cart-page__note">
+            <label for="Cart-note" class="field__label">{{ 'sections.cart.note' | t }}</label>
+            <textarea id="Cart-note" name="note" placeholder="{{ 'sections.cart.note' | t }}">{{ cart.note }}</textarea>
+          </form>
+        {%- else -%}
+          <div></div>
+        {%- endif -%}
+
+        <form action="{{ routes.cart_url }}" method="post" id="cart" class="cart__footer cart-page__summary">
+          {% render 'free-shipping-bar' %}
+          <div class="totals">
+            <span class="totals__subtitle">{{ 'sections.cart.estimated_total' | t }}</span>
+            <span class="totals__total">{{ cart.total_price | money_with_currency }}</span>
+          </div>
+          <p class="tax-note rte">{{ 'sections.cart.taxes_and_shipping_at_checkout' | t }}</p>
+          <div class="cart__ctas">
+            <button type="submit" name="update" class="button button--secondary button--full">{{ 'sections.cart.update' | t }}</button>
+            <button type="submit" name="checkout" class="button button--full" {% if cart == empty %}disabled{% endif %}>{{ 'sections.cart.checkout' | t }}</button>
+          </div>
+          {%- if settings.show_secure_badge -%}
+            <div class="secure-checkout cart-secure">
+              <span class="secure-checkout__label">{% render 'icon', icon: 'lock' %} {{ 'sections.cart.secure_checkout' | t }}</span>
+              {%- if shop.enabled_payment_types.size > 0 -%}
+                <div class="payment-icons" role="list" aria-label="Payment methods">
+                  {%- for type in shop.enabled_payment_types limit: 6 -%}{{ type | payment_type_svg_tag: class: 'payment-icon' }}{%- endfor -%}
+                </div>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Cart footer",
+  "class": "section-cart-footer",
+  "settings": []
+}
+{% endschema %}

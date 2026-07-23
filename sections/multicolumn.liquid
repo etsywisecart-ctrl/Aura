@@ -1,0 +1,67 @@
+{%- comment -%} Aura — Multicolumn (features / trust, told quietly) {%- endcomment -%}
+<div class="section color-{{ section.settings.color_scheme }} gradient">
+  <div class="page-width">
+    {%- if section.settings.title != blank or section.settings.eyebrow != blank -%}
+      <div class="section-header section-header--center scroll-trigger">
+        {%- if section.settings.eyebrow != blank -%}<span class="eyebrow eyebrow--center">{{ section.settings.eyebrow | escape }}</span>{%- endif -%}
+        {%- if section.settings.title != blank -%}<h2 class="{{ section.settings.heading_size | default: 'h1' }}">{{ section.settings.title | escape }}</h2>{%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <div class="multicolumn__list scroll-trigger" style="--cols: {{ section.settings.columns_desktop }};">
+      {%- for block in section.blocks -%}
+        <div class="multicolumn__item {% if section.settings.alignment == 'center' %}multicolumn__item--center{% endif %}" {{ block.shopify_attributes }}>
+          {%- if block.settings.icon != 'none' -%}
+            <span class="multicolumn__icon">{% render 'icon', icon: block.settings.icon %}</span>
+          {%- elsif block.settings.image != blank -%}
+            <div class="media media--square" style="width:8rem;border-radius:var(--r-md);">
+              <img src="{{ block.settings.image | image_url: width: 200 }}" alt="{{ block.settings.image.alt | escape }}" width="80" height="80" loading="lazy">
+            </div>
+          {%- endif -%}
+          {%- if block.settings.heading != blank -%}<h3 class="multicolumn__heading">{{ block.settings.heading | escape }}</h3>{%- endif -%}
+          {%- if block.settings.text != blank -%}<div class="rte caption" style="font-size:1.45rem;">{{ block.settings.text }}</div>{%- endif -%}
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Multicolumn",
+  "tag": "section",
+  "class": "section-multicolumn",
+  "max_blocks": 6,
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow" },
+    { "type": "inline_richtext", "id": "title", "label": "Heading", "default": "Why Aura" },
+    { "type": "select", "id": "heading_size", "options": [{ "value": "h2", "label": "Small" }, { "value": "h1", "label": "Medium" }], "default": "h1", "label": "Heading size" },
+    { "type": "select", "id": "columns_desktop", "options": [
+      { "value": "2", "label": "2" }, { "value": "3", "label": "3" }, { "value": "4", "label": "4" }
+    ], "default": "3", "label": "Columns on desktop" },
+    { "type": "select", "id": "alignment", "options": [{ "value": "left", "label": "Left" }, { "value": "center", "label": "Center" }], "default": "center", "label": "Alignment" },
+    { "type": "color_scheme", "id": "color_scheme", "default": "scheme-2", "label": "Color scheme" }
+  ],
+  "blocks": [{
+    "type": "column",
+    "name": "Column",
+    "settings": [
+      { "type": "select", "id": "icon", "options": [
+        { "value": "none", "label": "None" },
+        { "value": "check", "label": "Check" },
+        { "value": "arrow", "label": "Arrow" },
+        { "value": "cart", "label": "Bag" },
+        { "value": "account", "label": "Person" },
+        { "value": "search", "label": "Search" }
+      ], "default": "check", "label": "Icon" },
+      { "type": "image_picker", "id": "image", "label": "Image (if no icon)" },
+      { "type": "text", "id": "heading", "default": "Made to last", "label": "Heading" },
+      { "type": "richtext", "id": "text", "default": "<p>Materials chosen for permanence and a lifetime guarantee.</p>", "label": "Text" }
+    ]
+  }],
+  "presets": [{
+    "name": "Multicolumn",
+    "blocks": [{ "type": "column" }, { "type": "column" }, { "type": "column" }]
+  }]
+}
+{% endschema %}

@@ -1,0 +1,49 @@
+{%- comment -%} Aura — List collections {%- endcomment -%}
+<section class="section">
+  <div class="page-width">
+    <header class="collection-hero scroll-trigger">
+      <span class="eyebrow">{{ shop.name }}</span>
+      <h1 class="collection-hero__title h0">{{ section.settings.title | default: 'Collections' | escape }}</h1>
+    </header>
+
+    <div class="grid grid--{{ section.settings.columns_desktop }} grid--1-col-mobile scroll-trigger">
+      {%- assign collections = collections -%}
+      {%- if section.settings.sort == 'products_high' -%}{%- assign collections = collections | sort: 'all_products_count' | reverse -%}{%- endif -%}
+      {%- for collection in collections -%}
+        <div class="collection-list__item">
+          <a href="{{ collection.url }}" class="media media--{{ section.settings.image_ratio }} zoom-on-hover" aria-label="{{ collection.title | escape }}">
+            {%- if collection.featured_image -%}
+              <img src="{{ collection.featured_image | image_url: width: 720 }}" srcset="{{ collection.featured_image | image_url: width: 400 }} 400w, {{ collection.featured_image | image_url: width: 720 }} 720w" sizes="(min-width:990px) 33vw, 50vw" alt="{{ collection.featured_image.alt | escape }}" width="{{ collection.featured_image.width }}" height="{{ collection.featured_image.height }}" loading="lazy" class="image-fade">
+            {%- else -%}
+              {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg' }}
+            {%- endif -%}
+          </a>
+          <h2 class="collection-list__title"><a href="{{ collection.url }}">{{ collection.title | escape }} {% render 'icon', icon: 'arrow' %}</a></h2>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Collections list",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "title", "label": "Heading", "default": "Collections" },
+    { "type": "select", "id": "sort", "options": [
+      { "value": "alphabetical", "label": "Alphabetical" },
+      { "value": "products_high", "label": "Most products" }
+    ], "default": "alphabetical", "label": "Sort" },
+    { "type": "select", "id": "columns_desktop", "options": [
+      { "value": "2", "label": "2 columns" },
+      { "value": "3", "label": "3 columns" },
+      { "value": "4", "label": "4 columns" }
+    ], "default": "3", "label": "Columns on desktop" },
+    { "type": "select", "id": "image_ratio", "options": [
+      { "value": "portrait", "label": "Portrait" },
+      { "value": "square", "label": "Square" }
+    ], "default": "portrait", "label": "Image ratio" }
+  ]
+}
+{% endschema %}

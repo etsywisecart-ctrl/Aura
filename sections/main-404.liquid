@@ -1,0 +1,17 @@
+{%- comment -%} Aura — 404 {%- endcomment -%}
+<section class="section isolate" style="min-height:60vh;display:flex;align-items:center;">
+  <div class="aura-glow" style="left:50%;top:40%;transform:translate(-50%,-50%);" aria-hidden="true"></div>
+  <div class="page-width isolate center">
+    <p class="mono" style="font-size:1.4rem;letter-spacing:0.2em;color:rgba(var(--color-foreground),0.5);">404</p>
+    <h1 class="h0" style="margin:1.6rem 0;">{{ 'general.404.title' | t }}</h1>
+    <p class="lead" style="margin:0 auto 2.8rem;">{{ 'general.404.subtext' | t }}</p>
+    <a href="{{ routes.root_url }}" class="button">{{ 'general.404.link' | t }}</a>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "404",
+  "settings": []
+}
+{% endschema %}

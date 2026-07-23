@@ -1,0 +1,32 @@
+{%- comment -%} Aura — Gift card {%- endcomment -%}
+<div class="section isolate" style="min-height:80vh;display:flex;align-items:center;">
+  <div class="aura-glow" style="left:50%;top:30%;transform:translate(-50%,-50%);" aria-hidden="true"></div>
+  <div class="page-width page-width--narrow isolate center">
+    <span class="eyebrow eyebrow--center">{{ shop.name }}</span>
+    <h1 class="h1" style="margin:1.4rem 0;">{{ 'gift_cards.issued.title' | t: value: gift_card.initial_value | money, shop: shop.name }}</h1>
+
+    <div class="gift-card__wrapper" style="margin:3.2rem auto;max-width:44rem;padding:3.2rem;border:1px solid rgba(var(--color-foreground),0.14);border-radius:var(--r-lg);background:rgb(var(--color-background));box-shadow:var(--shadow-md);">
+      {%- if gift_card.qr_identifier -%}
+        <img src="{{ gift_card | payment_terms }}" alt="" style="display:none;">
+      {%- endif -%}
+      <div style="font-size:clamp(3.2rem,6vw,4.4rem);font-weight:300;letter-spacing:-0.02em;" class="mono">
+        {%- if gift_card.balance != gift_card.initial_value -%}
+          {{ 'gift_cards.issued.remaining_html' | t: balance: gift_card.balance | money }}
+        {%- else -%}
+          {{ gift_card.initial_value | money }}
+        {%- endif -%}
+      </div>
+      <div class="gift-card__code" style="margin-top:2rem;display:flex;gap:0.8rem;justify-content:center;">
+        <input type="text" class="mono" value="{{ gift_card.code | format_code }}" readonly style="text-align:center;letter-spacing:0.1em;" aria-label="{{ 'gift_cards.issued.gift_card_code' | t }}">
+      </div>
+      {%- if gift_card.expired and gift_card.enabled -%}
+        <p class="form__message form__message--error" style="justify-content:center;">{{ 'gift_cards.issued.expired' | t }}</p>
+      {%- endif -%}
+    </div>
+
+    <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+      <a href="{{ shop.url }}" class="button">{{ 'gift_cards.issued.shop_link' | t }}</a>
+      <button type="button" class="button button--secondary" onclick="window.print()">{{ 'gift_cards.issued.print_gift_card' | t }}</button>
+    </div>
+  </div>
+</div>

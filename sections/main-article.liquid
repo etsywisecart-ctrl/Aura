@@ -1,0 +1,65 @@
+{%- comment -%} Aura — Article {%- endcomment -%}
+<section class="section">
+  <article class="article">
+    <div class="page-width page-width--narrow">
+      <header class="article__header scroll-trigger">
+        {%- if section.settings.show_date -%}<div class="article__meta">{{ article.published_at | date: '%B %-d, %Y' }}{% if section.settings.show_author %} · {{ article.author }}{% endif %}</div>{%- endif -%}
+        <h1 class="article__title h0">{{ article.title | escape }}</h1>
+      </header>
+    </div>
+
+    {%- if article.image and section.settings.show_image -%}
+      <div class="page-width">
+        <div class="article__hero media media--wide scroll-trigger">
+          <img src="{{ article.image | image_url: width: 1600 }}" srcset="{{ article.image | image_url: width: 800 }} 800w, {{ article.image | image_url: width: 1600 }} 1600w" sizes="100vw" alt="{{ article.image.alt | escape }}" width="{{ article.image.width }}" height="{{ article.image.height }}" loading="eager" class="image-fade">
+        </div>
+      </div>
+    {%- endif -%}
+
+    <div class="page-width page-width--narrow">
+      <div class="article__body rte scroll-trigger">{{ article.content }}</div>
+
+      <div class="article__footer">
+        <a href="{{ blog.url }}" class="button--ghost button">{% render 'icon', icon: 'arrow' %} {{ 'blogs.article.back_to_blog' | t }}</a>
+      </div>
+
+      {%- if blog.comments_enabled? -%}
+        <div class="article__comments" style="margin-top:4rem;">
+          {%- if article.comments_count > 0 -%}
+            <h2 class="h3" style="margin-bottom:2rem;">{{ 'blogs.article.comments' | t: count: article.comments_count }}</h2>
+            {%- for comment in article.comments -%}
+              <div class="comment">
+                <div class="rte">{{ comment.content }}</div>
+                <div class="comment__meta">{{ comment.author }} · {{ comment.created_at | date: '%B %-d, %Y' }}</div>
+              </div>
+            {%- endfor -%}
+          {%- endif -%}
+
+          {%- form 'new_comment', article -%}
+            <h2 class="h3" style="margin:3.2rem 0 2rem;">{{ 'blogs.article.comment_form_title' | t }}</h2>
+            {%- if form.errors -%}<p class="form__message form__message--error">{{ form.errors.messages.first }}</p>{%- endif -%}
+            {%- if form.posted_successfully? -%}<p class="form__message form__message--success">{{ 'blogs.article.success' | t }}</p>{%- endif -%}
+            <div class="customer__form">
+              <div class="field"><label for="cname">{{ 'blogs.article.name' | t }}</label><input id="cname" type="text" name="comment[author]" required></div>
+              <div class="field"><label for="cemail">{{ 'blogs.article.email' | t }}</label><input id="cemail" type="email" name="comment[email]" required></div>
+              <div class="field"><label for="cbody">{{ 'blogs.article.message' | t }}</label><textarea id="cbody" name="comment[body]" required></textarea></div>
+              <button type="submit" class="button">{{ 'blogs.article.post' | t }}</button>
+            </div>
+          {%- endform -%}
+        </div>
+      {%- endif -%}
+    </div>
+  </article>
+</section>
+
+{% schema %}
+{
+  "name": "Article",
+  "tag": "section",
+  "settings": [
+    { "type": "checkbox", "id": "show_date", "default": true, "label": "Show date" },
+    { "type": "checkbox", "id": "show_author", "default": false, "label": "Show author" },
+    { "type": "checkbox", "id": "show_image", "default": true, "label": "Show featured image" }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,43 @@
+{%- comment -%} Aura — Newsletter (the calm close) {%- endcomment -%}
+<div class="section color-{{ section.settings.color_scheme }} gradient isolate">
+  {%- if section.settings.show_glow -%}<div class="aura-glow" style="left:50%;top:50%;transform:translate(-50%,-50%);" aria-hidden="true"></div>{%- endif -%}
+  <div class="page-width isolate">
+    <div class="newsletter scroll-trigger">
+      <div class="newsletter__wrapper">
+        {%- if section.settings.eyebrow != blank -%}<span class="eyebrow eyebrow--center">{{ section.settings.eyebrow | escape }}</span>{%- endif -%}
+        {%- if section.settings.heading != blank -%}<h2 class="{{ section.settings.heading_size | default: 'h1' }}">{{ section.settings.heading | escape }}</h2>{%- endif -%}
+        {%- if section.settings.text != blank -%}<div class="lead">{{ section.settings.text }}</div>{%- endif -%}
+        {%- form 'customer', class: 'newsletter-form' -%}
+          <input type="hidden" name="contact[tags]" value="newsletter">
+          <div class="field">
+            <label class="visually-hidden" for="Newsletter-{{ section.id }}">{{ 'newsletter.label' | t }}</label>
+            <input id="Newsletter-{{ section.id }}" type="email" name="contact[email]" required placeholder="{{ 'newsletter.label' | t }}" autocorrect="off" autocapitalize="off"{% if form.errors %} aria-invalid="true"{% endif %}>
+          </div>
+          <button type="submit" class="button" name="commit">{{ 'newsletter.button_label' | t }}</button>
+        {%- endform -%}
+        {%- if form.posted_successfully? -%}
+          <p class="form__message form__message--success">{% render 'icon', icon: 'check' %} {{ 'newsletter.success' | t }}</p>
+        {%- elsif form.errors -%}
+          <p class="form__message form__message--error">{{ form.errors.translated_fields.email | capitalize }} {{ form.errors.messages.email }}</p>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Newsletter",
+  "tag": "section",
+  "class": "section-newsletter",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Stay close" },
+    { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "Join the list" },
+    { "type": "select", "id": "heading_size", "options": [{ "value": "h2", "label": "Small" }, { "value": "h1", "label": "Medium" }, { "value": "h0", "label": "Large" }], "default": "h1", "label": "Heading size" },
+    { "type": "richtext", "id": "text", "label": "Text", "default": "<p>First access to new arrivals and considered stories. No noise.</p>" },
+    { "type": "checkbox", "id": "show_glow", "default": true, "label": "Show aura glow" },
+    { "type": "color_scheme", "id": "color_scheme", "default": "scheme-3", "label": "Color scheme" }
+  ],
+  "presets": [{ "name": "Newsletter" }]
+}
+{% endschema %}

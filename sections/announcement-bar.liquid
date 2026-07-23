@@ -1,0 +1,97 @@
+{%- comment -%}
+  Announcement bar — displays one or more rotating announcements.
+{%- endcomment -%}
+<div class="announcement-bar color-{{ section.settings.color_scheme }} gradient" role="region" aria-label="{{ 'sections.header.announcement' | t }}">
+  {%- if section.blocks.size > 0 -%}
+    <div class="page-width">
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'announcement' -%}
+          <div class="announcement-bar__item" {{ block.shopify_attributes }} {% if section.blocks.size > 1 and forloop.index > 1 %}hidden{% endif %}>
+            {%- if block.settings.link != blank -%}
+              <a href="{{ block.settings.link }}" class="announcement-bar__message">
+                <span>{{ block.settings.text | escape }}</span>
+              </a>
+            {%- else -%}
+              <p class="announcement-bar__message">
+                <span>{{ block.settings.text | escape }}</span>
+              </p>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  {%- endif -%}
+</div>
+
+{%- if section.settings.auto_rotate and section.blocks.size > 1 -%}
+  <script>
+    (function () {
+      var bar = document.currentScript.previousElementSibling;
+      var items = bar.querySelectorAll('.announcement-bar__item');
+      if (items.length < 2) return;
+      var i = 0;
+      setInterval(function () {
+        items[i].hidden = true;
+        i = (i + 1) % items.length;
+        items[i].hidden = false;
+      }, 5000);
+    })();
+  </script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Announcement bar",
+  "class": "announcement-bar-section",
+  "max_blocks": 5,
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-3"
+    },
+    {
+      "type": "checkbox",
+      "id": "auto_rotate",
+      "label": "Rotate announcements",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_social",
+      "label": "Show social icons",
+      "default": false
+    }
+  ],
+  "blocks": [
+    {
+      "type": "announcement",
+      "name": "Announcement",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "default": "Welcome to our store",
+          "label": "Text"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Announcement bar",
+      "blocks": [
+        {
+          "type": "announcement"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

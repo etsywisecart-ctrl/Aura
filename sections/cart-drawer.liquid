@@ -1,0 +1,11 @@
+{%- comment -%}
+  Exposes the cart drawer to the Section Rendering API so its contents can be
+  refreshed after AJAX cart changes.
+{%- endcomment -%}
+{% render 'cart-drawer' %}
+
+{% schema %}
+{
+  "name": "Cart drawer"
+}
+{% endschema %}

@@ -1,0 +1,30 @@
+{%- comment -%}
+  Renders the social account icons defined in Theme settings > Social media.
+{%- endcomment -%}
+{%- if settings.social_instagram_link != blank
+  or settings.social_facebook_link != blank
+  or settings.social_tiktok_link != blank
+  or settings.social_twitter_link != blank
+  or settings.social_youtube_link != blank
+  or settings.social_pinterest_link != blank -%}
+  <ul class="social-list list-unstyled">
+    {%- if settings.social_instagram_link != blank -%}
+      <li><a href="{{ settings.social_instagram_link }}" aria-label="{{ 'general.social.links.instagram' | t }}">{% render 'icon', icon: 'instagram' %}</a></li>
+    {%- endif -%}
+    {%- if settings.social_facebook_link != blank -%}
+      <li><a href="{{ settings.social_facebook_link }}" aria-label="{{ 'general.social.links.facebook' | t }}">{% render 'icon', icon: 'facebook' %}</a></li>
+    {%- endif -%}
+    {%- if settings.social_tiktok_link != blank -%}
+      <li><a href="{{ settings.social_tiktok_link }}" aria-label="{{ 'general.social.links.tiktok' | t }}">{% render 'icon', icon: 'tiktok' %}</a></li>
+    {%- endif -%}
+    {%- if settings.social_twitter_link != blank -%}
+      <li><a href="{{ settings.social_twitter_link }}" aria-label="{{ 'general.social.links.twitter' | t }}">{% render 'icon', icon: 'twitter' %}</a></li>
+    {%- endif -%}
+    {%- if settings.social_youtube_link != blank -%}
+      <li><a href="{{ settings.social_youtube_link }}" aria-label="{{ 'general.social.links.youtube' | t }}">{% render 'icon', icon: 'youtube' %}</a></li>
+    {%- endif -%}
+    {%- if settings.social_pinterest_link != blank -%}
+      <li><a href="{{ settings.social_pinterest_link }}" aria-label="{{ 'general.social.links.pinterest' | t }}">{% render 'icon', icon: 'pinterest' %}</a></li>
+    {%- endif -%}
+  </ul>
+{%- endif -%}

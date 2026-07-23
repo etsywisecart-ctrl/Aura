@@ -1,0 +1,51 @@
+{%- comment -%} Aura — Quote / testimonial {%- endcomment -%}
+<div class="section color-{{ section.settings.color_scheme }} gradient isolate">
+  {%- if section.settings.show_glow -%}<div class="aura-glow" style="left:50%;top:50%;transform:translate(-50%,-50%);opacity:0.6;" aria-hidden="true"></div>{%- endif -%}
+  <div class="page-width isolate">
+    {%- if section.blocks.size > 0 -%}
+      <div style="display:flex;flex-direction:column;gap:clamp(4rem,7vw,7rem);">
+        {%- for block in section.blocks -%}
+          <figure class="quote scroll-trigger" {{ block.shopify_attributes }}>
+            {%- if block.settings.rating > 0 -%}
+              <div class="rating" aria-label="{{ block.settings.rating }} out of 5 stars">
+                {%- for i in (1..5) -%}
+                  <svg viewBox="0 0 24 24" fill="{% if i <= block.settings.rating %}currentColor{% else %}none{% endif %}" aria-hidden="true"><path d="m12 3 2.6 5.6 6.1.7-4.5 4.2 1.2 6-5.4-3-5.4 3 1.2-6L3.3 9.3l6.1-.7z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
+                {%- endfor -%}
+              </div>
+            {%- endif -%}
+            <blockquote class="quote__text">{{ block.settings.text }}</blockquote>
+            {%- if block.settings.author != blank -%}
+              <figcaption class="quote__author">{{ block.settings.author | escape }}</figcaption>
+            {%- endif -%}
+          </figure>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Quote",
+  "tag": "section",
+  "class": "section-quote",
+  "max_blocks": 3,
+  "settings": [
+    { "type": "checkbox", "id": "show_glow", "default": false, "label": "Show aura glow" },
+    { "type": "color_scheme", "id": "color_scheme", "default": "scheme-2", "label": "Color scheme" }
+  ],
+  "blocks": [{
+    "type": "quote",
+    "name": "Quote",
+    "settings": [
+      { "type": "range", "id": "rating", "min": 0, "max": 5, "step": 1, "label": "Star rating", "default": 5 },
+      { "type": "richtext", "id": "text", "label": "Quote", "default": "<p>The best-made piece I own. Three years in and it looks better than the day it arrived.</p>" },
+      { "type": "text", "id": "author", "label": "Author", "default": "A. Mercer, verified buyer" }
+    ]
+  }],
+  "presets": [{
+    "name": "Quote",
+    "blocks": [{ "type": "quote" }]
+  }]
+}
+{% endschema %}

@@ -1,0 +1,49 @@
+{%- comment -%} Aura — Product recommendations (considered pairings) {%- endcomment -%}
+<product-recommendations
+  class="section product-recommendations"
+  data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit={{ section.settings.products_to_show }}&intent=related">
+  {%- if recommendations.performed and recommendations.products_count > 0 -%}
+    <div class="page-width">
+      <div class="section-header section-header--center scroll-trigger">
+        {%- if section.settings.heading != blank -%}<h2 class="{{ section.settings.heading_size | default: 'h2' }}">{{ section.settings.heading | escape }}</h2>{%- endif -%}
+      </div>
+      <div class="grid grid--{{ section.settings.columns_desktop }} grid--1-col-mobile">
+        {%- for product in recommendations.products -%}
+          {% render 'card-product', card_product: product, media_aspect_ratio: section.settings.image_ratio %}
+        {%- endfor -%}
+      </div>
+    </div>
+  {%- endif -%}
+</product-recommendations>
+
+<script>
+  (function () {
+    var el = document.currentScript.previousElementSibling;
+    if (!el || el.querySelector('.grid')) return;
+    var url = el.dataset.url;
+    if (!url) return;
+    fetch(url)
+      .then(function (r) { return r.text(); })
+      .then(function (text) {
+        var html = new DOMParser().parseFromString(text, 'text/html');
+        var inner = html.querySelector('product-recommendations');
+        if (inner && inner.innerHTML.trim().length) { el.innerHTML = inner.innerHTML; }
+      })
+      .catch(function () {});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Product recommendations",
+  "tag": "section",
+  "class": "section-product-recommendations",
+  "settings": [
+    { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "You may also like" },
+    { "type": "select", "id": "heading_size", "options": [{ "value": "h2", "label": "Small" }, { "value": "h1", "label": "Medium" }], "default": "h2", "label": "Heading size" },
+    { "type": "range", "id": "products_to_show", "min": 2, "max": 8, "step": 1, "default": 4, "label": "Products to show" },
+    { "type": "select", "id": "columns_desktop", "options": [{ "value": "3", "label": "3" }, { "value": "4", "label": "4" }], "default": "4", "label": "Columns on desktop" },
+    { "type": "select", "id": "image_ratio", "options": [{ "value": "adapt", "label": "Adapt" }, { "value": "portrait", "label": "Portrait" }, { "value": "square", "label": "Square" }], "default": "portrait", "label": "Image ratio" }
+  ]
+}
+{% endschema %}

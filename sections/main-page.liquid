@@ -1,0 +1,19 @@
+{%- comment -%} Aura — Page {%- endcomment -%}
+<section class="section">
+  <div class="page-width page-width--narrow">
+    <header class="center scroll-trigger" style="margin-bottom:clamp(2.4rem,4vw,4rem);">
+      <h1 class="h0">{{ page.title | escape }}</h1>
+    </header>
+    <div class="rte scroll-trigger" style="font-size:1.7rem;line-height:1.8;">
+      {{ page.content }}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Page",
+  "tag": "section",
+  "settings": []
+}
+{% endschema %}

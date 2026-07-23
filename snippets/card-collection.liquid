@@ -1,0 +1,36 @@
+{%- comment -%}
+  Renders a collection card for the collection list section.
+  Accepts:
+    card_collection    {Object}  collection
+    media_aspect_ratio {String}  'square' | 'portrait' | 'landscape'
+    columns            {Number}
+{%- endcomment -%}
+{%- liquid
+  assign ratio = media_aspect_ratio | default: 'square'
+-%}
+<div class="collection-list__item card-wrapper">
+  <a href="{{ card_collection.url | default: '#' }}" class="media media--{{ ratio }} zoom-on-hover">
+    {%- if card_collection.featured_image -%}
+      <img
+        srcset="
+          {{ card_collection.featured_image | image_url: width: 275 }} 275w,
+          {{ card_collection.featured_image | image_url: width: 550 }} 550w,
+          {{ card_collection.featured_image | image_url: width: 750 }} 750w
+        "
+        sizes="(min-width: 990px) 25vw, 50vw"
+        src="{{ card_collection.featured_image | image_url: width: 550 }}"
+        alt="{{ card_collection.featured_image.alt | escape }}"
+        width="{{ card_collection.featured_image.width }}"
+        height="{{ card_collection.featured_image.height }}"
+        loading="lazy"
+      >
+    {%- else -%}
+      {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg' }}
+    {%- endif -%}
+  </a>
+  <h3 class="collection-list__title">
+    <a href="{{ card_collection.url | default: '#' }}">
+      {{ card_collection.title | default: 'onboarding.collection_title' | t }}
+    </a>
+  </h3>
+</div>
