@@ -1189,6 +1189,9 @@ facet-filters { display: block; }
 /* Scroll reveal — a small rise and fade */
 .scroll-trigger { opacity: 0; transform: translateY(1.6rem); }
 .scroll-trigger.aura-in { opacity: 1; transform: none; transition: opacity var(--t-slow) var(--ease-aura), transform var(--t-slow) var(--ease-aura); }
+/* Fallback: if JS never runs (disabled, or the script failed to load), never
+   leave reveal content hidden. Mirrors the .no-js rule for .image-fade. */
+.no-js .scroll-trigger { opacity: 1; transform: none; }
 .scroll-trigger--delay-1.aura-in { transition-delay: 60ms; }
 .scroll-trigger--delay-2.aura-in { transition-delay: 120ms; }
 .scroll-trigger--delay-3.aura-in { transition-delay: 180ms; }
