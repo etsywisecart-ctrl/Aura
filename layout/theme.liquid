@@ -23,7 +23,44 @@
       <meta name="description" content="{{ page_description | escape }}">
     {%- endif %}
 
-    {% render 'meta-tags' %}
+    {%- comment -%} SEO / social meta — inlined so the head never depends on a separately-synced snippet {%- endcomment -%}
+    <meta property="og:site_name" content="{{ shop.name }}">
+    <meta property="og:url" content="{{ canonical_url }}">
+    <meta property="og:title" content="{{ page_title | default: shop.name }}">
+    <meta property="og:type" content="{% if request.page_type == 'product' %}product{% elsif request.page_type == 'article' %}article{% else %}website{% endif %}">
+    <meta property="og:description" content="{{ page_description | default: shop.description | default: shop.name | escape }}">
+    {%- if page_image -%}
+      <meta property="og:image" content="http:{{ page_image | image_url: width: 1200 }}">
+      <meta property="og:image:secure_url" content="https:{{ page_image | image_url: width: 1200 }}">
+      <meta property="og:image:width" content="1200">
+      <meta property="og:image:height" content="{{ 1200 | divided_by: page_image.aspect_ratio | round }}">
+    {%- endif -%}
+    {%- if request.page_type == 'product' -%}
+      <meta property="og:price:amount" content="{{ product.price | money_without_currency | strip_html }}">
+      <meta property="og:price:currency" content="{{ cart.currency.iso_code }}">
+    {%- endif -%}
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ page_title | default: shop.name }}">
+    <meta name="twitter:description" content="{{ page_description | default: shop.description | default: shop.name | escape }}">
+    {%- if settings.social_twitter_link != blank -%}
+      {%- assign twitter_handle = settings.social_twitter_link | split: '/' | last | prepend: '@' -%}
+      <meta name="twitter:site" content="{{ twitter_handle }}">
+    {%- endif -%}
+    {%- if request.page_type == 'index' -%}
+      <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          "name": {{ shop.name | json }},
+          "url": {{ shop.url | append: routes.root_url | json }},
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": {{ shop.url | append: routes.search_url | append: "?q={search_term_string}" | json }},
+            "query-input": "required name=search_term_string"
+          }
+        }
+      </script>
+    {%- endif -%}
 
     {% style %}
       :root {
