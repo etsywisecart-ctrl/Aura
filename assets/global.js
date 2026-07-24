@@ -668,33 +668,55 @@
 
   /* -----------------------------------------------------------------------
      Scroll-reveal animations
+
+     Elements with .scroll-trigger start at opacity:0 and reveal (via .aura-in)
+     when they enter the viewport. A single shared observer is reused across
+     re-inits so dynamically-rendered content (Shopify editor, Section
+     Rendering API) gets wired without leaking observers. In the theme editor
+     (Shopify.designMode) or under reduced-motion, everything is revealed
+     immediately — the merchant must always see their content while editing.
      ----------------------------------------------------------------------- */
-  function initScrollAnimations() {
+  const inDesignMode = () => !!(window.Shopify && window.Shopify.designMode);
+  let revealObserver = null;
+
+  function revealNow(root) {
+    (root || document).querySelectorAll('.scroll-trigger:not(.aura-in)').forEach((el) => el.classList.add('aura-in'));
+  }
+
+  function initScrollAnimations(scope) {
+    const root = scope || document;
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const triggers = document.querySelectorAll('.scroll-trigger');
-    if (reduce || !triggers.length || !('IntersectionObserver' in window)) {
+    const triggers = root.querySelectorAll('.scroll-trigger:not(.aura-in)');
+    if (!triggers.length) return;
+    if (reduce || inDesignMode() || !('IntersectionObserver' in window)) {
       triggers.forEach((el) => el.classList.add('aura-in'));
       return;
     }
-    const observer = new IntersectionObserver(
-      (entries, obs) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('aura-in');
-            obs.unobserve(entry.target);
-          }
-        });
-      },
-      { rootMargin: '0px 0px -8% 0px' }
-    );
-    triggers.forEach((el) => observer.observe(el));
+    if (!revealObserver) {
+      revealObserver = new IntersectionObserver(
+        (entries, obs) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('aura-in');
+              obs.unobserve(entry.target);
+            }
+          });
+        },
+        { rootMargin: '0px 0px -8% 0px' }
+      );
+    }
+    triggers.forEach((el) => revealObserver.observe(el));
   }
 
-  /* Blur-up: fade images in once decoded */
-  function initImageFade() {
-    document.querySelectorAll('img.image-fade').forEach((img) => {
-      if (img.complete) img.classList.add('loaded');
-      else img.addEventListener('load', () => img.classList.add('loaded'), { once: true });
+  /* Blur-up: fade images in once loaded. Handles cached images (already
+     complete), broken images (reveal on error so the container is never
+     stuck invisible), and re-scans on demand for dynamic content. */
+  function initImageFade(scope) {
+    (scope || document).querySelectorAll('img.image-fade:not(.loaded)').forEach((img) => {
+      if (img.complete) { img.classList.add('loaded'); return; }
+      const reveal = () => img.classList.add('loaded');
+      img.addEventListener('load', reveal, { once: true });
+      img.addEventListener('error', reveal, { once: true });
     });
   }
 
@@ -819,4 +841,32 @@
   } else {
     document.addEventListener('DOMContentLoaded', init);
   }
+
+  /* Safety net: once everything has loaded, force-reveal any trigger that is
+     already in the viewport but somehow wasn't caught by the observer (e.g.
+     refreshed while scrolled down, or a race on injection). Content must
+     never be left permanently invisible. */
+  window.addEventListener('load', () => {
+    initImageFade();
+    requestAnimationFrame(() => {
+      document.querySelectorAll('.scroll-trigger:not(.aura-in)').forEach((el) => {
+        const r = el.getBoundingClientRect();
+        if (r.top < window.innerHeight && r.bottom > 0) el.classList.add('aura-in');
+      });
+    });
+  });
+
+  /* Re-wire content rendered after initial load — Shopify theme editor and the
+     Section Rendering API both inject/replace sections the one-shot init never
+     saw. Without this, their .scroll-trigger / .image-fade elements stay at
+     opacity:0 forever (the "images disappear in the editor / after reload" bug). */
+  document.addEventListener('shopify:section:load', (e) => {
+    initScrollAnimations(e.target);
+    initImageFade(e.target);
+    initWishlist();
+  });
+  document.addEventListener('shopify:section:select', (e) => revealNow(e.target));
+  document.addEventListener('shopify:block:select', (e) => {
+    revealNow((e.target && e.target.closest && e.target.closest('.shopify-section')) || document);
+  });
 })();
