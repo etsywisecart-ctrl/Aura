@@ -10,8 +10,8 @@
    ------------------------------------------------------------------------- */
 :root {
   /* Champagne — the single accent. Spent on marks, focus and light only. */
-  --accent: 194, 162, 104;          /* #C2A268 */
-  --accent-strong: 154, 123, 68;    /* #9A7B44 — legible on light */
+  --accent: 194, 162, 104;          /* #C2A268 — champagne, for large decorative marks */
+  --accent-strong: 138, 110, 60;    /* #8A6E3C — richer antique gold, ≥4.5:1 on white for accent text/links */
   --halo: rgba(194, 162, 104, 0.22);
   --halo-soft: rgba(194, 162, 104, 0.10);
 
@@ -19,6 +19,9 @@
   --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --font-serif: "Hoefler Text", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, ui-serif, serif;
   --font-mono: ui-monospace, "SF Mono", "SFMono-Regular", Menlo, Consolas, monospace;
+  /* Editorial display serif — the fine-jewellery voice, on the large headline tier only.
+     Falls back to an elegant system serif if the webfont is blocked. */
+  --font-display: "Bodoni Moda", "Hoefler Text", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, ui-serif, serif;
 
   /* Radius */
   --r-xs: 6px;  --r-sm: 10px;  --r-md: 16px;  --r-lg: 24px;  --r-pill: 999px;
@@ -135,6 +138,16 @@ table { border-collapse: collapse; width: 100%; }
 .h4, h4 { font-size: 1.9rem; font-weight: 600; letter-spacing: -0.01em; }
 .h5, h5 { font-size: 1.6rem; font-weight: 600; letter-spacing: -0.006em; }
 .h6, h6 { font-size: 1.3rem; font-weight: 600; }
+
+/* Editorial serif on the display tier — luxury/jewellery voice (Tiffany/Cartier register).
+   Didones read best near their natural rhythm, so we relax the tight sans tracking
+   and lighten the weight. Body, UI, nav, prices and small headings stay system-sans. */
+.display, .h0, .h1, h1, .h2, h2, .showcase__heading {
+  font-family: var(--font-display);
+  font-weight: 500;
+  letter-spacing: -0.005em;
+}
+.display, .h0 { line-height: 1.02; }
 
 .lead {
   font-size: clamp(1.9rem, 1.9vw, 2.3rem);

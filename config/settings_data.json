@@ -4,40 +4,40 @@
       "scheme-1": {
         "settings": {
           "background": "#FFFFFF",
-          "text": "#1D1D1F",
-          "button": "#1D1D1F",
+          "text": "#1C1917",
+          "button": "#1C1917",
           "button_label": "#FFFFFF",
-          "secondary_button_label": "#1D1D1F",
-          "shadow": "#1D1D1F"
+          "secondary_button_label": "#1C1917",
+          "shadow": "#1C1917"
         }
       },
       "scheme-2": {
         "settings": {
-          "background": "#F5F5F7",
-          "text": "#1D1D1F",
-          "button": "#1D1D1F",
+          "background": "#F5F2EC",
+          "text": "#1C1917",
+          "button": "#1C1917",
           "button_label": "#FFFFFF",
-          "secondary_button_label": "#1D1D1F",
-          "shadow": "#1D1D1F"
+          "secondary_button_label": "#1C1917",
+          "shadow": "#1C1917"
         }
       },
       "scheme-3": {
         "settings": {
-          "background": "#0D0E11",
-          "text": "#F5F5F7",
-          "button": "#F5F5F7",
-          "button_label": "#0D0E11",
-          "secondary_button_label": "#F5F5F7",
+          "background": "#161311",
+          "text": "#F5F2EC",
+          "button": "#F5F2EC",
+          "button_label": "#161311",
+          "secondary_button_label": "#F5F2EC",
           "shadow": "#000000"
         }
       },
       "scheme-4": {
         "settings": {
-          "background": "#1D1D1F",
-          "text": "#F5F5F7",
-          "button": "#F5F5F7",
-          "button_label": "#1D1D1F",
-          "secondary_button_label": "#F5F5F7",
+          "background": "#1C1917",
+          "text": "#F5F2EC",
+          "button": "#F5F2EC",
+          "button_label": "#1C1917",
+          "secondary_button_label": "#F5F2EC",
           "shadow": "#000000"
         }
       }
