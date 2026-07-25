@@ -1,35 +1,57 @@
 {%- comment -%} Aura — Image banner / hero (the "arrival") {%- endcomment -%}
 {%- liquid
+  # Two layouts. stacked = Apple's pattern: light ground, headline first, the
+  # product beneath it, contained rather than cropped. overlay = the image
+  # fills the banner and the text sits on top of it.
+  assign style = section.settings.hero_style | default: 'stacked'
+  assign has_image = false
+  if section.settings.image != blank
+    assign has_image = true
+  endif
+
+  # Light text only makes sense over an image. In the stacked layout the text
+  # sits on the scheme's own background, so it always uses the scheme colour.
   assign text_light = false
-  if section.settings.image != blank and section.settings.text_color == 'light'
+  if style == 'overlay' and has_image and section.settings.text_color == 'light'
     assign text_light = true
+  endif
+
+  assign eager = false
+  if section.index <= 2
+    assign eager = true
   endif
 -%}
 <div class="section" style="--section-y: 0;">
-  <div class="banner banner--{{ section.settings.height }} banner--{{ section.settings.content_position }} color-{{ section.settings.color_scheme }} gradient{% if text_light %} banner--text-light{% endif %} scroll-trigger isolate">
-    {%- if section.settings.image != blank -%}
-      <div class="banner__media">
-        <img
-          src="{{ section.settings.image | image_url: width: 2200 }}"
-          srcset="{{ section.settings.image | image_url: width: 900 }} 900w, {{ section.settings.image | image_url: width: 1400 }} 1400w, {{ section.settings.image | image_url: width: 2200 }} 2200w"
-          sizes="100vw"
-          alt="{{ section.settings.image.alt | escape }}"
-          width="{{ section.settings.image.width }}"
-          height="{{ section.settings.image.height }}"
-          loading="{% if section.index <= 2 %}eager{% else %}lazy{% endif %}"
-          fetchpriority="{% if section.index <= 2 %}high{% else %}auto{% endif %}">
-      </div>
-      {%- if section.settings.overlay_opacity > 0 -%}
-        <div class="banner__overlay" style="--overlay-opacity: {{ section.settings.overlay_opacity | divided_by: 100.0 }};"></div>
+  <div class="banner banner--{{ style }} banner--{{ section.settings.height }} banner--{{ section.settings.content_position }} color-{{ section.settings.color_scheme }} gradient{% if text_light %} banner--text-light{% endif %} scroll-trigger isolate">
+    {%- if style == 'overlay' -%}
+      {%- if has_image -%}
+        <div class="banner__media">
+          <img
+            src="{{ section.settings.image | image_url: width: 2200 }}"
+            srcset="{{ section.settings.image | image_url: width: 900 }} 900w, {{ section.settings.image | image_url: width: 1400 }} 1400w, {{ section.settings.image | image_url: width: 2200 }} 2200w"
+            sizes="100vw"
+            alt="{{ section.settings.image.alt | escape }}"
+            width="{{ section.settings.image.width }}"
+            height="{{ section.settings.image.height }}"
+            loading="{% if eager %}eager{% else %}lazy{% endif %}"
+            fetchpriority="{% if eager %}high{% else %}auto{% endif %}">
+        </div>
+        {%- comment -%}
+          A scrim always renders under light text, even at 0% overlay — a pale
+          photograph would otherwise swallow the headline entirely.
+        {%- endcomment -%}
+        {%- if section.settings.overlay_opacity > 0 or text_light -%}
+          <div class="banner__overlay" style="--overlay-opacity: {{ section.settings.overlay_opacity | divided_by: 100.0 }};"></div>
+        {%- endif -%}
+      {%- else -%}
+        <div class="aura-glow" style="top:-15%; right:-5%;" aria-hidden="true"></div>
       {%- endif -%}
-    {%- else -%}
-      <div class="aura-glow" style="top:-15%; right:-5%;" aria-hidden="true"></div>
     {%- endif -%}
 
     <div class="banner__content-wrap page-width">
       <div class="banner__box">
         {%- if section.settings.eyebrow != blank -%}
-          <span class="eyebrow{% if section.settings.content_position contains 'center' %} eyebrow--center{% endif %}">{{ section.settings.eyebrow | escape }}</span>
+          <span class="eyebrow{% if section.settings.content_position contains 'center' or style == 'stacked' %} eyebrow--center{% endif %}">{{ section.settings.eyebrow | escape }}</span>
         {%- endif -%}
         {%- if section.settings.heading != blank -%}
           <h2 class="banner__heading {{ section.settings.heading_size }}">{{ section.settings.heading | escape }}</h2>
@@ -49,6 +71,20 @@
         {%- endif -%}
       </div>
     </div>
+
+    {%- if style == 'stacked' and has_image -%}
+      <div class="banner__product">
+        <img
+          src="{{ section.settings.image | image_url: width: 1600 }}"
+          srcset="{{ section.settings.image | image_url: width: 800 }} 800w, {{ section.settings.image | image_url: width: 1200 }} 1200w, {{ section.settings.image | image_url: width: 1600 }} 1600w"
+          sizes="(min-width: 990px) min(100rem, 80vw), 92vw"
+          alt="{{ section.settings.image.alt | escape }}"
+          width="{{ section.settings.image.width }}"
+          height="{{ section.settings.image.height }}"
+          loading="{% if eager %}eager{% else %}lazy{% endif %}"
+          fetchpriority="{% if eager %}high{% else %}auto{% endif %}">
+      </div>
+    {%- endif -%}
   </div>
 </div>
 
@@ -58,13 +94,20 @@
   "tag": "section",
   "class": "section-image-banner",
   "settings": [
-    { "type": "image_picker", "id": "image", "label": "Background image" },
+    { "type": "select", "id": "hero_style", "options": [
+        { "value": "stacked", "label": "Product-led — heading above the image" },
+        { "value": "overlay", "label": "Full-bleed — text over the image" }
+      ], "default": "stacked", "label": "Layout",
+      "info": "Product-led keeps the image uncropped on the section's background, the way Apple presents a product." },
+    { "type": "image_picker", "id": "image", "label": "Image" },
     { "type": "select", "id": "height", "options": [
         { "value": "small", "label": "Small" },
         { "value": "medium", "label": "Medium" },
         { "value": "large", "label": "Large" }
-      ], "default": "large", "label": "Height" },
-    { "type": "range", "id": "overlay_opacity", "min": 0, "max": 80, "step": 5, "unit": "%", "label": "Image overlay opacity", "default": 15 },
+      ], "default": "large", "label": "Minimum height" },
+    { "type": "header", "content": "Full-bleed options" },
+    { "type": "range", "id": "overlay_opacity", "min": 0, "max": 80, "step": 5, "unit": "%", "label": "Image overlay opacity", "default": 40,
+      "info": "Darkens the image so light text stays readable. Only used by the full-bleed layout." },
     { "type": "select", "id": "text_color", "options": [
         { "value": "auto", "label": "From color scheme" },
         { "value": "light", "label": "Light (over image)" }

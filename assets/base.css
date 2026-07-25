@@ -15,15 +15,14 @@
   --halo: rgba(194, 162, 104, 0.22);
   --halo-soft: rgba(194, 162, 104, 0.10);
 
-  /* Type roles.
-     --font-body-family and --font-heading-family are set by the layout from the
-     theme's font settings (Shopify's font library). The stacks below are the
-     fallbacks, so type still renders correctly if those are ever absent. */
-  --font-sans: var(--font-body-family, -apple-system), BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  /* Type roles. The system stack is the theme's voice — it renders as SF Pro on
+     Apple devices, Segoe on Windows, Roboto on Android, and costs zero network
+     requests. Headlines use the same face as the interface, which is what makes
+     the page read as Apple rather than as a template. */
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-display: var(--font-sans);
   --font-serif: "Hoefler Text", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, ui-serif, serif;
   --font-mono: ui-monospace, "SF Mono", "SFMono-Regular", Menlo, Consolas, monospace;
-  /* Display face — the editorial voice, on the large headline tier only. */
-  --font-display: var(--font-heading-family, "Hoefler Text"), "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, ui-serif, serif;
 
   /* Radius */
   --r-xs: 6px;  --r-sm: 10px;  --r-md: 16px;  --r-lg: 24px;  --r-pill: 999px;
@@ -127,29 +126,28 @@ table { border-collapse: collapse; width: 100%; }
 /* -------------------------------------------------------------------------
    3. Typographic scale
    ------------------------------------------------------------------------- */
-/* Apple-caliber: confident semibold display, tight optical tracking */
+/* Confident semibold display, tight optical tracking. Tracking tightens as the
+   size grows, the way optical sizing does on a real type family. */
 .display, .h0 {
   font-weight: 600;
-  letter-spacing: -0.025em;
-  line-height: 1.04;
-  font-size: clamp(4rem, 7.2vw, 6.6rem);
+  letter-spacing: -0.028em;
+  line-height: 1.03;
+  font-size: clamp(5.4rem, 6.2vw, 9rem);
 }
-.h1, h1 { font-size: clamp(3.2rem, 5vw, 4.8rem); font-weight: 600; letter-spacing: -0.021em; line-height: 1.06; }
-.h2, h2 { font-size: clamp(2.6rem, 4vw, 4rem); font-weight: 600; letter-spacing: -0.019em; line-height: 1.08; }
-.h3, h3 { font-size: clamp(2.1rem, 2.6vw, 2.7rem); font-weight: 600; letter-spacing: -0.014em; line-height: 1.16; }
-.h4, h4 { font-size: 1.9rem; font-weight: 600; letter-spacing: -0.01em; }
-.h5, h5 { font-size: 1.6rem; font-weight: 600; letter-spacing: -0.006em; }
-.h6, h6 { font-size: 1.3rem; font-weight: 600; }
+.h1, h1 { font-size: clamp(4.2rem, 4.4vw, 6.4rem); font-weight: 600; letter-spacing: -0.024em; line-height: 1.05; }
+.h2, h2 { font-size: clamp(3.4rem, 3vw, 4.6rem); font-weight: 600; letter-spacing: -0.021em; line-height: 1.07; }
+.h3, h3 { font-size: clamp(2.4rem, 2.6vw, 3.2rem); font-weight: 600; letter-spacing: -0.016em; line-height: 1.14; }
+.h4, h4 { font-size: 2rem; font-weight: 600; letter-spacing: -0.012em; }
+.h5, h5 { font-size: 1.7rem; font-weight: 600; letter-spacing: -0.008em; }
+.h6, h6 { font-size: 1.3rem; font-weight: 600; letter-spacing: -0.004em; }
 
-/* Editorial serif on the display tier — luxury/jewellery voice (Tiffany/Cartier register).
-   Didones read best near their natural rhythm, so we relax the tight sans tracking
-   and lighten the weight. Body, UI, nav, prices and small headings stay system-sans. */
-.display, .h0, .h1, h1, .h2, h2, .showcase__heading {
-  font-family: var(--font-display);
-  font-weight: 500;
-  letter-spacing: -0.005em;
+/* Small screens can't carry the big end of the scale — step it down so a
+   headline never runs to four ragged lines on a phone. */
+@media screen and (max-width: 749px) {
+  .display, .h0 { font-size: clamp(3.6rem, 10vw, 5.4rem); letter-spacing: -0.024em; }
+  .h1, h1 { font-size: clamp(3rem, 8vw, 4.2rem); }
+  .h2, h2 { font-size: clamp(2.6rem, 7vw, 3.4rem); }
 }
-.display, .h0 { line-height: 1.02; }
 
 .lead {
   font-size: clamp(1.9rem, 1.9vw, 2.3rem);
@@ -914,7 +912,13 @@ body.overflow-hidden { overflow: hidden; }
 /* ---- Header ---- */
 .collection-header { padding: clamp(1.4rem, 2.2vw, 2.4rem) 0 clamp(1.6rem, 2.4vw, 2.4rem); display: flex; flex-direction: column; gap: 0.9rem; max-width: 72rem; }
 .collection-header--center { align-items: center; text-align: center; margin: 0 auto; }
-.collection-header__title { margin: 0; }
+/* A shade under the global h1 — the grid is the subject here, not the title. */
+.collection-header__title,
+.collection-banner__title { margin: 0; font-size: clamp(3.6rem, 3.6vw, 5.2rem); letter-spacing: -0.022em; }
+@media screen and (max-width: 749px) {
+  .collection-header__title,
+  .collection-banner__title { font-size: clamp(2.8rem, 8vw, 3.8rem); }
+}
 .collection-header__desc { color: rgba(var(--color-foreground), 0.6); font-size: 1.5rem; line-height: 1.55; max-width: 60ch; }
 
 .collection-banner { position: relative; overflow: hidden; border-radius: var(--r-lg); min-height: 28rem; display: flex; align-items: flex-end; margin: 1.2rem 0 clamp(1.6rem, 2.4vw, 2.4rem); isolation: isolate; }
@@ -1133,8 +1137,15 @@ facet-filters { display: block; }
 .showcase__tile--light { color: #f5f5f7; }
 .showcase__tile--light .showcase__sub { color: rgba(245, 245, 247, 0.82); }
 .showcase__eyebrow { font-size: 1.4rem; font-weight: 500; letter-spacing: 0.01em; color: rgb(var(--accent)); }
-.showcase__heading { font-size: clamp(2.8rem, 3.6vw, 4rem); font-weight: 600; letter-spacing: -0.02em; line-height: 1.06; }
-.showcase__tile--tall .showcase__heading { font-size: clamp(3.4rem, 4.6vw, 5.6rem); }
+.showcase__heading { font-size: clamp(3.2rem, 2.6vw, 4.6rem); font-weight: 600; letter-spacing: -0.022em; line-height: 1.05; }
+/* The full-width tile is the section's hero and carries the larger size. */
+.showcase__tile--full .showcase__heading,
+.showcase__tile--tall .showcase__heading { font-size: clamp(4.4rem, 4vw, 7rem); letter-spacing: -0.026em; line-height: 1.03; }
+@media screen and (max-width: 749px) {
+  .showcase__heading { font-size: clamp(2.8rem, 7.5vw, 3.6rem); }
+  .showcase__tile--full .showcase__heading,
+  .showcase__tile--tall .showcase__heading { font-size: clamp(3.4rem, 9vw, 4.6rem); }
+}
 .showcase__sub { font-size: clamp(1.7rem, 1.7vw, 2.1rem); font-weight: 400; color: rgba(var(--color-foreground), 0.64); max-width: 40ch; }
 .showcase__ctas { display: inline-flex; align-items: center; gap: 2.2rem; flex-wrap: wrap; justify-content: center; margin-top: 0.4rem; }
 .showcase__product { position: relative; z-index: 1; margin-top: auto; width: 100%; display: flex; justify-content: center; padding: 0 2rem 3rem; }
@@ -1150,7 +1161,17 @@ facet-filters { display: block; }
 .banner { position: relative; display: flex; overflow: hidden; isolation: isolate; }
 .banner__media { position: absolute; inset: 0; z-index: 0; }
 .banner__media img, .banner__media video { width: 100%; height: 100%; object-fit: cover; }
-.banner__overlay { position: absolute; inset: 0; z-index: 1; background: linear-gradient(180deg, rgba(0,0,0,calc(var(--overlay-opacity, 0.12) * 0.4)) 0%, rgba(0,0,0,var(--overlay-opacity, 0.12)) 100%); }
+/* Scrim: weighted toward the bottom, with a floor so light text stays legible
+   over a pale photograph even when the merchant sets the overlay low. */
+.banner__overlay {
+  position: absolute; inset: 0; z-index: 1;
+  background:
+    linear-gradient(180deg,
+      rgba(0,0,0, calc(var(--overlay-opacity, 0.4) * 0.35)) 0%,
+      rgba(0,0,0, calc(var(--overlay-opacity, 0.4) * 0.75)) 55%,
+      rgba(0,0,0, var(--overlay-opacity, 0.4)) 100%);
+}
+.banner--text-light .banner__overlay { background-color: rgba(0,0,0,0.22); }
 .banner__box {
   position: relative; z-index: 2; display: flex; flex-direction: column; gap: 1.8rem;
   max-width: 60rem; padding: clamp(3.2rem, 6vw, 6.4rem);
@@ -1160,9 +1181,47 @@ facet-filters { display: block; }
 .banner--middle-center .banner__box { align-items: center; text-align: center; }
 .banner--bottom-left .banner__content-wrap { align-items: flex-end; }
 .banner--middle-left .banner__content-wrap { align-items: center; }
-.banner--small { min-height: 44rem; }
-.banner--medium { min-height: 60rem; }
-.banner--large { min-height: 80rem; }
+
+/* Heights are viewport-relative with a cap, so a hero never grows taller than
+   the screen on a laptop nor stretches absurdly on a large monitor. */
+.banner--small { min-height: min(52vh, 54rem); }
+.banner--medium { min-height: min(70vh, 72rem); }
+.banner--large { min-height: min(85vh, 88rem); }
+
+/* ---- Product-led layout: headline first, product beneath, nothing cropped --- */
+.banner--stacked {
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: center;
+  overflow: hidden;
+}
+.banner--stacked .banner__content-wrap { flex: none; justify-content: center; }
+.banner--stacked .banner__box {
+  align-items: center;
+  text-align: center;
+  max-width: 78rem;
+  padding: clamp(5.6rem, 9vh, 10rem) 0 clamp(2.4rem, 3vh, 3.6rem);
+  gap: 1.6rem;
+}
+.banner--stacked .banner__text { max-width: 52ch; }
+.banner--stacked .banner__buttons { justify-content: center; margin-top: 0.6rem; }
+.banner__product {
+  position: relative; z-index: 1;
+  flex: 1 1 auto; min-height: 0;
+  width: 100%;
+  display: flex; align-items: flex-end; justify-content: center;
+  padding: 0 var(--page-margin);
+}
+.banner__product img {
+  width: auto; max-width: min(100rem, 88vw);
+  height: 100%; max-height: 100%;
+  object-fit: contain; object-position: center bottom;
+}
+@media screen and (max-width: 749px) {
+  .banner--stacked .banner__box { padding-top: clamp(3.6rem, 7vh, 5.6rem); }
+  .banner__product img { max-width: 94vw; }
+}
 .banner__buttons { display: flex; flex-wrap: wrap; gap: 1.2rem; }
 .banner--text-light { color: #fff; }
 .banner--text-light .eyebrow { color: rgba(255,255,255,0.85); }

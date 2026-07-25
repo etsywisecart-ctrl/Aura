@@ -14,19 +14,20 @@
       "settings": {
         "image": "shopify://shop_images/jewlery.png",
         "height": "large",
-        "overlay_opacity": 20,
-        "text_color": "light",
+        "overlay_opacity": 40,
+        "text_color": "auto",
         "eyebrow": "New arrival",
         "heading": "The essential object",
         "heading_size": "display",
-        "text": "<p>Considered essentials, made to last a lifetime.</p>",
+        "text": "<p>Considered pieces, made to last a lifetime.</p>",
         "content_position": "middle-center",
         "button_label_1": "Shop the collection",
         "button_link_1": "",
         "button_style_1": "primary",
         "button_label_2": "Our story",
         "button_link_2": "",
-        "color_scheme": "scheme-4"
+        "color_scheme": "scheme-1",
+        "hero_style": "stacked"
       }
     },
     "ticker": {
@@ -84,8 +85,8 @@
             "text_color": "light",
             "content_position": "top",
             "eyebrow": "The Winter Edit",
-            "heading": "Layers, considered",
-            "subheading": "Warmth without weight — the pieces the season is built around.",
+            "heading": "Light, made solid",
+            "subheading": "The pieces this season is built around.",
             "cta1_label": "Explore the edit",
             "cta1_link": "",
             "cta2_label": "Shop now",
@@ -102,8 +103,8 @@
             "text_color": "dark",
             "content_position": "top",
             "eyebrow": "",
-            "heading": "Outerwear",
-            "subheading": "Built for a decade of weather.",
+            "heading": "Rings",
+            "subheading": "Set by hand, one stone at a time.",
             "cta1_label": "Learn more",
             "cta1_link": "",
             "cta2_label": "Shop",
@@ -120,8 +121,8 @@
             "text_color": "dark",
             "content_position": "top",
             "eyebrow": "",
-            "heading": "Knitwear",
-            "subheading": "Merino, milled in Scotland.",
+            "heading": "Necklaces",
+            "subheading": "Fine chains, milled in Italy.",
             "cta1_label": "Learn more",
             "cta1_link": "",
             "cta2_label": "Shop",
@@ -138,8 +139,8 @@
             "text_color": "light",
             "content_position": "top",
             "eyebrow": "",
-            "heading": "Leather goods",
-            "subheading": "Vegetable-tanned, made to age.",
+            "heading": "Earrings",
+            "subheading": "Solid gold, made to be worn daily.",
             "cta1_label": "Learn more",
             "cta1_link": "",
             "cta2_label": "Shop",
@@ -211,7 +212,7 @@
         "text": {
           "type": "text",
           "settings": {
-            "text": "<p>Each piece is finished by hand and inspected against a single question — will it still feel right in ten years?</p>"
+            "text": "<p>Every piece is finished by hand and held to a single question — will it still feel right in ten years?</p>"
           }
         },
         "button": {
@@ -243,7 +244,7 @@
           "settings": {
             "icon": "check",
             "heading": "Made to last",
-            "text": "<p>Materials chosen for permanence, backed by a lifetime guarantee.</p>"
+            "text": "<p>Solid metals and responsibly sourced stones, backed by a lifetime guarantee.</p>"
           }
         },
         "b2": {
@@ -251,7 +252,7 @@
           "settings": {
             "icon": "cart",
             "heading": "Considered shipping",
-            "text": "<p>Carbon-neutral delivery in recyclable packaging, always.</p>"
+            "text": "<p>Carbon-neutral delivery, insured and gift-boxed as standard.</p>"
           }
         },
         "b3": {
@@ -284,7 +285,7 @@
           "type": "quote",
           "settings": {
             "rating": 5,
-            "text": "<p>The best-made piece I own. Three years in and it looks better than the day it arrived.</p>",
+            "text": "<p>The best-made piece I own. Three years of daily wear and it still looks new.</p>",
             "author": "A. Mercer, verified buyer"
           }
         }

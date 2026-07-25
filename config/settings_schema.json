@@ -84,29 +84,7 @@
     "settings": [
       {
         "type": "paragraph",
-        "content": "Aura sets type in two roles: a display face for headlines and a text face for everything else. Fonts are served from Shopify's font library — no third-party requests."
-      },
-      {
-        "type": "header",
-        "content": "Headings"
-      },
-      {
-        "type": "font_picker",
-        "id": "type_header_font",
-        "label": "Display font",
-        "default": "playfair_display_n4",
-        "info": "Used for large headlines. A serif carries the editorial voice; a sans reads closer to Apple."
-      },
-      {
-        "type": "header",
-        "content": "Body"
-      },
-      {
-        "type": "font_picker",
-        "id": "type_body_font",
-        "label": "Text font",
-        "default": "assistant_n4",
-        "info": "Used for body copy, navigation, prices and all interface text."
+        "content": "Aura sets type in the system typeface — SF Pro on Apple devices, Segoe UI on Windows, Roboto on Android. It renders instantly with no font download, which is why the theme feels native and loads fast. Type roles, scale and weights are fixed by the design language for consistency."
       }
     ]
   },

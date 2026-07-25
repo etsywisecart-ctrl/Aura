@@ -62,22 +62,9 @@
       </script>
     {%- endif -%}
 
-    {%- comment -%} Fonts come from Shopify's library — no third-party requests. {%- endcomment -%}
-    {%- liquid
-      assign body_bold = settings.type_body_font | font_modify: 'weight', 'bold'
-      assign body_italic = settings.type_body_font | font_modify: 'style', 'italic'
-      assign heading_bold = settings.type_header_font | font_modify: 'weight', 'bold'
-    -%}
+    {%- comment -%} Type is the system stack — nothing to download. {%- endcomment -%}
     {% style %}
-      {{ settings.type_body_font | font_face: font_display: 'swap' }}
-      {{ body_bold | font_face: font_display: 'swap' }}
-      {{ body_italic | font_face: font_display: 'swap' }}
-      {{ settings.type_header_font | font_face: font_display: 'swap' }}
-      {{ heading_bold | font_face: font_display: 'swap' }}
-
       :root {
-        --font-body-family: {{ settings.type_body_font.family }}, {{ settings.type_body_font.fallback_families }};
-        --font-heading-family: {{ settings.type_header_font.family }}, {{ settings.type_header_font.fallback_families }};
         --page-width: {{ settings.page_width | divided_by: 10 }}rem;
         --spacing-sections: {{ settings.spacing_sections }}px;
         --grid-horizontal-spacing: {{ settings.spacing_grid_horizontal }}px;
