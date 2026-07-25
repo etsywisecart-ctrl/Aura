@@ -84,7 +84,29 @@
     "settings": [
       {
         "type": "paragraph",
-        "content": "Aura uses the system typeface for a fast, native, flagship feel — the same voice as the Apple store on Apple devices. Type roles, scale, and weights are fixed by the design language for consistency."
+        "content": "Aura sets type in two roles: a display face for headlines and a text face for everything else. Fonts are served from Shopify's font library — no third-party requests."
+      },
+      {
+        "type": "header",
+        "content": "Headings"
+      },
+      {
+        "type": "font_picker",
+        "id": "type_header_font",
+        "label": "Display font",
+        "default": "playfair_display_n4",
+        "info": "Used for large headlines. A serif carries the editorial voice; a sans reads closer to Apple."
+      },
+      {
+        "type": "header",
+        "content": "Body"
+      },
+      {
+        "type": "font_picker",
+        "id": "type_body_font",
+        "label": "Text font",
+        "default": "assistant_n4",
+        "info": "Used for body copy, navigation, prices and all interface text."
       }
     ]
   },
@@ -144,8 +166,14 @@
         "type": "select",
         "id": "card_style",
         "options": [
-          { "value": "standard", "label": "Standard" },
-          { "value": "card", "label": "Card" }
+          {
+            "value": "standard",
+            "label": "Standard"
+          },
+          {
+            "value": "card",
+            "label": "Card"
+          }
         ],
         "default": "standard",
         "label": "Style",
@@ -155,9 +183,18 @@
         "type": "select",
         "id": "card_image_ratio",
         "options": [
-          { "value": "adapt", "label": "Adapt to image" },
-          { "value": "portrait", "label": "Portrait" },
-          { "value": "square", "label": "Square" }
+          {
+            "value": "adapt",
+            "label": "Adapt to image"
+          },
+          {
+            "value": "portrait",
+            "label": "Portrait"
+          },
+          {
+            "value": "square",
+            "label": "Square"
+          }
         ],
         "default": "portrait",
         "label": "Image ratio"
@@ -193,9 +230,18 @@
         "type": "select",
         "id": "cart_type",
         "options": [
-          { "value": "drawer", "label": "Drawer" },
-          { "value": "page", "label": "Page" },
-          { "value": "notification", "label": "Popup notification" }
+          {
+            "value": "drawer",
+            "label": "Drawer"
+          },
+          {
+            "value": "page",
+            "label": "Page"
+          },
+          {
+            "value": "notification",
+            "label": "Popup notification"
+          }
         ],
         "default": "drawer",
         "label": "Cart type"
@@ -234,28 +280,81 @@
   {
     "name": "Social media",
     "settings": [
-      { "type": "header", "content": "Social accounts" },
-      { "type": "text", "id": "social_instagram_link", "label": "Instagram", "info": "https://instagram.com/shopify" },
-      { "type": "text", "id": "social_facebook_link", "label": "Facebook", "info": "https://facebook.com/shopify" },
-      { "type": "text", "id": "social_tiktok_link", "label": "TikTok", "info": "https://tiktok.com/@shopify" },
-      { "type": "text", "id": "social_twitter_link", "label": "X", "info": "https://x.com/shopify" },
-      { "type": "text", "id": "social_youtube_link", "label": "YouTube", "info": "https://youtube.com/shopify" },
-      { "type": "text", "id": "social_pinterest_link", "label": "Pinterest", "info": "https://pinterest.com/shopify" }
+      {
+        "type": "header",
+        "content": "Social accounts"
+      },
+      {
+        "type": "text",
+        "id": "social_instagram_link",
+        "label": "Instagram",
+        "info": "https://instagram.com/shopify"
+      },
+      {
+        "type": "text",
+        "id": "social_facebook_link",
+        "label": "Facebook",
+        "info": "https://facebook.com/shopify"
+      },
+      {
+        "type": "text",
+        "id": "social_tiktok_link",
+        "label": "TikTok",
+        "info": "https://tiktok.com/@shopify"
+      },
+      {
+        "type": "text",
+        "id": "social_twitter_link",
+        "label": "X",
+        "info": "https://x.com/shopify"
+      },
+      {
+        "type": "text",
+        "id": "social_youtube_link",
+        "label": "YouTube",
+        "info": "https://youtube.com/shopify"
+      },
+      {
+        "type": "text",
+        "id": "social_pinterest_link",
+        "label": "Pinterest",
+        "info": "https://pinterest.com/shopify"
+      }
     ]
   },
   {
     "name": "Brand information",
     "settings": [
-      { "type": "paragraph", "content": "Add a brand to your store's footer, social sharing, and search results." },
-      { "type": "image_picker", "id": "brand_image", "label": "Logo" },
-      { "type": "textarea", "id": "brand_headline", "label": "Headline" },
-      { "type": "richtext", "id": "brand_description", "label": "Description" }
+      {
+        "type": "paragraph",
+        "content": "Add a brand to your store's footer, social sharing, and search results."
+      },
+      {
+        "type": "image_picker",
+        "id": "brand_image",
+        "label": "Logo"
+      },
+      {
+        "type": "textarea",
+        "id": "brand_headline",
+        "label": "Headline"
+      },
+      {
+        "type": "richtext",
+        "id": "brand_description",
+        "label": "Description"
+      }
     ]
   },
   {
     "name": "Favicon",
     "settings": [
-      { "type": "image_picker", "id": "favicon", "label": "Favicon image", "info": "Will be scaled down to 32 x 32px" }
+      {
+        "type": "image_picker",
+        "id": "favicon",
+        "label": "Favicon image",
+        "info": "Will be scaled down to 32 x 32px"
+      }
     ]
   }
 ]

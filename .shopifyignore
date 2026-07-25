@@ -1,0 +1,10 @@
+# Files the CLI must never upload to a store.
+node_modules/
+package.json
+package-lock.json
+.theme-check.yml
+.shopifyignore
+.gitignore
+shopify.theme.toml
+README.md
+.github/

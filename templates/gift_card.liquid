@@ -1,17 +1,22 @@
 {%- comment -%} Aura — Gift card {%- endcomment -%}
+{%- liquid
+  comment
+    Money has to be applied before the string is handed to `t` — a filter
+    cannot be chained onto a translation argument.
+  endcomment
+  assign gift_card_value = gift_card.initial_value | money
+  assign gift_card_balance = gift_card.balance | money
+-%}
 <div class="section isolate" style="min-height:80vh;display:flex;align-items:center;">
   <div class="aura-glow" style="left:50%;top:30%;transform:translate(-50%,-50%);" aria-hidden="true"></div>
   <div class="page-width page-width--narrow isolate center">
     <span class="eyebrow eyebrow--center">{{ shop.name }}</span>
-    <h1 class="h1" style="margin:1.4rem 0;">{{ 'gift_cards.issued.title' | t: value: gift_card.initial_value | money, shop: shop.name }}</h1>
+    <h1 class="h1" style="margin:1.4rem 0;">{{ 'gift_cards.issued.title' | t: value: gift_card_value, shop: shop.name }}</h1>
 
     <div class="gift-card__wrapper" style="margin:3.2rem auto;max-width:44rem;padding:3.2rem;border:1px solid rgba(var(--color-foreground),0.14);border-radius:var(--r-lg);background:rgb(var(--color-background));box-shadow:var(--shadow-md);">
-      {%- if gift_card.qr_identifier -%}
-        <img src="{{ gift_card | payment_terms }}" alt="" style="display:none;">
-      {%- endif -%}
       <div style="font-size:clamp(3.2rem,6vw,4.4rem);font-weight:300;letter-spacing:-0.02em;" class="mono">
         {%- if gift_card.balance != gift_card.initial_value -%}
-          {{ 'gift_cards.issued.remaining_html' | t: balance: gift_card.balance | money }}
+          {{ 'gift_cards.issued.remaining_html' | t: balance: gift_card_balance }}
         {%- else -%}
           {{ gift_card.initial_value | money }}
         {%- endif -%}

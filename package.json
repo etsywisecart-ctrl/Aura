@@ -1,0 +1,25 @@
+{
+  "name": "aura-shopify-theme",
+  "version": "1.0.0",
+  "description": "Aura — a premium Shopify Online Store 2.0 theme.",
+  "private": true,
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "shopify theme dev",
+    "check": "shopify theme check",
+    "check:fix": "shopify theme check --auto-correct",
+    "push": "shopify theme push",
+    "push:unpublished": "shopify theme push --unpublished",
+    "pull": "shopify theme pull",
+    "share": "shopify theme share",
+    "list": "shopify theme list",
+    "package": "shopify theme package",
+    "console": "shopify theme console"
+  },
+  "devDependencies": {
+    "@shopify/cli": "^4.5.2"
+  }
+}

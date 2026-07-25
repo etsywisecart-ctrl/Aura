@@ -58,37 +58,65 @@ drawers, `aria` labelling, and full `prefers-reduced-motion` support.
 ## Project structure
 
 ```
-assets/         base.css (design system) · global.js (interactions)
-config/         settings_schema.json · settings_data.json (Aura color schemes)
-layout/         theme.liquid · password.liquid
-locales/        en.default.json
-sections/       page sections + header/footer/announcement groups
-snippets/       card-product, price, icon, cart-drawer, pagination, …
-templates/      JSON templates (+ customers/ Liquid templates)
-design/         design-language.html — the source‑of‑truth spec
+assets/                  base.css (design system) · global.js (interactions)
+config/                  settings_schema.json · settings_data.json
+layout/                  theme.liquid · password.liquid
+locales/                 en.default.json
+sections/                page sections + header/footer/announcement groups
+snippets/                card-product, card-collection, price, icon, pagination, …
+templates/               JSON templates (+ customers/ Liquid templates)
+.github/workflows/       theme-check.yml — CI lint on every push
+.theme-check.yml         Theme Check config (theme-check:all)
+shopify.theme.toml       CLI store environments
+.shopifyignore           files the CLI must never upload
+package.json             npm scripts wrapping the CLI
 ```
 
 ---
 
 ## Local development
 
-Requires the [Shopify CLI](https://shopify.dev/docs/themes/tools/cli).
+Requires [Node 20+](https://nodejs.org) and the Shopify CLI.
 
 ```bash
-shopify theme dev --store your-store.myshopify.com   # live preview
-shopify theme check                                   # lint
-shopify theme push                                    # deploy
+npm install -g @shopify/cli@latest     # one time
 ```
 
+Point the CLI at your store by editing `shopify.theme.toml`, replacing
+`your-store.myshopify.com` with your myshopify domain. Then:
+
+| Command | What it does |
+|---|---|
+| `npm run dev` | Live preview on a dev theme, hot-reloads on save |
+| `npm run check` | Theme Check (the Theme Store ruleset) |
+| `npm run push` | Push to the store — prompts for which theme |
+| `npm run push:unpublished` | Push as a new unpublished theme |
+| `npm run pull` | Pull theme-editor changes back down |
+| `npm run share` | Upload and get a shareable preview link |
+| `npm run package` | Build a distributable zip |
+
+The first command opens a browser to authenticate against your store. After
+that the CLI remembers the session.
+
+`config/settings_data.json` is listed under `ignore` in `shopify.theme.toml`,
+so pushing never overwrites the settings a merchant has saved in the editor.
+
+### Deploying without the CLI
+
+Shopify can sync a branch directly: **Online Store → Themes → Add theme →
+Connect from GitHub**. Pick this repo and a branch, and every push to that
+branch updates the theme — no zip, no CLI.
+
 No build step — CSS and JS are authored directly and served as static assets.
-No external fonts or scripts are loaded.
 
 ## Customizing
 
 - **Colors** — Theme editor → *Colors*. Four Aura schemes ship by default;
   each section chooses a scheme. The champagne accent is theme‑wide.
-- **Typography** — system‑driven by design (fast, native). Roles and scale are
-  fixed for consistency.
+- **Typography** — Theme editor → *Typography*. Two roles: a display face for
+  headlines and a text face for everything else, both from Shopify's font
+  library so no third‑party font requests are made. Scale and weights are
+  fixed by the design language.
 - **Layout, cards, cart** — page width, grid spacing, card style/ratio, and
   cart type (drawer / page / notification) are all in Theme settings.
 

@@ -1,0 +1,14 @@
+# Theme Check — https://shopify.dev/docs/storefronts/themes/tools/theme-check
+#
+# `theme-check:all` is the strictest preset and is the right bar to hold a
+# theme to if the goal is a Shopify Theme Store submission. Disabling a check
+# here does not disable it during Shopify's own review, so nothing is silenced.
+#
+# Run:  npm run check
+extends: theme-check:all
+
+root: .
+
+ignore:
+  - node_modules/**
+  - .git/**

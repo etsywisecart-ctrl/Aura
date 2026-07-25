@@ -7,7 +7,9 @@
           {%- for block in section.blocks -%}
             <span class="marquee__item" {{ block.shopify_attributes }}>
               {%- if block.settings.image != blank -%}
-                <img src="{{ block.settings.image | image_url: width: 240 }}" alt="{{ block.settings.text | escape }}" height="26" loading="lazy">
+                {%- comment -%} Intrinsic ratio at the rendered height, so the strip never shifts. {%- endcomment -%}
+                {%- assign mark_width = block.settings.image.aspect_ratio | times: 26 | round -%}
+                <img src="{{ block.settings.image | image_url: width: 240 }}" alt="{{ block.settings.text | escape }}" width="{{ mark_width | default: 26 }}" height="26" loading="lazy">
               {%- else -%}
                 {{ block.settings.text | escape }}
               {%- endif -%}

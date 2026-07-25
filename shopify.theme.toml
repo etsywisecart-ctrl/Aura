@@ -1,0 +1,19 @@
+# Shopify CLI theme environments.
+#
+#   npm run dev                 → live preview with hot reload
+#   npm run push                → push to the store below
+#   shopify theme push -e prod  → push using the [environments.prod] block
+#
+# Replace the placeholder store domains with your own. `store` is the
+# myshopify.com domain, not the custom domain.
+
+[environments.development]
+store = "your-store.myshopify.com"
+# theme = "123456789"        # optional: pin a specific theme id
+ignore = ["config/settings_data.json"]
+
+[environments.production]
+store = "your-store.myshopify.com"
+# theme = "987654321"
+# Never overwrite the live store's saved settings on push.
+ignore = ["config/settings_data.json"]

@@ -1,36 +1,52 @@
 {%- comment -%}
-  Renders a collection card for the collection list section.
+  Renders a collection card. Used by the collection list section and the
+  list-collections template.
   Accepts:
-    card_collection    {Object}  collection
+    card_collection    {Object}  collection (optional when custom_* are given)
     media_aspect_ratio {String}  'square' | 'portrait' | 'landscape'
-    columns            {Number}
+    custom_image       {Object}  overrides the collection's featured image
+    custom_title       {String}  overrides the collection's title
+    heading_tag        {String}  'h2' | 'h3' — defaults to h3
+    lazy_load          {Boolean} defaults to true
+    block_attributes   {String}  block.shopify_attributes, for the theme editor
 {%- endcomment -%}
 {%- liquid
-  assign ratio = media_aspect_ratio | default: 'square'
+  assign ratio = media_aspect_ratio | default: 'portrait'
+  assign tag = heading_tag | default: 'h3'
+  assign image = custom_image | default: card_collection.featured_image
+  assign url = card_collection.url | default: '#'
+
+  comment
+    Resolve the label first — piping a real title through `t` would look it
+    up as a translation key and render "Translation missing".
+  endcomment
+  assign label = custom_title | default: card_collection.title
+  if label == blank
+    assign label = 'onboarding.collection_title' | t
+  endif
+
+  assign loading = 'lazy'
+  if lazy_load == false
+    assign loading = 'eager'
+  endif
 -%}
-<div class="collection-list__item card-wrapper">
-  <a href="{{ card_collection.url | default: '#' }}" class="media media--{{ ratio }} zoom-on-hover">
-    {%- if card_collection.featured_image -%}
+<div class="collection-list__item card-wrapper" {{ block_attributes }}>
+  <a href="{{ url }}" class="media media--{{ ratio }} zoom-on-hover" aria-label="{{ label | escape }}" tabindex="-1">
+    {%- if image != blank -%}
       <img
-        srcset="
-          {{ card_collection.featured_image | image_url: width: 275 }} 275w,
-          {{ card_collection.featured_image | image_url: width: 550 }} 550w,
-          {{ card_collection.featured_image | image_url: width: 750 }} 750w
-        "
-        sizes="(min-width: 990px) 25vw, 50vw"
-        src="{{ card_collection.featured_image | image_url: width: 550 }}"
-        alt="{{ card_collection.featured_image.alt | escape }}"
-        width="{{ card_collection.featured_image.width }}"
-        height="{{ card_collection.featured_image.height }}"
-        loading="lazy"
-      >
+        srcset="{{ image | image_url: width: 400 }} 400w, {{ image | image_url: width: 720 }} 720w, {{ image | image_url: width: 1080 }} 1080w"
+        sizes="(min-width: 990px) 33vw, 50vw"
+        src="{{ image | image_url: width: 720 }}"
+        alt="{{ image.alt | escape }}"
+        width="{{ image.width }}"
+        height="{{ image.height }}"
+        loading="{{ loading }}"
+        class="image-fade">
     {%- else -%}
       {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg' }}
     {%- endif -%}
   </a>
-  <h3 class="collection-list__title">
-    <a href="{{ card_collection.url | default: '#' }}">
-      {{ card_collection.title | default: 'onboarding.collection_title' | t }}
-    </a>
-  </h3>
+  <{{ tag }} class="collection-list__title">
+    <a href="{{ url }}">{{ label | escape }} {% render 'icon', icon: 'arrow' %}</a>
+  </{{ tag }}>
 </div>

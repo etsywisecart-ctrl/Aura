@@ -10,16 +10,7 @@
       {%- assign collections = collections -%}
       {%- if section.settings.sort == 'products_high' -%}{%- assign collections = collections | sort: 'all_products_count' | reverse -%}{%- endif -%}
       {%- for collection in collections -%}
-        <div class="collection-list__item">
-          <a href="{{ collection.url }}" class="media media--{{ section.settings.image_ratio }} zoom-on-hover" aria-label="{{ collection.title | escape }}">
-            {%- if collection.featured_image -%}
-              <img src="{{ collection.featured_image | image_url: width: 720 }}" srcset="{{ collection.featured_image | image_url: width: 400 }} 400w, {{ collection.featured_image | image_url: width: 720 }} 720w" sizes="(min-width:990px) 33vw, 50vw" alt="{{ collection.featured_image.alt | escape }}" width="{{ collection.featured_image.width }}" height="{{ collection.featured_image.height }}" loading="lazy" class="image-fade">
-            {%- else -%}
-              {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg' }}
-            {%- endif -%}
-          </a>
-          <h2 class="collection-list__title"><a href="{{ collection.url }}">{{ collection.title | escape }} {% render 'icon', icon: 'arrow' %}</a></h2>
-        </div>
+        {% render 'card-collection', card_collection: collection, media_aspect_ratio: section.settings.image_ratio, heading_tag: 'h2', lazy_load: forloop.index > 6 %}
       {%- endfor -%}
     </div>
   </div>

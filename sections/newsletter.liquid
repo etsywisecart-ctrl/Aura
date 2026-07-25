@@ -14,12 +14,13 @@
             <input id="Newsletter-{{ section.id }}" type="email" name="contact[email]" required placeholder="{{ 'newsletter.label' | t }}" autocorrect="off" autocapitalize="off"{% if form.errors %} aria-invalid="true"{% endif %}>
           </div>
           <button type="submit" class="button" name="commit">{{ 'newsletter.button_label' | t }}</button>
+          {%- comment -%} The form object only exists inside this block. {%- endcomment -%}
+          {%- if form.posted_successfully? -%}
+            <p class="form__message form__message--success" role="status">{% render 'icon', icon: 'check' %} {{ 'newsletter.success' | t }}</p>
+          {%- elsif form.errors -%}
+            <p class="form__message form__message--error" role="alert">{{ form.errors.translated_fields.email | capitalize }} {{ form.errors.messages.email }}</p>
+          {%- endif -%}
         {%- endform -%}
-        {%- if form.posted_successfully? -%}
-          <p class="form__message form__message--success">{% render 'icon', icon: 'check' %} {{ 'newsletter.success' | t }}</p>
-        {%- elsif form.errors -%}
-          <p class="form__message form__message--error">{{ form.errors.translated_fields.email | capitalize }} {{ form.errors.messages.email }}</p>
-        {%- endif -%}
       </div>
     </div>
   </div>
