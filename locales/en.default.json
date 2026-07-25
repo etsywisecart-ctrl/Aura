@@ -259,6 +259,7 @@
       }
     },
     "facets": {
+      "all": "All",
       "apply": "Apply",
       "clear": "Clear",
       "clear_all": "Remove all",

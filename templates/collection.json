@@ -12,12 +12,15 @@
         "show_description": true,
         "products_per_page": 24,
         "columns_desktop": "4",
-        "image_ratio": "portrait",
+        "columns_mobile": "2",
+        "image_ratio": "square",
         "show_quick_add": true,
         "show_wishlist": true,
         "show_rating": true,
+        "show_swatches": true,
         "enable_filtering": true,
-        "enable_sorting": true
+        "enable_sorting": true,
+        "enable_quicknav": true
       }
     }
   },

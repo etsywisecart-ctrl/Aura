@@ -21,7 +21,7 @@
       {%- endif -%}
     </div>
 
-    <div class="grid grid--{{ section.settings.columns_desktop }} grid--1-col-mobile scroll-trigger">
+    <div class="grid grid--{{ section.settings.columns_desktop }} grid--1-col-mobile product-grid scroll-trigger">
       {%- if collection != blank and collection.products.size > 0 -%}
         {%- for product in collection.products limit: products_to_show -%}
           {% render 'card-product',

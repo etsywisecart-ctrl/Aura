@@ -147,10 +147,24 @@
     connectedCallback() {
       if (this.dataset.sticky !== 'true') return;
       this.lastScroll = 0;
+      this.wasHidden = null;
       this.onScroll = this.onScroll.bind(this);
+      this.onResize = debounce(this.publishOffset.bind(this), 150);
       window.addEventListener('scroll', this.onScroll, { passive: true });
+      window.addEventListener('resize', this.onResize);
+      this.publishOffset();
     }
-    disconnectedCallback() { window.removeEventListener('scroll', this.onScroll); }
+    disconnectedCallback() {
+      window.removeEventListener('scroll', this.onScroll);
+      window.removeEventListener('resize', this.onResize);
+    }
+    /* Anything else that sticks (the collection toolbar) pins below the header
+       while it is on screen, and to the top once it has slid away. */
+    publishOffset() {
+      const hidden = this.classList.contains('header--hidden');
+      document.documentElement.style.setProperty('--sticky-offset', hidden ? '0px' : this.offsetHeight + 'px');
+      this.wasHidden = hidden;
+    }
     onScroll() {
       const y = window.scrollY;
       this.classList.toggle('header--scrolled', y > 60);
@@ -162,6 +176,7 @@
           this.classList.remove('header--hidden');
         }
       }
+      if (this.classList.contains('header--hidden') !== this.wasHidden) this.publishOffset();
       this.lastScroll = y;
     }
   }
@@ -744,15 +759,20 @@
       else this.applyFromForm();
     }
     applyFromForm() {
-      const params = new URLSearchParams(new FormData(this.form)).toString();
-      this.render(this.baseUrl + (params ? '?' + params : ''), true);
+      /* Skip blank fields so an untouched price box never lands in the URL. */
+      const params = new URLSearchParams();
+      for (const [key, value] of new FormData(this.form).entries()) {
+        if (value !== '') params.append(key, value);
+      }
+      const query = params.toString();
+      this.render(this.baseUrl + (query ? '?' + query : ''), true);
     }
     onClick(e) {
       const link = e.target.closest('a[href]');
       if (!link) return;
-      if (link.matches('.active-facet, .pagination__item, .facets__clear-all') || link.hasAttribute('data-facet-link')) {
+      if (link.matches('.active-facet, .pagination__item, .facets__clear-all, .quicknav__chip') || link.hasAttribute('data-facet-link')) {
         e.preventDefault();
-        this.render(link.href, true);
+        this.render(link.href, true, link.matches('.pagination__item'));
         this.closeDrawer();
       }
     }
@@ -761,18 +781,32 @@
       const d = document.getElementById('filter-drawer');
       if (d && d.classList.contains('active') && typeof d.close === 'function') d.close();
     }
-    render(url, push) {
+    /* Paging swaps the grid under the reader, so put them back at its top. */
+    scrollToGrid() {
+      const anchor = this.querySelector('#ProductGridContainer');
+      if (!anchor) return;
+      const offset = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--sticky-offset'), 10) || 0;
+      const top = anchor.getBoundingClientRect().top + window.scrollY - offset - 80;
+      window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+    }
+    render(url, push, scrollTop) {
       const u = new URL(url, location.origin);
       u.searchParams.set('section_id', this.sectionId);
       this.classList.add('facets--loading');
+      /* Controls are re-rendered, so remember where the keyboard was and
+         which filter groups the shopper had expanded. */
+      const activeId = document.activeElement && document.activeElement.id;
+      const openGroups = [];
+      this.querySelectorAll('details[data-filter][open]').forEach((d) => openGroups.push(d.dataset.filter));
       fetch(u.toString())
         .then((r) => r.text())
         .then((text) => {
           const doc = new DOMParser().parseFromString(text, 'text/html');
-          ['#ProductGridContainer', '.active-facets-wrap', '[data-product-count]', '#FacetFiltersForm'].forEach((sel) => {
-            const nw = doc.querySelector(sel);
-            const cur = this.querySelector(sel);
-            if (nw && cur) cur.innerHTML = nw.innerHTML;
+          FacetFilters.SWAP.forEach((sel) => {
+            const incoming = doc.querySelectorAll(sel);
+            this.querySelectorAll(sel).forEach((cur, i) => {
+              if (incoming[i]) cur.innerHTML = incoming[i].innerHTML;
+            });
           });
           if (push) {
             const clean = new URL(url, location.origin);
@@ -780,12 +814,32 @@
             history.pushState({ aura: true }, '', clean.toString());
           }
           this.classList.remove('facets--loading');
+          this.querySelectorAll('details[data-filter]').forEach((d) => {
+            d.open = openGroups.indexOf(d.dataset.filter) !== -1;
+          });
+          if (activeId) {
+            const restored = this.querySelector('#' + (window.CSS && CSS.escape ? CSS.escape(activeId) : activeId));
+            if (restored) restored.focus({ preventScroll: true });
+          }
+          if (scrollTop) this.scrollToGrid();
           initWishlist();
           publish('facets:update', {});
         })
         .catch(() => this.classList.remove('facets--loading'));
     }
   }
+  /* Regions re-rendered from the Section Rendering API response. Only the
+     contents are replaced — the elements themselves persist, which is what
+     lets the aria-live product count actually announce a new result count. */
+  FacetFilters.SWAP = [
+    '#ProductGridContainer',
+    '.active-facets-wrap',
+    '[data-product-count]',
+    '[data-filter-count]',
+    '.collection-toolbar__sort',
+    '.quicknav',
+    '#FacetFiltersForm',
+  ];
   customElements.define('facet-filters', FacetFilters);
 
   /* Wishlist — client-side, persisted in localStorage */

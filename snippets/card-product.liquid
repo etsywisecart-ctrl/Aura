@@ -8,6 +8,7 @@
     show_quick_add        {Boolean}
     show_wishlist         {Boolean}
     show_rating           {Boolean}
+    show_swatches         {Boolean}
     lazy_load             {Boolean}
     placeholder           {String}
 {%- endcomment -%}
@@ -33,6 +34,30 @@
         assign is_new = true
       endif
       assign rating = card_product.metafields.reviews.rating.value
+
+      comment
+        Colour swatches — native variant swatches when the merchant has set
+        them, otherwise a plain count so the card never shows blank dots.
+      endcomment
+      assign swatch_option = null
+      if show_swatches != false
+        for option in card_product.options_with_values
+          assign option_name = option.name | downcase
+          if option_name == 'color' or option_name == 'colour'
+            assign swatch_option = option
+            break
+          endif
+        endfor
+      endif
+      assign has_native_swatches = false
+      if swatch_option
+        for value in swatch_option.values
+          if value.swatch.color or value.swatch.image
+            assign has_native_swatches = true
+            break
+          endif
+        endfor
+      endif
     -%}
     <div class="card card--{{ settings.card_style }}">
       <div class="card__media">
@@ -41,7 +66,8 @@
           {%- if card_product.available == false -%}
             <span class="badge badge--sold-out">{{ 'products.product.sold_out' | t }}</span>
           {%- elsif card_product.compare_at_price > card_product.price -%}
-            <span class="badge badge--sale">{{ 'products.product.on_sale' | t }}</span>
+            {%- assign pct_off = card_product.compare_at_price | minus: card_product.price | times: 100.0 | divided_by: card_product.compare_at_price | round -%}
+            <span class="badge badge--sale">&minus;{{ pct_off }}%</span>
           {%- elsif is_new -%}
             <span class="badge badge--new">New</span>
           {%- endif -%}
@@ -54,9 +80,12 @@
           </button>
         {%- endif -%}
 
-        <a href="{{ card_product.url }}" class="media media--{{ ratio }} zoom-on-hover"
-          {% if ratio == 'adapt' and card_product.featured_media %}style="--ratio-percent: {{ 1 | divided_by: card_product.featured_media.aspect_ratio | times: 100 }}%;"{% endif %}
-          aria-label="{{ card_product.title | escape }}">
+        {%- comment -%}
+          Not a link: .card__heading a::after already covers the whole card, so
+          a second anchor here would only add a duplicate tab stop.
+        {%- endcomment -%}
+        <div class="media media--{{ ratio }} zoom-on-hover"
+          {% if ratio == 'adapt' and card_product.featured_media %}style="--ratio-percent: {{ 1 | divided_by: card_product.featured_media.aspect_ratio | times: 100 }}%;"{% endif %}>
           {%- if card_product.featured_media -%}
             <img
               srcset="{%- if card_product.featured_media.width >= 360 %}{{ card_product.featured_media | image_url: width: 360 }} 360w,{% endif -%}
@@ -74,7 +103,7 @@
           {%- else -%}
             {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
           {%- endif -%}
-        </a>
+        </div>
 
         {%- comment -%} Quick add {%- endcomment -%}
         {%- if show_quick_add != false and card_product.available -%}
@@ -109,6 +138,26 @@
               <span class="rating__count">({{ card_product.metafields.reviews.rating_count }})</span>
             {%- endif -%}
           </div>
+        {%- endif -%}
+
+        {%- if swatch_option and swatch_option.values.size > 1 -%}
+          {%- if has_native_swatches -%}
+            <div class="card__swatches" aria-label="{{ swatch_option.name | escape }}">
+              {%- for value in swatch_option.values limit: 5 -%}
+                {%- assign value_name = value.name | default: value -%}
+                {%- if value.swatch.image -%}
+                  <span class="card__swatch" style="background-image: url({{ value.swatch.image | image_url: width: 40 }});" title="{{ value_name | escape }}"></span>
+                {%- elsif value.swatch.color -%}
+                  <span class="card__swatch" style="background-color: {{ value.swatch.color }};" title="{{ value_name | escape }}"></span>
+                {%- endif -%}
+              {%- endfor -%}
+              {%- if swatch_option.values.size > 5 -%}
+                <span class="card__swatch-more">+{{ swatch_option.values.size | minus: 5 }}</span>
+              {%- endif -%}
+            </div>
+          {%- else -%}
+            <span class="card__option-count">{{ swatch_option.values.size }} {{ swatch_option.name | downcase }}s</span>
+          {%- endif -%}
         {%- endif -%}
 
         {%- render 'price', product: card_product, use_variant: true -%}

@@ -7,7 +7,7 @@
       <div class="section-header section-header--center scroll-trigger">
         {%- if section.settings.heading != blank -%}<h2 class="{{ section.settings.heading_size | default: 'h2' }}">{{ section.settings.heading | escape }}</h2>{%- endif -%}
       </div>
-      <div class="grid grid--{{ section.settings.columns_desktop }} grid--1-col-mobile">
+      <div class="grid grid--{{ section.settings.columns_desktop }} grid--1-col-mobile product-grid">
         {%- for product in recommendations.products -%}
           {% render 'card-product', card_product: product, media_aspect_ratio: section.settings.image_ratio %}
         {%- endfor -%}

@@ -20,7 +20,7 @@
       {%- else -%}
         <p class="product-count" style="margin-bottom:2.4rem;">{{ 'general.search.results_with_count' | t: count: search.results_count }}</p>
         {%- paginate search.results by 24 -%}
-          <div class="grid grid--{{ section.settings.columns_desktop }} grid--1-col-mobile">
+          <div class="grid grid--{{ section.settings.columns_desktop }} grid--1-col-mobile product-grid">
             {%- for item in search.results -%}
               {%- if item.object_type == 'product' -%}
                 {% render 'card-product', card_product: item, media_aspect_ratio: 'portrait', lazy_load: forloop.index > 8 %}
