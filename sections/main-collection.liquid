@@ -160,7 +160,7 @@
         <div class="grid grid--{{ section.settings.columns_desktop }} grid--{{ section.settings.columns_mobile }}-col-mobile product-grid" id="product-grid">
           {%- for product in collection.products -%}
             <div class="scroll-trigger scroll-trigger--delay-{{ forloop.index0 | modulo: 3 | plus: 1 }}">
-              {% render 'card-product', card_product: product, media_aspect_ratio: section.settings.image_ratio, show_quick_add: section.settings.show_quick_add, show_wishlist: section.settings.show_wishlist, show_rating: section.settings.show_rating, show_swatches: section.settings.show_swatches, lazy_load: forloop.index > 8 %}
+              {% render 'card-product', card_product: product, media_aspect_ratio: section.settings.image_ratio, show_quick_add: section.settings.show_quick_add, show_wishlist: section.settings.show_wishlist, show_rating: section.settings.show_rating, show_swatches: section.settings.show_swatches, lazy_load: forloop.index %}
             </div>
           {%- endfor -%}
         </div>
@@ -271,3 +271,19 @@
   ]
 }
 {% endschema %}
+{% comment %}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: "{% render 'card-product', card_product: product, media_aspect_ratio: section.settings.image_ratio,
+    show_quick_add: section.settings.show_quick_add, show_wishlist: section.settings.show_wishlist,
+    show_rating: section.settings.show_rating, show_swatches: section.settings.show_swatches,
+    lazy_load: forloop.index > 8 %}"
+  to: "{% render 'card-product', card_product: product, media_aspect_ratio: section.settings.image_ratio,
+    show_quick_add: section.settings.show_quick_add, show_wishlist: section.settings.show_wishlist,
+    show_rating: section.settings.show_rating, show_swatches: section.settings.show_swatches,
+    lazy_load: forloop.index %}"
+  position: 8943..9255
+{% endcomment %}

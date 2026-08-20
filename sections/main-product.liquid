@@ -131,7 +131,7 @@
                                 endif
                               endfor
                             -%}
-                            {%- capture swatch_bg -%}{%- case value | downcase -%}{%- when 'black' -%}#1a1a1a{%- when 'white' -%}#f2f2f0{%- when 'ivory','cream' -%}#efe7d6{%- when 'grey','gray','charcoal' -%}#7c7d80{%- when 'navy' -%}#26314a{%- when 'blue' -%}#3a5f8a{%- when 'olive' -%}#6b7247{%- when 'green' -%}#3f6f52{%- when 'stone' -%}#b8ae9c{%- when 'sand','beige' -%}#d8c3a5{%- when 'tan','camel' -%}#c19a6b{%- when 'brown' -%}#6b4f3a{%- when 'red' -%}#9b2c2c{%- when 'pink' -%}#e0a9ac{%- else -%}#cfcabf{%- endcase -%}{%- endcapture -%}
+                            {%- capture swatch_bg -%}{%- case value -%}{%- when 'black' -%}#1a1a1a{%- when 'white' -%}#f2f2f0{%- when 'ivory','cream' -%}#efe7d6{%- when 'grey','gray','charcoal' -%}#7c7d80{%- when 'navy' -%}#26314a{%- when 'blue' -%}#3a5f8a{%- when 'olive' -%}#6b7247{%- when 'green' -%}#3f6f52{%- when 'stone' -%}#b8ae9c{%- when 'sand','beige' -%}#d8c3a5{%- when 'tan','camel' -%}#c19a6b{%- when 'brown' -%}#6b4f3a{%- when 'red' -%}#9b2c2c{%- when 'pink' -%}#e0a9ac{%- else -%}#cfcabf{%- endcase -%}{%- endcapture -%}
                             <label class="variant-swatch" for="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}" title="{{ value | escape }}"{% if swatch_url != blank %} style="background-image:url({{ swatch_url }})"{% else %} style="background-color:{{ swatch_bg | strip }}"{% endif %}>
                               <span class="visually-hidden">{{ value }}</span>
                             </label>
@@ -308,3 +308,13 @@
   }]
 }
 {% endschema %}
+{% comment %}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: "{%- case value | downcase -%}"
+  to: "{%- case value -%}"
+  position: 8264..8282
+{% endcomment %}

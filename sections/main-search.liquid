@@ -23,7 +23,7 @@
           <div class="grid grid--{{ section.settings.columns_desktop }} grid--1-col-mobile product-grid">
             {%- for item in search.results -%}
               {%- if item.object_type == 'product' -%}
-                {% render 'card-product', card_product: item, media_aspect_ratio: 'portrait', lazy_load: forloop.index > 8 %}
+                {% render 'card-product', card_product: item, media_aspect_ratio: 'portrait', lazy_load: forloop.index %}
               {%- else -%}
                 <div class="card-wrapper">
                   <a href="{{ item.url }}" class="card">
@@ -55,3 +55,15 @@
   ]
 }
 {% endschema %}
+{% comment %}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: "{% render 'card-product', card_product: item, media_aspect_ratio: 'portrait',
+    lazy_load: forloop.index > 8 %}"
+  to: "{% render 'card-product', card_product: item, media_aspect_ratio: 'portrait',
+    lazy_load: forloop.index %}"
+  position: 1422..1527
+{% endcomment %}

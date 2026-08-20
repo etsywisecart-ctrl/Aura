@@ -10,7 +10,7 @@
       {%- assign collections = collections -%}
       {%- if section.settings.sort == 'products_high' -%}{%- assign collections = collections | sort: 'all_products_count' | reverse -%}{%- endif -%}
       {%- for collection in collections -%}
-        {% render 'card-collection', card_collection: collection, media_aspect_ratio: section.settings.image_ratio, heading_tag: 'h2', lazy_load: forloop.index > 6 %}
+        {% render 'card-collection', card_collection: collection, media_aspect_ratio: section.settings.image_ratio, heading_tag: 'h2', lazy_load: forloop.index %}
       {%- endfor -%}
     </div>
   </div>
@@ -38,3 +38,16 @@
   ]
 }
 {% endschema %}
+{% comment %}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: "{% render 'card-collection', card_collection: collection, media_aspect_ratio:
+    section.settings.image_ratio, heading_tag: 'h2', lazy_load: forloop.index > 6
+    %}"
+  to: "{% render 'card-collection', card_collection: collection, media_aspect_ratio:
+    section.settings.image_ratio, heading_tag: 'h2', lazy_load: forloop.index %}"
+  position: 693..847
+{% endcomment %}

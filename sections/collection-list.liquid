@@ -10,7 +10,7 @@
 
     <div class="grid grid--{{ section.settings.columns_desktop }} grid--1-col-mobile scroll-trigger">
       {%- for block in section.blocks -%}
-        {% render 'card-collection', card_collection: block.settings.collection, custom_image: block.settings.image, custom_title: block.settings.custom_title, media_aspect_ratio: section.settings.image_ratio, block_attributes: block.shopify_attributes, lazy_load: forloop.index > 3 %}
+        {% render 'card-collection', card_collection: block.settings.collection, custom_image: block.settings.image, custom_title: block.settings.custom_title, media_aspect_ratio: section.settings.image_ratio, block_attributes: block.shopify_attributes, lazy_load: forloop.index %}
       {%- else -%}
         {%- for i in (1..3) -%}
           <div class="collection-list__item">
@@ -67,3 +67,19 @@
   }]
 }
 {% endschema %}
+{% comment %}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: "{% render 'card-collection', card_collection: block.settings.collection,
+    custom_image: block.settings.image, custom_title: block.settings.custom_title,
+    media_aspect_ratio: section.settings.image_ratio, block_attributes: block.shopify_attributes,
+    lazy_load: forloop.index > 3 %}"
+  to: "{% render 'card-collection', card_collection: block.settings.collection, custom_image:
+    block.settings.image, custom_title: block.settings.custom_title, media_aspect_ratio:
+    section.settings.image_ratio, block_attributes: block.shopify_attributes, lazy_load:
+    forloop.index %}"
+  position: 935..1208
+{% endcomment %}

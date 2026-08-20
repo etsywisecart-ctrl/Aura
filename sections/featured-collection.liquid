@@ -24,11 +24,7 @@
     <div class="grid grid--{{ section.settings.columns_desktop }} grid--1-col-mobile product-grid scroll-trigger">
       {%- if collection != blank and collection.products.size > 0 -%}
         {%- for product in collection.products limit: products_to_show -%}
-          {% render 'card-product',
-            card_product: product,
-            media_aspect_ratio: section.settings.image_ratio,
-            lazy_load: forloop.index > 4
-          %}
+          {% render 'card-product', card_product: product, media_aspect_ratio: section.settings.image_ratio, lazy_load: forloop.index %}
         {%- endfor -%}
       {%- else -%}
         {%- for i in (1..products_to_show) -%}
@@ -77,3 +73,19 @@
   "presets": [{ "name": "Featured collection" }]
 }
 {% endschema %}
+{% comment %}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: |-
+    {% render 'card-product',
+                card_product: product,
+                media_aspect_ratio: section.settings.image_ratio,
+                lazy_load: forloop.index > 4
+              %}
+  to: "{% render 'card-product', card_product: product, media_aspect_ratio: section.settings.image_ratio,
+    lazy_load: forloop.index %}"
+  position: 1331..1457
+{% endcomment %}
